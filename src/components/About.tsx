@@ -9,40 +9,57 @@ export default function About({ content, language }: any) {
             {content[language].aboutTag}
           </p>
 
-          <h2 className="mt-4 text-4xl font-bold leading-tight md:text-5xl">
+          <h2 className="mt-4 text-5xl font-bold leading-tight md:text-6xl">
             {content[language].aboutTitle}
           </h2>
 
-          <p className="mt-8 text-lg leading-8 text-gray-400">
+          <p className="mt-8 max-w-xl text-lg leading-8 text-gray-400">
             {content[language].aboutText1}
           </p>
 
-          <p className="mt-6 text-lg leading-8 text-gray-400">
+          <p className="mt-6 max-w-xl text-lg leading-8 text-gray-400">
             {content[language].aboutText2}
           </p>
         </div>
 
-        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8 backdrop-blur-md">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-2xl bg-[var(--brand-blue)]/20 p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_36px_rgba(14,108,178,0.45)]">
-              <div className="text-sm font-medium text-white/35">01</div>
-              <p className="mt-3 text-lg font-semibold text-white">Sound Experience</p>
-            </div>
+        <div className="grid gap-6">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-all duration-300 hover:-translate-y-2 hover:border-[var(--brand-blue)]/40 hover:bg-white/[0.07]">
+          <div className="mb-6 h-1 w-14 rounded-full bg-[var(--brand-blue)]"></div>
+            <div className="text-sm font-medium text-white/35">01</div>
 
-            <div className="rounded-2xl bg-[var(--brand-pink)]/20 p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_36px_rgba(233,43,139,0.45)]">
-              <div className="text-sm font-medium text-white/35">02</div>
-              <p className="mt-3 text-lg font-semibold text-white">Creative Design</p>
-            </div>
+            <h3 className="mt-4 text-2xl font-semibold text-white">
+              {content[language].aboutStoryTitle}
+            </h3>
 
-            <div className="rounded-2xl bg-[var(--brand-yellow)]/20 p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_36px_rgba(255,207,23,0.45)]">
-              <div className="text-sm font-medium text-white/35">03</div>
-              <p className="mt-3 text-lg font-semibold text-white">Live Culture</p>
-            </div>
+            <p className="mt-5 leading-8 text-gray-400">
+              {content[language].aboutStoryText}
+            </p>
+          </div>
 
-            <div className="rounded-2xl bg-[var(--brand-teal)]/20 p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_36px_rgba(76,186,175,0.45)]">
-              <div className="text-sm font-medium text-white/35">04</div>
-              <p className="mt-3 text-lg font-semibold text-white">Future Technology</p>
-            </div>
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-all duration-300 hover:-translate-y-2 hover:border-[var(--brand-blue)]/40 hover:bg-white/[0.07]">
+          <div className="mb-6 h-1 w-14 rounded-full bg-[var(--brand-pink)]"></div>
+            <div className="text-sm font-medium text-white/35">02</div>
+
+            <h3 className="mt-4 text-2xl font-semibold text-white">
+              {content[language].aboutMissionTitle}
+            </h3>
+
+            <p className="mt-5 leading-8 text-gray-400">
+              {content[language].aboutMissionText}
+            </p>
+          </div>
+
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-all duration-300 hover:-translate-y-2 hover:border-[var(--brand-blue)]/40 hover:bg-white/[0.07]">
+          <div className="mb-6 h-1 w-14 rounded-full bg-[var(--brand-yellow)]"></div>
+            <div className="text-sm font-medium text-white/35">03</div>
+
+            <h3 className="mt-4 text-2xl font-semibold text-white">
+              {content[language].aboutVisionTitle}
+            </h3>
+
+            <p className="mt-5 leading-8 text-gray-400">
+              {content[language].aboutVisionText}
+            </p>
           </div>
         </div>
       </div>
