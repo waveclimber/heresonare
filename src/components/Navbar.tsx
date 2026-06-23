@@ -6,13 +6,25 @@ export default function Navbar({ content, language, setLanguage }: any) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 
+  const navItems = [
+    { label: "TOUR", href: "/tour" },
+    { label: "ARTISTS", href: "/artists" },
+    { label: "PRODUCTIONS", href: "/productions" },
+    { label: "MUSIC", href: "/music" },
+    { label: "VIDEO", href: "/video" },
+    { label: "VENUES", href: "/venues" },
+    { label: "STORE", href: "/store" },
+    { label: "ABOUT", href: "/about" },
+    { label: "CONTACT", href: "/contact" },
+  ];
+
   const navLinkClassName =
     "text-gray-300 transition-all duration-300 hover:text-[var(--brand-blue)]";
 
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-white/10 bg-black/40 backdrop-blur-md">
       <div className="mx-auto flex h-20 w-full max-w-[1440px] items-center justify-between px-6 lg:px-12">
-        <div className="flex items-center gap-3">
+        <a href="/" className="flex items-center gap-3">
           <img
             src="/images/logo/logo-color.svg"
             alt="héReSonare"
@@ -22,20 +34,14 @@ export default function Navbar({ content, language, setLanguage }: any) {
           <span className="bg-gradient-to-r from-[var(--brand-pink)] via-white to-[var(--brand-blue)] bg-clip-text text-2xl font-semibold tracking-[0.05em] text-transparent">
             héReSonare
           </span>
-        </div>
+        </a>
 
-        <div className="hidden items-center gap-8 text-sm text-gray-300 md:flex">
-          <a href="#products" className={navLinkClassName}>
-            {content[language].navProducts}
-          </a>
-
-          <a href="#about" className={navLinkClassName}>
-            {content[language].navAbout}
-          </a>
-
-          <a href="#contact" className={navLinkClassName}>
-            {content[language].navContact}
-          </a>
+        <div className="hidden items-center gap-6 text-sm text-gray-300 lg:flex">
+          {navItems.map((item) => (
+            <a key={item.href} href={item.href} className={navLinkClassName}>
+              {item.label}
+            </a>
+          ))}
 
           <div className="relative">
             <button
@@ -43,7 +49,6 @@ export default function Navbar({ content, language, setLanguage }: any) {
               onClick={() => setIsLanguageOpen(!isLanguageOpen)}
             >
               <span>{language}</span>
-
               <span
                 className={`transition-transform duration-300 ${
                   isLanguageOpen ? "rotate-180" : ""
@@ -54,96 +59,60 @@ export default function Navbar({ content, language, setLanguage }: any) {
             </button>
 
             {isLanguageOpen && (
-              <div className="absolute right-0 mt-2 w-36 rounded-xl border border-white/10 bg-black/90 p-2 backdrop-blur-md opacity-100 translate-y-0 transition-all duration-300 ease-out animate-[dropdownFade_0.25s_ease-out]">
-                <button
-                  onClick={() => {
-                    setLanguage("EN");
-                    setIsLanguageOpen(false);
-                  }}
-                  className="block w-full rounded-lg px-3 py-2 text-left hover:bg-white/10"
-                >
-                  English
-                </button>
-
-                <button
-                  onClick={() => {
-                    setLanguage("JP");
-                    setIsLanguageOpen(false);
-                  }}
-                  className="block w-full rounded-lg px-3 py-2 text-left hover:bg-white/10"
-                >
-                  日本語
-                </button>
-
-                <button
-                  onClick={() => {
-                    setLanguage("CN");
-                    setIsLanguageOpen(false);
-                  }}
-                  className="block w-full rounded-lg px-3 py-2 text-left hover:bg-white/10"
-                >
-                  中文
-                </button>
+              <div className="absolute right-0 mt-2 w-36 rounded-xl border border-white/10 bg-black/90 p-2 backdrop-blur-md animate-[dropdownFade_0.25s_ease-out]">
+                {["EN", "JP", "CN"].map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => {
+                      setLanguage(lang);
+                      setIsLanguageOpen(false);
+                    }}
+                    className="block w-full rounded-lg px-3 py-2 text-left hover:bg-white/10"
+                  >
+                    {lang === "EN" ? "English" : lang === "JP" ? "日本語" : "中文"}
+                  </button>
+                ))}
               </div>
             )}
           </div>
         </div>
 
         <button
-          className="text-2xl md:hidden"
+          className="text-2xl lg:hidden"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           {isMenuOpen ? "✕" : "☰"}
         </button>
 
         {isMenuOpen && (
-          <div className="absolute left-0 top-20 w-full border-b border-white/10 bg-black/95 backdrop-blur-md md:hidden animate-[mobileMenuFade_0.25s_ease-out]">
+          <div className="absolute left-0 top-20 w-full border-b border-white/10 bg-black/95 backdrop-blur-md lg:hidden animate-[mobileMenuFade_0.25s_ease-out]">
             <div className="flex flex-col gap-4 p-6">
-              <a href="#products" onClick={() => setIsMenuOpen(false)}>
-                {content[language].navProducts}
-              </a>
-
-              <a href="#about" onClick={() => setIsMenuOpen(false)}>
-                {content[language].navAbout}
-              </a>
-
-              <a href="#contact" onClick={() => setIsMenuOpen(false)}>
-                {content[language].navContact}
-              </a>
+              {navItems.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </a>
+              ))}
 
               <div className="border-t border-white/10 pt-4">
                 <div className="mb-3 text-sm text-gray-500">Language</div>
 
                 <div className="flex flex-col gap-3">
-                  <button
-                    className="text-left"
-                    onClick={() => {
-                      setLanguage("EN");
-                      setIsMenuOpen(false);
-                    }}
-                  >
-                    English
-                  </button>
-
-                  <button
-                    className="text-left"
-                    onClick={() => {
-                      setLanguage("JP");
-                      setIsMenuOpen(false);
-                    }}
-                  >
-                    日本語
-                  </button>
-
-                  <button
-                    className="text-left"
-                    onClick={() => {
-                      setLanguage("CN");
-                      setIsMenuOpen(false);
-                    }}
-                  >
-                    中文
-                  </button>
+                  {["EN", "JP", "CN"].map((lang) => (
+                    <button
+                      key={lang}
+                      className="text-left"
+                      onClick={() => {
+                        setLanguage(lang);
+                        setIsMenuOpen(false);
+                      }}
+                    >
+                      {lang === "EN" ? "English" : lang === "JP" ? "日本語" : "中文"}
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
