@@ -1,7 +1,37 @@
+"use client";
+
+import { useLanguage } from "@/context/LanguageContext";
+import { siteContent } from "@/data/siteContent";
+
 export default function ContactPage() {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-black text-white">
-        <h1 className="text-5xl font-bold">CONTACT</h1>
-      </main>
-    );
-  }
+  const { language } = useLanguage();
+  const content = siteContent[language];
+
+  return (
+    <main className="min-h-screen bg-black text-white">
+      <section className="mx-auto max-w-7xl px-6 py-32">
+        <p className="mb-4 text-sm uppercase tracking-[0.35em] text-cyan-400">
+          {content.pages.contact.tag}
+        </p>
+
+        <h1 className="mb-6 text-5xl font-bold md:text-7xl">
+          {content.pages.contact.title}
+        </h1>
+
+        <p className="mb-20 max-w-2xl text-lg text-white/70">
+          {content.pages.contact.description}
+        </p>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-12">
+          <h2 className="mb-4 text-2xl font-semibold">
+            Get In Touch
+          </h2>
+
+          <p className="text-white/65">
+            For partnerships, productions, artist collaborations, and business inquiries.
+          </p>
+        </div>
+      </section>
+    </main>
+  );
+}
