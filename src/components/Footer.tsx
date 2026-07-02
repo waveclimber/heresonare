@@ -1,6 +1,12 @@
 import Link from "next/link";
+import type { Language, SiteContent } from "@/data/siteContent";
 
-export default function Footer({ content, language }: any) {
+type ContentProps = {
+  content: SiteContent;
+  language: Language;
+};
+
+export default function Footer({ content, language }: ContentProps) {
   const navLinks = [
     { href: "/tour", label: "TOUR" },
     { href: "/artists", label: "ARTISTS" },

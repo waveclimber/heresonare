@@ -1,6 +1,12 @@
 import Link from "next/link";
+import type { Language, SiteContent } from "@/data/siteContent";
 
-export default function Products({ content, language }: any) {
+type ContentProps = {
+  content: SiteContent;
+  language: Language;
+};
+
+export default function Products({ content, language }: ContentProps) {
   const featuredItems = [
     {
       title: content[language].featuredArtistsTitle,
