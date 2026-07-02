@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Language, SiteContent } from "@/data/siteContent";
 
 type ContentProps = {
@@ -46,7 +47,7 @@ export default function Products({ content, language }: ContentProps) {
 
       <div className="grid gap-8 lg:grid-cols-3">
         {featuredItems.map((item) => (
-          <a
+          <Link
             key={item.title}
             href={item.href}
             className="group relative overflow-hidden rounded-[36px] border border-white/10 bg-white/[0.03] p-10 backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:border-[var(--brand-blue)] hover:shadow-[0_0_50px_rgba(14,108,178,0.18)]"
@@ -75,7 +76,7 @@ export default function Products({ content, language }: ContentProps) {
             </div>
 
             <div className="absolute bottom-0 left-0 h-1 w-0 bg-[var(--brand-blue)] transition-all duration-500 group-hover:w-full" />
-          </a>
+          </Link>
         ))}
       </div>
     </section>

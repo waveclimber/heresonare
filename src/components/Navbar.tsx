@@ -50,9 +50,9 @@ export default function Navbar({ language, setLanguage }: NavbarProps) {
 
         <div className="hidden items-center gap-6 text-sm text-gray-300 lg:flex">
           {navItems.map((item) => (
-            <a key={item.href} href={item.href} className={navLinkClassName}>
+            <Link key={item.href} href={item.href} className={navLinkClassName}>
               {item.label}
-            </a>
+            </Link>
           ))}
 
           <div className="relative">
@@ -100,13 +100,13 @@ export default function Navbar({ language, setLanguage }: NavbarProps) {
           <div className="absolute left-0 top-20 w-full border-b border-white/10 bg-black/95 backdrop-blur-md lg:hidden animate-[mobileMenuFade_0.25s_ease-out]">
             <div className="flex flex-col gap-4 p-6">
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
 
               <div className="border-t border-white/10 pt-4">
