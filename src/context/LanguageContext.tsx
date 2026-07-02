@@ -5,10 +5,9 @@ import {
   useContext,
   useEffect,
   useState,
-  ReactNode,
 } from "react";
-
-type Language = "EN" | "JP" | "CN";
+import type { ReactNode } from "react";
+import type { Language } from "@/data/siteContent";
 
 type LanguageContextType = {
   language: Language;
