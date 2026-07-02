@@ -31,13 +31,26 @@ export type PageContentItem = {
   subtitle?: string;
   role?: string;
   type?: string;
+  category?: string;
   status?: string;
   href?: string;
   image?: string;
+  media?: {
+    card?: string;
+    hero?: string;
+    render?: string;
+    icon?: string;
+  };
   meta?: string;
   year?: string;
   date?: string;
   location?: string;
+  features?: string[];
+  useCases?: string[];
+  specs?: {
+    label: string;
+    value: string;
+  }[];
   links?: PageLink[];
 };
 
@@ -160,36 +173,112 @@ const englishPages = {
     slug: "productions",
     hero: {
       tag: "heReSonare Productions",
-      title: "Creative Production",
+      title: "Product Lines",
       description:
-        "Reusable content for production services, sound design, and creative direction.",
+        "A product-oriented foundation for audio technology products, creative platform modules, and live experience systems.",
     },
     sections: [
       {
-        id: "services",
-        label: "Services",
-        title: "Production Capabilities",
+        id: "product-lines",
+        label: "Products",
+        title: "Product Line Catalog",
+        description:
+          "Static product-line records designed for future product detail pages, media, and structured product data.",
         items: [
           {
-            id: "service-sound-design",
-            slug: "sound-design",
-            title: "Sound Design",
-            type: "Production",
-            subtitle: "Production",
+            id: "audio-innovation",
+            slug: "audio-innovation",
+            title: "Audio Innovation",
+            category: "Audio Technology Product",
+            type: "Audio Technology",
+            subtitle: "Audio Technology Product",
+            status: "Concept",
             description:
-              "Sonic identity, cues, and atmospheres for brand and stage experiences.",
-            status: "Available",
+              "A modular audio technology product line for future listening, spatial sound, and resonance-driven experiences.",
+            features: [
+              "Spatial sound framework",
+              "Adaptive resonance layer",
+              "Brand-ready audio modules",
+            ],
+            useCases: [
+              "Immersive listening",
+              "Interactive installations",
+              "Productized sound identity",
+            ],
+            specs: [
+              { label: "Format", value: "Modular audio system" },
+              { label: "Stage", value: "Concept" },
+            ],
+            media: {
+              card: "/images/products/audio-innovation/card.jpg",
+              hero: "/images/products/audio-innovation/hero.jpg",
+              render: "/images/products/audio-innovation/render.png",
+              icon: "/images/products/audio-innovation/icon.svg",
+            },
             href: "/productions",
           },
           {
-            id: "service-creative-direction",
-            slug: "creative-direction",
-            title: "Creative Direction",
-            type: "Strategy",
-            subtitle: "Strategy",
+            id: "creative-platform",
+            slug: "creative-platform",
+            title: "Creative Platform",
+            category: "Creative Platform Product",
+            type: "Platform",
+            subtitle: "Creative Platform Product",
+            status: "In development",
             description:
-              "Concept development for projects where sound, visuals, and story meet.",
-            status: "Available",
+              "A creative platform product for organizing releases, artist worlds, media, and digital sound experiences.",
+            features: [
+              "Artist world modules",
+              "Release and media structure",
+              "Multilingual content foundation",
+            ],
+            useCases: [
+              "Artist storytelling",
+              "Digital sound experience hubs",
+              "Brand and community portals",
+            ],
+            specs: [
+              { label: "Format", value: "Web platform module" },
+              { label: "Stage", value: "In development" },
+            ],
+            media: {
+              card: "/images/products/creative-platform/card.jpg",
+              hero: "/images/products/creative-platform/hero.jpg",
+              render: "/images/products/creative-platform/render.png",
+              icon: "/images/products/creative-platform/icon.svg",
+            },
+            href: "/productions",
+          },
+          {
+            id: "live-experience",
+            slug: "live-experience",
+            title: "Live Experience",
+            category: "Live Experience Product",
+            type: "Experience System",
+            subtitle: "Live Experience Product",
+            status: "Research",
+            description:
+              "A live experience product line for connecting performance, venue environments, and responsive sound moments.",
+            features: [
+              "Venue-ready experience kit",
+              "Live sound interaction layer",
+              "Audience resonance touchpoints",
+            ],
+            useCases: [
+              "Concert environments",
+              "Pop-up experiences",
+              "Venue and brand activations",
+            ],
+            specs: [
+              { label: "Format", value: "Experience system" },
+              { label: "Stage", value: "Research" },
+            ],
+            media: {
+              card: "/images/products/live-experience/card.jpg",
+              hero: "/images/products/live-experience/hero.jpg",
+              render: "/images/products/live-experience/render.png",
+              icon: "/images/products/live-experience/icon.svg",
+            },
             href: "/productions",
           },
         ],
@@ -396,7 +485,7 @@ const englishPages = {
             title: "Partners",
             subtitle: "Business",
             description:
-              "Brand collaborations, production projects, and strategic partnerships.",
+              "Brand collaborations, product partnerships, and strategic business relationships.",
             href: "mailto:contact@heresonare.com",
             links: [
               {
@@ -433,9 +522,9 @@ const localizedPages = {
     productions: {
       hero: {
         tag: "heReSonare Productions JP",
-        title: "Creative Production",
+        title: "Product Lines",
         description:
-          "Production services and creative direction prepared for Japanese content.",
+          "Audio technology products, creative platform products, and live experience products prepared for Japanese content.",
       },
     },
     tour: {
@@ -507,9 +596,9 @@ const localizedPages = {
     productions: {
       hero: {
         tag: "heReSonare Productions CN",
-        title: "Creative Production",
+        title: "Product Lines",
         description:
-          "Production services and creative direction prepared for Chinese content.",
+          "Audio technology products, creative platform products, and live experience products prepared for Chinese content.",
       },
     },
     tour: {
