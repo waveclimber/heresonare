@@ -27,20 +27,22 @@ export function LanguageProvider({
     useState<Language>("EN");
 
   useEffect(() => {
-    const savedLanguage = localStorage.getItem("language");
+    const savedLanguage = window.localStorage.getItem("language");
 
     if (
       savedLanguage === "EN" ||
       savedLanguage === "JP" ||
       savedLanguage === "CN"
     ) {
-      setLanguageState(savedLanguage);
+      window.requestAnimationFrame(() => {
+        setLanguageState(savedLanguage);
+      });
     }
   }, []);
 
   const setLanguage = (newLanguage: Language) => {
     setLanguageState(newLanguage);
-    localStorage.setItem("language", newLanguage);
+    window.localStorage.setItem("language", newLanguage);
   };
 
   return (

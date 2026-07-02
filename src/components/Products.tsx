@@ -1,4 +1,11 @@
-export default function Products({ content, language }: any) {
+import type { Language, SiteContent } from "@/data/siteContent";
+
+type ContentProps = {
+  content: SiteContent;
+  language: Language;
+};
+
+export default function Products({ content, language }: ContentProps) {
   const featuredItems = [
     {
       title: content[language].featuredArtistsTitle,

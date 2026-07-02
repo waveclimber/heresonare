@@ -365,4 +365,5 @@ export const siteContent = {
       },
   };
 
+  export type SiteContent = typeof siteContent;
   export type Language = keyof typeof siteContent;

@@ -1,4 +1,11 @@
-export default function About({ content, language }: any) {
+import type { Language, SiteContent } from "@/data/siteContent";
+
+type ContentProps = {
+  content: SiteContent;
+  language: Language;
+};
+
+export default function About({ content, language }: ContentProps) {
   const aboutCards = [
     {
       number: "01",
