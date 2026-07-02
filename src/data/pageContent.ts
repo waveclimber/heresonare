@@ -84,7 +84,7 @@ const englishPages = {
   artists: {
     slug: "artists",
     hero: {
-      tag: "h®¶ReSonare Artists",
+      tag: "h√©ReSonare Artists",
       title: "Voices That Resonate",
       description:
         "A foundation for future artist profiles, collaborations, and creative rosters.",
@@ -130,7 +130,7 @@ const englishPages = {
   music: {
     slug: "music",
     hero: {
-      tag: "h®¶ReSonare Music",
+      tag: "h√©ReSonare Music",
       title: "Sound for the Future",
       description:
         "A structured catalog foundation for releases, playlists, and sound concepts.",
@@ -172,7 +172,7 @@ const englishPages = {
   productions: {
     slug: "productions",
     hero: {
-      tag: "h®¶ReSonare Productions",
+      tag: "h√©ReSonare Productions",
       title: "Product Lines",
       description:
         "A product-oriented foundation for audio technology products, creative platform modules, and live experience systems.",
@@ -288,7 +288,7 @@ const englishPages = {
   tour: {
     slug: "tour",
     hero: {
-      tag: "h®¶ReSonare Tour",
+      tag: "h√©ReSonare Tour",
       title: "Live Beyond Boundaries",
       description:
         "Static tour and event records for future schedules, locations, and ticket links.",
@@ -324,7 +324,7 @@ const englishPages = {
   venues: {
     slug: "venues",
     hero: {
-      tag: "h®¶ReSonare Venues",
+      tag: "h√©ReSonare Venues",
       title: "Spaces for Resonance",
       description:
         "Venue content prepared for future spaces, partners, and live environment data.",
@@ -354,7 +354,7 @@ const englishPages = {
   video: {
     slug: "video",
     hero: {
-      tag: "h®¶ReSonare Video",
+      tag: "h√©ReSonare Video",
       title: "Visual Soundscapes",
       description:
         "A content model for music videos, live sessions, and visual works.",
@@ -384,7 +384,7 @@ const englishPages = {
   store: {
     slug: "store",
     hero: {
-      tag: "h®¶ReSonare Store",
+      tag: "h√©ReSonare Store",
       title: "Official Store",
       description:
         "A simple structure for future goods, releases, and collectible products.",
@@ -418,7 +418,7 @@ const englishPages = {
   about: {
     slug: "about",
     hero: {
-      tag: "About h®¶ReSonare",
+      tag: "About h√©ReSonare",
       title: "Where Sound Becomes Resonance",
       description:
         "Brand story, mission, and vision content organized for future expansion.",
@@ -505,7 +505,7 @@ const localizedPages = {
   JP: {
     artists: {
       hero: {
-        tag: "h®¶ReSonare Artists JP",
+        tag: "h√©ReSonare Artists JP",
         title: "Future Artist Roster",
         description:
           "Artist profiles and collaborations prepared for Japanese content.",
@@ -513,7 +513,7 @@ const localizedPages = {
     },
     music: {
       hero: {
-        tag: "h®¶ReSonare Music JP",
+        tag: "h√©ReSonare Music JP",
         title: "Future Sound Catalog",
         description:
           "Release and playlist content prepared for Japanese audiences.",
@@ -521,7 +521,7 @@ const localizedPages = {
     },
     productions: {
       hero: {
-        tag: "h®¶ReSonare Productions JP",
+        tag: "h√©ReSonare Productions JP",
         title: "Product Lines",
         description:
           "Audio technology products, creative platform products, and live experience products prepared for Japanese content.",
@@ -529,7 +529,7 @@ const localizedPages = {
     },
     tour: {
       hero: {
-        tag: "h®¶ReSonare Tour JP",
+        tag: "h√©ReSonare Tour JP",
         title: "Future Live Schedule",
         description:
           "Tour and event content prepared for Japanese announcements.",
@@ -537,7 +537,7 @@ const localizedPages = {
     },
     venues: {
       hero: {
-        tag: "h®¶ReSonare Venues JP",
+        tag: "h√©ReSonare Venues JP",
         title: "Resonance Spaces",
         description:
           "Venue and partner space content prepared for Japanese pages.",
@@ -545,7 +545,7 @@ const localizedPages = {
     },
     video: {
       hero: {
-        tag: "h®¶ReSonare Video JP",
+        tag: "h√©ReSonare Video JP",
         title: "Visual Soundscapes",
         description:
           "Video and visual work content prepared for Japanese pages.",
@@ -553,7 +553,7 @@ const localizedPages = {
     },
     store: {
       hero: {
-        tag: "h®¶ReSonare Store JP",
+        tag: "h√©ReSonare Store JP",
         title: "Official Store",
         description:
           "Store and product content prepared for Japanese pages.",
@@ -561,7 +561,7 @@ const localizedPages = {
     },
     about: {
       hero: {
-        tag: "About h®¶ReSonare JP",
+        tag: "About h√©ReSonare JP",
         title: "Sound Becomes Resonance",
         description:
           "Brand story and mission content prepared for Japanese pages.",
@@ -579,7 +579,7 @@ const localizedPages = {
   CN: {
     artists: {
       hero: {
-        tag: "h®¶ReSonare Artists CN",
+        tag: "h√©ReSonare Artists CN",
         title: "Future Artist Roster",
         description:
           "Artist profiles and collaborations prepared for Chinese content.",
@@ -587,7 +587,7 @@ const localizedPages = {
     },
     music: {
       hero: {
-        tag: "h®¶ReSonare Music CN",
+        tag: "h√©ReSonare Music CN",
         title: "Future Sound Catalog",
         description:
           "Release and playlist content prepared for Chinese audiences.",
@@ -595,7 +595,7 @@ const localizedPages = {
     },
     productions: {
       hero: {
-        tag: "h®¶ReSonare Productions CN",
+        tag: "h√©ReSonare Productions CN",
         title: "Product Lines",
         description:
           "Audio technology products, creative platform products, and live experience products prepared for Chinese content.",
@@ -603,7 +603,7 @@ const localizedPages = {
     },
     tour: {
       hero: {
-        tag: "h®¶ReSonare Tour CN",
+        tag: "h√©ReSonare Tour CN",
         title: "Future Live Schedule",
         description:
           "Tour and event content prepared for Chinese announcements.",
@@ -611,7 +611,7 @@ const localizedPages = {
     },
     venues: {
       hero: {
-        tag: "h®¶ReSonare Venues CN",
+        tag: "h√©ReSonare Venues CN",
         title: "Resonance Spaces",
         description:
           "Venue and partner space content prepared for Chinese pages.",
@@ -619,7 +619,7 @@ const localizedPages = {
     },
     video: {
       hero: {
-        tag: "h®¶ReSonare Video CN",
+        tag: "h√©ReSonare Video CN",
         title: "Visual Soundscapes",
         description:
           "Video and visual work content prepared for Chinese pages.",
@@ -627,7 +627,7 @@ const localizedPages = {
     },
     store: {
       hero: {
-        tag: "h®¶ReSonare Store CN",
+        tag: "h√©ReSonare Store CN",
         title: "Official Store",
         description:
           "Store and product content prepared for Chinese pages.",
@@ -635,7 +635,7 @@ const localizedPages = {
     },
     about: {
       hero: {
-        tag: "About h®¶ReSonare CN",
+        tag: "About h√©ReSonare CN",
         title: "Sound Becomes Resonance",
         description:
           "Brand story and mission content prepared for Chinese pages.",
