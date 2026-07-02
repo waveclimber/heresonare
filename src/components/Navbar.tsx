@@ -1,8 +1,17 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
+import type { Language, SiteContent } from "@/data/siteContent";
 
-export default function Navbar({ content, language, setLanguage }: any) {
+type NavbarProps = {
+  content: SiteContent;
+  language: Language;
+  setLanguage: (language: Language) => void;
+};
+
+export default function Navbar({ language, setLanguage }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 
@@ -20,21 +29,24 @@ export default function Navbar({ content, language, setLanguage }: any) {
 
   const navLinkClassName =
     "text-gray-300 transition-all duration-300 hover:text-[var(--brand-blue)]";
+  const languageOptions: Language[] = ["EN", "JP", "CN"];
 
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-white/10 bg-black/40 backdrop-blur-md">
       <div className="mx-auto flex h-20 w-full max-w-[1440px] items-center justify-between px-6 lg:px-12">
-        <a href="/" className="flex items-center gap-3">
-          <img
+        <Link href="/" className="flex items-center gap-3">
+          <Image
             src="/images/logo/logo-color.svg"
             alt="héReSonare"
+            width={48}
+            height={48}
             className="h-12 w-auto"
           />
 
           <span className="bg-gradient-to-r from-[var(--brand-pink)] via-white to-[var(--brand-blue)] bg-clip-text text-2xl font-semibold tracking-[0.05em] text-transparent">
             héReSonare
           </span>
-        </a>
+        </Link>
 
         <div className="hidden items-center gap-6 text-sm text-gray-300 lg:flex">
           {navItems.map((item) => (
@@ -60,7 +72,7 @@ export default function Navbar({ content, language, setLanguage }: any) {
 
             {isLanguageOpen && (
               <div className="absolute right-0 mt-2 w-36 rounded-xl border border-white/10 bg-black/90 p-2 backdrop-blur-md animate-[dropdownFade_0.25s_ease-out]">
-                {["EN", "JP", "CN"].map((lang) => (
+                {languageOptions.map((lang) => (
                   <button
                     key={lang}
                     onClick={() => {
@@ -101,7 +113,7 @@ export default function Navbar({ content, language, setLanguage }: any) {
                 <div className="mb-3 text-sm text-gray-500">Language</div>
 
                 <div className="flex flex-col gap-3">
-                  {["EN", "JP", "CN"].map((lang) => (
+                  {languageOptions.map((lang) => (
                     <button
                       key={lang}
                       className="text-left"

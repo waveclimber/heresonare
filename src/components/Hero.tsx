@@ -1,4 +1,11 @@
-export default function Hero({ content, language }: any) {
+import type { Language, SiteContent } from "@/data/siteContent";
+
+type ContentProps = {
+  content: SiteContent;
+  language: Language;
+};
+
+export default function Hero({ content, language }: ContentProps) {
   const spectrumBars = [
     32, 56, 40, 72, 48, 88, 60, 96, 64, 84, 52, 70, 44, 58, 36,
   ];

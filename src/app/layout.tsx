@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import { LanguageProvider } from "@/context/LanguageContext";
+import SiteShell from "@/components/SiteShell";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -78,7 +79,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <LanguageProvider>
-          {children}
+          <SiteShell>{children}</SiteShell>
         </LanguageProvider>
       </body>
     </html>
