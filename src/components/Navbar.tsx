@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 export default function Navbar({ content, language, setLanguage }: any) {
@@ -24,7 +25,7 @@ export default function Navbar({ content, language, setLanguage }: any) {
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-white/10 bg-black/40 backdrop-blur-md">
       <div className="mx-auto flex h-20 w-full max-w-[1440px] items-center justify-between px-6 lg:px-12">
-        <a href="/" className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3">
           <img
             src="/images/logo/logo-color.svg"
             alt="héReSonare"
@@ -34,13 +35,13 @@ export default function Navbar({ content, language, setLanguage }: any) {
           <span className="bg-gradient-to-r from-[var(--brand-pink)] via-white to-[var(--brand-blue)] bg-clip-text text-2xl font-semibold tracking-[0.05em] text-transparent">
             héReSonare
           </span>
-        </a>
+        </Link>
 
         <div className="hidden items-center gap-6 text-sm text-gray-300 lg:flex">
           {navItems.map((item) => (
-            <a key={item.href} href={item.href} className={navLinkClassName}>
+            <Link key={item.href} href={item.href} className={navLinkClassName}>
               {item.label}
-            </a>
+            </Link>
           ))}
 
           <div className="relative">
@@ -88,13 +89,13 @@ export default function Navbar({ content, language, setLanguage }: any) {
           <div className="absolute left-0 top-20 w-full border-b border-white/10 bg-black/95 backdrop-blur-md lg:hidden animate-[mobileMenuFade_0.25s_ease-out]">
             <div className="flex flex-col gap-4 p-6">
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
 
               <div className="border-t border-white/10 pt-4">

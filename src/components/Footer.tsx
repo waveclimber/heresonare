@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Footer({ content, language }: any) {
   const navLinks = [
     { href: "/tour", label: "TOUR" },
@@ -30,13 +32,13 @@ export default function Footer({ content, language }: any) {
 
           <nav className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
                 className="text-sm tracking-[0.15em] text-gray-400 transition-all duration-300 hover:text-[var(--brand-blue)]"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
