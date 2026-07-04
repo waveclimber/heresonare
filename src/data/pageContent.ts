@@ -55,6 +55,7 @@ export type PageContentItem = {
 };
 
 export type ComingSoonContent = {
+  label: string;
   title: string;
   description: string;
   cta?: PageLink;
@@ -299,6 +300,7 @@ const englishPages = {
         label: "Live",
         title: "Tour Framework",
         comingSoon: {
+          label: "Coming Soon",
           title: "Tour announcements are coming soon",
           description:
             "Dates, locations, and event details can be dropped into this structure when confirmed.",
@@ -395,6 +397,7 @@ const englishPages = {
         label: "Store",
         title: "Product Placeholders",
         comingSoon: {
+          label: "Coming Soon",
           title: "Store opening soon",
           description:
             "Merchandise, digital releases, and limited items can use this static schema before commerce is added.",
@@ -529,6 +532,7 @@ type LocalizedPageContentItem = {
 };
 
 type LocalizedComingSoonContent = {
+  label: string;
   title: string;
   description: string;
   cta?: LocalizedPageLink;
@@ -718,6 +722,7 @@ const localizedPages = {
           label: "???",
           title: "?????",
           comingSoon: {
+            label: "\u8fd1\u65e5\u516c\u958b",
             title: "??????????????",
             description:
               "?????????????????????????????????",
@@ -799,6 +804,7 @@ const localizedPages = {
           label: "???",
           title: "???????",
           comingSoon: {
+            label: "\u8fd1\u65e5\u516c\u958b",
             title: "????????",
             description:
               "????????????????????????????????????????????????",
@@ -1035,6 +1041,7 @@ const localizedPages = {
           label: "??",
           title: "????",
           comingSoon: {
+            label: "\u5373\u5c06\u516c\u5f00",
             title: "????????",
             description: "??????????????????????????",
             cta: { label: "??" },
@@ -1109,6 +1116,7 @@ const localizedPages = {
           label: "??",
           title: "??????",
           comingSoon: {
+            label: "\u5373\u5c06\u4e0a\u7ebf",
             title: "???????",
             description:
               "??????????????????????????????????",
@@ -1363,6 +1371,7 @@ function localizeComingSoon(
 
   return {
     ...comingSoon,
+    label: localizedComingSoon.label,
     title: localizedComingSoon.title,
     description: localizedComingSoon.description,
     cta:

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 type ComingSoonBlockProps = {
+  label: string;
   title: string;
   description: string;
   cta?: {
@@ -14,6 +15,7 @@ function isExternalHref(href: string) {
 }
 
 export default function ComingSoonBlock({
+  label,
   title,
   description,
   cta,
@@ -27,7 +29,7 @@ export default function ComingSoonBlock({
 
       <div className="relative z-10 mx-auto max-w-2xl">
         <p className="text-xs uppercase tracking-[0.35em] text-[var(--brand-blue)]">
-          Coming Soon
+          {label}
         </p>
 
         <h2 className="mt-5 text-4xl font-bold text-white">{title}</h2>
