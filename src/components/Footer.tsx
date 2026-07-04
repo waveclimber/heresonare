@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { navigationItems } from "@/data/navigation";
 import type { Language, SiteContent } from "@/data/siteContent";
 
 type ContentProps = {
@@ -7,18 +8,6 @@ type ContentProps = {
 };
 
 export default function Footer({ content, language }: ContentProps) {
-  const navLinks = [
-    { href: "/tour", label: "TOUR" },
-    { href: "/artists", label: "ARTISTS" },
-    { href: "/productions", label: "PRODUCTIONS" },
-    { href: "/music", label: "MUSIC" },
-    { href: "/video", label: "VIDEO" },
-    { href: "/venues", label: "VENUES" },
-    { href: "/store", label: "STORE" },
-    { href: "/about", label: "ABOUT" },
-    { href: "/contact", label: "CONTACT" },
-  ];
-
   return (
     <footer className="relative overflow-hidden border-t border-white/10 px-6 py-20">
       <div className="absolute left-1/2 top-0 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-[var(--brand-blue)] opacity-10 blur-3xl" />
@@ -37,7 +26,7 @@ export default function Footer({ content, language }: ContentProps) {
           <div className="mt-12 h-px w-32 bg-white/10" />
 
           <nav className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
-            {navLinks.map((link) => (
+            {navigationItems.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
