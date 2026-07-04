@@ -1,25 +1,8 @@
-"use client";
+import HomeContent from "@/components/HomeContent";
+import { createHomeMetadata } from "@/lib/pageMetadata";
 
-import Hero from "@/components/Hero";
-import Products from "@/components/Products";
-import About from "@/components/About";
-import Contact from "@/components/Contact";
-
-import { siteContent } from "@/data/siteContent";
-import { useLanguage } from "@/context/LanguageContext";
+export const metadata = createHomeMetadata();
 
 export default function Home() {
-  const { language } = useLanguage();
-
-  return (
-    <main className="min-h-screen bg-black text-white">
-      <Hero content={siteContent} language={language} />
-
-      <Products content={siteContent} language={language} />
-
-      <About content={siteContent} language={language} />
-
-      <Contact content={siteContent} language={language} />
-    </main>
-  );
+  return <HomeContent />;
 }
