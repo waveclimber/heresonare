@@ -66,6 +66,7 @@ export default function StaticPage({ pageKey }: StaticPageProps) {
               {section.comingSoon && (
                 <div className={section.items?.length ? "mt-10" : ""}>
                   <ComingSoonBlock
+                    label={section.comingSoon.label}
                     title={section.comingSoon.title}
                     description={section.comingSoon.description}
                     cta={section.comingSoon.cta}
