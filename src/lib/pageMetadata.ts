@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { pageContent, type PageKey } from "@/data/pageContent";
+import {
+  pageContent,
+  type PageContentItem,
+  type PageKey,
+} from "@/data/pageContent";
 import { siteContent } from "@/data/siteContent";
 import {
   contentLanguageByLocale,
@@ -78,6 +82,17 @@ export function createPageMetadata(
   return buildMetadata(
     `${page.hero.title} | ${BRAND_NAME}`,
     page.hero.description,
+    locale
+  );
+}
+
+export function createProductionMetadata(
+  production: PageContentItem,
+  locale: Locale
+): Metadata {
+  return buildMetadata(
+    `${production.title} | ${BRAND_NAME}`,
+    production.description,
     locale
   );
 }

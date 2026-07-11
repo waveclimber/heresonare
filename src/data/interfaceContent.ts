@@ -14,6 +14,11 @@ type InterfaceContent = {
     status: string;
     view: string;
   };
+  productionDetail: {
+    backToProductions: string;
+    notFoundTitle: string;
+    notFoundDescription: string;
+  };
 };
 
 export const interfaceContent = {
@@ -35,6 +40,11 @@ export const interfaceContent = {
       status: "Status",
       view: "View",
     },
+    productionDetail: {
+      backToProductions: "Back to Productions",
+      notFoundTitle: "Production not found",
+      notFoundDescription: "The requested production is not available.",
+    },
   },
   JP: {
     language: "言語",
@@ -54,6 +64,11 @@ export const interfaceContent = {
       status: "ステータス",
       view: "詳細を見る",
     },
+    productionDetail: {
+      backToProductions: "プロダクション一覧に戻る",
+      notFoundTitle: "プロダクションが見つかりません",
+      notFoundDescription: "お探しのプロダクションはご利用いただけません。",
+    },
   },
   CN: {
     language: "语言",
@@ -72,6 +87,11 @@ export const interfaceContent = {
       links: "链接",
       status: "状态",
       view: "查看详情",
+    },
+    productionDetail: {
+      backToProductions: "返回制作列表",
+      notFoundTitle: "未找到制作项目",
+      notFoundDescription: "您请求的制作项目当前不可用。",
     },
   },
 } as const satisfies Record<ContentLanguage, InterfaceContent>;

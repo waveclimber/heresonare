@@ -9,7 +9,9 @@ type ContentCardMediaProps = {
   item: PageContentItem;
 };
 
-function isApprovedRasterMedia(path: string | undefined): path is string {
+export function isApprovedRasterMedia(
+  path: string | undefined
+): path is string {
   return Boolean(
     isApprovedContentMediaPath(path) &&
       /\.(?:avif|jpe?g|png|webp)$/iu.test(path)

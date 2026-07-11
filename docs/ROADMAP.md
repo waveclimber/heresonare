@@ -36,6 +36,9 @@ This ordered roadmap records direction, not fixed delivery dates. Each stage sho
 
 ## 4. Add dynamic detail pages
 
+**Status:** In progress. Stage 4A delivers the production-only vertical slice;
+detail routes for every other content type remain deferred.
+
 **Objective:** Support stable detail routes for entities such as artists, releases, productions, events, venues, videos, and store items when approved content exists.
 
 **Major deliverables:** Route and slug conventions, typed detail models, shared detail layouts, not-found behavior, internal links, and localized detail content handling.
@@ -43,6 +46,15 @@ This ordered roadmap records direction, not fixed delivery dates. Each stage sho
 **Acceptance conditions:** Approved entities resolve to stable detail URLs; invalid slugs return the intended not-found experience; list-to-detail navigation, responsive behavior, keyboard access, metadata, and EN/JP/CN impact are validated.
 
 **Dependencies or risks:** Depends on a complete static content model and product-approved URL strategy. Premature route conventions could create migration and SEO costs when CMS-backed content arrives.
+
+**Stage 4A completed slice:** The approved `audio-innovation`,
+`creative-platform`, and `live-experience` records now generate nine localized
+production detail pages across EN, JP, and CN. Productions list cards link to
+those localized routes, nested pages retain the Productions Navbar state,
+localized detail metadata and back navigation are present, unknown slugs return
+the localized not-found experience, and missing product media continues to use
+the audited branded fallback without broken requests. No other detail route is
+supported yet.
 
 ## 5. Complete SEO infrastructure
 

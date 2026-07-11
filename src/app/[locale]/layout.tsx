@@ -22,7 +22,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const dynamicParams = false;
+// Valid locales are prerendered below. Runtime locale params remain enabled so
+// nested routes can reach their localized not-found boundaries.
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   return supportedLocales.map((locale) => ({ locale }));

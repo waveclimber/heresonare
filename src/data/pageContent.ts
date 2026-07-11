@@ -216,7 +216,7 @@ const englishPages = {
               render: "/images/products/audio-innovation/render.webp",
               icon: "/images/products/audio-innovation/icon.svg",
             },
-            href: "/productions",
+            href: "/productions/audio-innovation",
           },
           {
             id: "creative-platform",
@@ -248,7 +248,7 @@ const englishPages = {
               render: "/images/products/creative-platform/render.webp",
               icon: "/images/products/creative-platform/icon.svg",
             },
-            href: "/productions",
+            href: "/productions/creative-platform",
           },
           {
             id: "live-experience",
@@ -280,7 +280,7 @@ const englishPages = {
               render: "/images/products/live-experience/render.webp",
               icon: "/images/products/live-experience/icon.svg",
             },
-            href: "/productions",
+            href: "/productions/live-experience",
           },
         ],
       },
