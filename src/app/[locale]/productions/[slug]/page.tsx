@@ -5,16 +5,18 @@ import ProductionDetail from "@/components/ProductionDetail";
 import { interfaceContent } from "@/data/interfaceContent";
 import {
   getLocalizedProduction,
+} from "@/data/productionContent";
+import {
   isProductionSlug,
   productionSlugs,
-} from "@/data/productionContent";
+} from "@/data/productionRoutes";
 import {
   contentLanguageByLocale,
   isLocale,
 } from "@/i18n/config";
 import { createProductionMetadata } from "@/lib/pageMetadata";
 
-export const dynamicParams = true;
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return productionSlugs.map((slug) => ({ slug }));
@@ -39,28 +41,9 @@ export async function generateMetadata({
   params,
 }: ProductionPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
+  const result = getProduction(locale, slug);
 
-  if (!isLocale(locale)) notFound();
-
-  const language = contentLanguageByLocale[locale];
-  if (!isProductionSlug(slug)) {
-    return {
-      title: interfaceContent[language].productionDetail.notFoundTitle,
-      description:
-        interfaceContent[language].productionDetail.notFoundDescription,
-    };
-  }
-
-  const production = getLocalizedProduction(locale, slug);
-  if (!production) {
-    return {
-      title: interfaceContent[language].productionDetail.notFoundTitle,
-      description:
-        interfaceContent[language].productionDetail.notFoundDescription,
-    };
-  }
-
-  return createProductionMetadata(production, locale);
+  return createProductionMetadata(result.production, result.locale);
 }
 
 export default async function ProductionPage({ params }: ProductionPageProps) {
@@ -73,7 +56,7 @@ export default async function ProductionPage({ params }: ProductionPageProps) {
       production={result.production}
       locale={result.locale}
       labels={interfaceContent[language].staticPage}
-      backLabel={interfaceContent[language].productionDetail.backToProductions}
+      detailLabels={interfaceContent[language].productionDetail}
     />
   );
 }

@@ -1,21 +1,14 @@
 import { pageContent, type PageContentItem } from "@/data/pageContent";
 import {
+  isProductionSlug,
+  productionSlugs,
+  type ProductionSlug,
+} from "@/data/productionRoutes";
+import {
   contentLanguageByLocale,
   type ContentLanguage,
   type Locale,
 } from "@/i18n/config";
-
-export const productionSlugs = [
-  "audio-innovation",
-  "creative-platform",
-  "live-experience",
-] as const;
-
-export type ProductionSlug = (typeof productionSlugs)[number];
-
-export function isProductionSlug(value: string): value is ProductionSlug {
-  return productionSlugs.some((slug) => slug === value);
-}
 
 function getProductions(language: ContentLanguage): PageContentItem[] {
   return pageContent[language].productions.sections.flatMap(

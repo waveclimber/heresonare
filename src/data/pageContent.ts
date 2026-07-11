@@ -1,4 +1,5 @@
 import type { Language } from "@/data/siteContent";
+import { getProductionDetailPath } from "@/data/productionRoutes";
 
 export type PageKey =
   | "artists"
@@ -216,7 +217,7 @@ const englishPages = {
               render: "/images/products/audio-innovation/render.webp",
               icon: "/images/products/audio-innovation/icon.svg",
             },
-            href: "/productions/audio-innovation",
+            href: getProductionDetailPath("audio-innovation"),
           },
           {
             id: "creative-platform",
@@ -248,7 +249,7 @@ const englishPages = {
               render: "/images/products/creative-platform/render.webp",
               icon: "/images/products/creative-platform/icon.svg",
             },
-            href: "/productions/creative-platform",
+            href: getProductionDetailPath("creative-platform"),
           },
           {
             id: "live-experience",
@@ -280,7 +281,7 @@ const englishPages = {
               render: "/images/products/live-experience/render.webp",
               icon: "/images/products/live-experience/icon.svg",
             },
-            href: "/productions/live-experience",
+            href: getProductionDetailPath("live-experience"),
           },
         ],
       },

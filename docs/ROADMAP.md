@@ -51,9 +51,12 @@ detail routes for every other content type remain deferred.
 `creative-platform`, and `live-experience` records now generate nine localized
 production detail pages across EN, JP, and CN. Productions list cards link to
 those localized routes, nested pages retain the Productions Navbar state,
-localized detail metadata and back navigation are present, unknown slugs return
-the localized not-found experience, and missing product media continues to use
-the audited branded fallback without broken requests. No other detail route is
+localized detail metadata and back navigation are present, and missing product
+media continues to use the audited branded fallback without broken requests.
+Both locale and slug parameters remain statically closed; unknown slugs and
+unsupported locales use the framework-global 404 with Next.js `noindex`
+metadata. Application-wide localized unmatched-route handling remains outside
+this slice because `globalNotFound` is experimental. No other detail route is
 supported yet.
 
 ## 5. Complete SEO infrastructure

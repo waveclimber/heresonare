@@ -2,15 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 
 import {
-  getApprovedContentIcon,
-  isApprovedRasterMedia,
-} from "@/components/content-card/ContentCardMedia";
-import {
   normalizeSpecs,
   normalizeTextList,
   type ContentCardLabels,
 } from "@/components/content-card/contentCardUtils";
-import { contentCardFallbackMedia } from "@/data/contentMedia";
+import {
+  contentCardFallbackMedia,
+  isApprovedIconContentMedia,
+  isApprovedRasterContentMedia,
+} from "@/data/contentMedia";
+import type { ProductionDetailLabels } from "@/data/interfaceContent";
 import type { PageContentItem } from "@/data/pageContent";
 import { getLocalizedPath, type Locale } from "@/i18n/config";
 
@@ -18,7 +19,7 @@ type ProductionDetailProps = {
   production: PageContentItem;
   locale: Locale;
   labels: ContentCardLabels;
-  backLabel: string;
+  detailLabels: ProductionDetailLabels;
 };
 
 type DetailListProps = {
@@ -52,14 +53,13 @@ function DetailList({
   );
 }
 
-function ProductionHeroMedia({ production }: { production: PageContentItem }) {
-  const heroMedia = [
-    production.media?.hero,
-    production.media?.card,
-    production.image,
-    production.media?.render,
-  ].find(isApprovedRasterMedia);
-
+function ProductionHeroMedia({
+  production,
+  heroMedia,
+}: {
+  production: PageContentItem;
+  heroMedia?: string;
+}) {
   return (
     <div className="relative aspect-[16/11] min-w-0 overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_20%_20%,rgba(76,186,175,0.24),transparent_34%),radial-gradient(circle_at_80%_75%,rgba(14,108,178,0.38),transparent_40%),#111]">
       {heroMedia ? (
@@ -94,7 +94,7 @@ export default function ProductionDetail({
   production,
   locale,
   labels,
-  backLabel,
+  detailLabels,
 }: ProductionDetailProps) {
   const primaryLabels = normalizeTextList([
     production.subtitle,
@@ -110,24 +110,39 @@ export default function ProductionDetail({
   const features = normalizeTextList(production.features);
   const useCases = normalizeTextList(production.useCases);
   const specs = normalizeSpecs(production.specs);
-  const icon = getApprovedContentIcon(production.media?.icon);
-  const renderMedia = isApprovedRasterMedia(production.media?.render)
-    ? production.media.render
+  const icon = isApprovedIconContentMedia(production.media?.icon)
+    ? production.media.icon
+    : undefined;
+  const heroMedia = [
+    production.media?.hero,
+    production.media?.render,
+    production.media?.card,
+    production.image,
+  ].find(isApprovedRasterContentMedia);
+  const renderMedia =
+    isApprovedRasterContentMedia(production.media?.render) &&
+    production.media.render !== heroMedia
+      ? production.media.render
     : undefined;
 
   return (
     <main className="min-h-screen overflow-hidden bg-black px-6 pb-32 pt-28 text-white">
       <article className="mx-auto max-w-7xl">
-        <Link
-          href={getLocalizedPath("/productions", locale)}
-          className="inline-flex min-h-11 items-center rounded-full border border-white/20 px-5 py-2 text-sm text-gray-300 transition-colors hover:border-[var(--brand-blue)] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--brand-yellow)]"
-        >
-          <span aria-hidden="true">←</span>
-          <span className="ml-2">{backLabel}</span>
-        </Link>
+        <nav aria-label={detailLabels.backToList}>
+          <Link
+            href={getLocalizedPath("/productions", locale)}
+            className="inline-flex min-h-11 items-center rounded-full border border-white/20 px-5 py-2 text-sm text-gray-300 transition-colors hover:border-[var(--brand-blue)] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--brand-yellow)]"
+          >
+            <span aria-hidden="true">←</span>
+            <span className="ml-2">{detailLabels.backToList}</span>
+          </Link>
+        </nav>
 
         <header className="relative mt-10 grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16">
           <div className="min-w-0">
+            <p className="mb-5 text-xs uppercase tracking-[0.3em] text-[var(--brand-teal)]">
+              {detailLabels.detailLabel}
+            </p>
             {primaryLabels.length > 0 && (
               <ul className="flex flex-wrap gap-x-4 gap-y-2 text-xs tracking-[0.2em] text-[var(--brand-blue)] uppercase">
                 {primaryLabels.map((label) => (
@@ -179,7 +194,10 @@ export default function ProductionDetail({
             )}
           </div>
 
-          <ProductionHeroMedia production={production} />
+          <ProductionHeroMedia
+            production={production}
+            heroMedia={heroMedia}
+          />
         </header>
 
         <div className="mt-20 grid min-w-0 gap-8 md:grid-cols-2">
