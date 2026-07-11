@@ -1,0 +1,92 @@
+name: Codex task
+description: Define a scoped implementation or maintenance task for Codex.
+title: "[Codex] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: Provide enough context and acceptance criteria for one focused, reviewable task.
+
+  - type: textarea
+    id: desired_outcome
+    attributes:
+      label: Desired outcome
+      description: Describe the business or user outcome this task should achieve.
+      placeholder: State the result and why it matters.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance criteria
+      description: List observable conditions that must be true for the task to be complete.
+      placeholder: |
+        - [ ] Expected behavior is implemented
+        - [ ] Required validation passes
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope_constraints
+    attributes:
+      label: Scope and constraints
+      description: Define what is in scope and what must not change, including visual, content, route, dependency, and compatibility constraints.
+    validations:
+      required: true
+
+  - type: textarea
+    id: relevant_routes_files
+    attributes:
+      label: Relevant routes or files
+      description: List known routes, components, data files, documentation, or configuration involved in the task. Write "To be identified" when repository inspection is required.
+    validations:
+      required: true
+
+  - type: textarea
+    id: localization_impact
+    attributes:
+      label: Localization impact for EN, JP, and CN
+      description: Explain the impact on each supported language, including user-facing labels, metadata, empty states, and status text. Write "None" with a reason when not applicable.
+      placeholder: |
+        EN:
+        JP:
+        CN:
+    validations:
+      required: true
+
+  - type: textarea
+    id: required_validation
+    attributes:
+      label: Required validation
+      description: List automated commands and any manual, responsive, accessibility, localization, or visual checks.
+      value: |
+        - npm ci
+        - npm run lint
+        - npm run typecheck
+        - npm run build
+        - npm run check
+        - git diff --check
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Link designs, issues, discussions, or relevant files. Do not include secrets. Write "None" when there are no references.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: workflow_confirmation
+    attributes:
+      label: Workflow confirmation
+      description: Confirm the required branch and review workflow.
+      options:
+        - label: The task will use a separate branch.
+          required: true
+        - label: "`main` will not be modified directly."
+          required: true
+        - label: The task will not be merged automatically.
+          required: true

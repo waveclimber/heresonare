@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# héReSonare
 
-## Getting Started
+The public website repository for héReSonare, an entertainment label connecting music, artists, productions, live experiences, venues, video, and merchandise.
 
-First, run the development server:
+## Technology
+
+- Next.js 16 App Router
+- React 19 and TypeScript
+- Tailwind CSS 4
+- ESLint 9
+- Client-side English, Japanese, and Simplified Chinese content selection
+
+The language choice is managed by `LanguageContext` and persisted in browser `localStorage`; it is not URL-based or server-side localization. Navbar and Footer route labels are currently fixed English labels. The nine section routes are implemented with shared static-page foundations, and some sections intentionally contain placeholder or coming-soon content.
+
+## Local development
+
+The repository's local and CI baseline is Node.js 22 with npm.
 
 ```bash
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Quality checks
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm run typecheck
+npm run build
+```
 
-## Learn More
+Run the complete quality gate with:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run check
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `src/app` — routes, root layout, and global styles
+- `src/components` — shared page and layout components
+- `src/context` — client-side language state and `localStorage` persistence
+- `src/data` — fixed-English navigation labels and localized site/page content
+- `src/lib` — shared metadata utilities
+- `public` — static assets and brand imagery
+- `docs` — development workflow and roadmap
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Read [AGENTS.md](./AGENTS.md) and [docs/DEVELOPMENT_WORKFLOW.md](./docs/DEVELOPMENT_WORKFLOW.md) before making changes. Work on a branch created from the latest `main`; pull requests must pass the automated quality workflow.
