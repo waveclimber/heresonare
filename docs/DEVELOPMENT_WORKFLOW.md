@@ -53,7 +53,7 @@ git checkout -b <type>/<short-description>
 
 Use a focused prefix such as `feature/`, `fix/`, `refactor/`, `docs/`, or `chore/`. Before editing, read `AGENTS.md`, inspect relevant repository code, and read the relevant Next.js 16 guide in `node_modules/next/dist/docs/`.
 
-Define explicit inclusions and exclusions. Navigation labels in `src/data/navigation.ts` are currently fixed English text. Localized site and page content uses EN, JP, and CN data selected by `LanguageContext` and persisted in `localStorage`; localization is not URL-based.
+Define explicit inclusions and exclusions. Public routes are locale-prefixed with `en`, `ja`, or `zh-cn`. Navigation labels are localized in `src/data/navigation.ts`, and localized site and page content uses EN, JP, and CN data selected from the active URL locale through `LanguageContext`. The locale preference cookie is used for legacy-route redirects, not as a competing source of active page state.
 
 ## Implementation and review
 
@@ -84,7 +84,7 @@ npm run check
 git diff --check
 ```
 
-For visual or interactive changes, use the client-side selector to verify EN, JP, and CN content and inspect affected routes at desktop and mobile sizes. Record screenshots or preview evidence in the Draft PR.
+For visual or interactive changes, use the locale selector to verify EN, JP, and CN content, locale-preserving navigation, and affected routes at desktop and mobile sizes. Record screenshots or preview evidence in the Draft PR.
 
 ## Draft PR and follow-up
 

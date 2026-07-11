@@ -12,19 +12,18 @@ export default function SiteShell({
 }: {
   children: ReactNode;
 }) {
-  const { language, setLanguage } = useLanguage();
+  const { language, locale } = useLanguage();
 
   return (
     <div className="min-h-screen bg-black text-white">
       <Navbar
-        content={siteContent}
         language={language}
-        setLanguage={setLanguage}
+        locale={locale}
       />
 
       {children}
 
-      <Footer content={siteContent} language={language} />
+      <Footer content={siteContent} language={language} locale={locale} />
     </div>
   );
 }

@@ -1,29 +1,31 @@
 import Link from "next/link";
 import type { Language, SiteContent } from "@/data/siteContent";
+import { getLocalizedPath, type Locale } from "@/i18n/config";
 
 type ContentProps = {
   content: SiteContent;
   language: Language;
+  locale: Locale;
 };
 
-export default function Products({ content, language }: ContentProps) {
+export default function Products({ content, language, locale }: ContentProps) {
   const featuredItems = [
     {
       title: content[language].featuredArtistsTitle,
       text: content[language].featuredArtistsText,
-      href: "/artists",
+      href: getLocalizedPath("/artists", locale),
       number: "01",
     },
     {
       title: content[language].featuredMusicTitle,
       text: content[language].featuredMusicText,
-      href: "/music",
+      href: getLocalizedPath("/music", locale),
       number: "02",
     },
     {
       title: content[language].featuredProductionsTitle,
       text: content[language].featuredProductionsText,
-      href: "/productions",
+      href: getLocalizedPath("/productions", locale),
       number: "03",
     },
   ];

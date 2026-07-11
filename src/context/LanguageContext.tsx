@@ -1,17 +1,16 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useContext } from "react";
 import type { ReactNode } from "react";
-import type { Language } from "@/data/siteContent";
+import {
+  contentLanguageByLocale,
+  type ContentLanguage,
+  type Locale,
+} from "@/i18n/config";
 
 type LanguageContextType = {
-  language: Language;
-  setLanguage: (language: Language) => void;
+  language: ContentLanguage;
+  locale: Locale;
 };
 
 const LanguageContext =
@@ -19,34 +18,16 @@ const LanguageContext =
 
 export function LanguageProvider({
   children,
+  locale,
 }: {
   children: ReactNode;
+  locale: Locale;
 }) {
-  const [language, setLanguageState] =
-    useState<Language>("EN");
-
-  useEffect(() => {
-    const savedLanguage = window.localStorage.getItem("language");
-
-    if (
-      savedLanguage === "EN" ||
-      savedLanguage === "JP" ||
-      savedLanguage === "CN"
-    ) {
-      window.requestAnimationFrame(() => {
-        setLanguageState(savedLanguage);
-      });
-    }
-  }, []);
-
-  const setLanguage = (newLanguage: Language) => {
-    setLanguageState(newLanguage);
-    window.localStorage.setItem("language", newLanguage);
-  };
+  const language = contentLanguageByLocale[locale];
 
   return (
     <LanguageContext.Provider
-      value={{ language, setLanguage }}
+      value={{ language, locale }}
     >
       {children}
     </LanguageContext.Provider>

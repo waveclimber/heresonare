@@ -16,9 +16,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 - Next.js 16 App Router source lives in `src/app`.
 - Shared UI components live in `src/components`.
-- Client-side language selection is managed by `src/context/LanguageContext.tsx` and persisted in `localStorage`; locales are not URL-based or server-selected.
+- Public pages use locale-prefixed routes (`en`, `ja`, and `zh-cn`). `src/context/LanguageContext.tsx` derives its language from the active URL locale, while a preference cookie is used only to redirect legacy unprefixed routes.
 - Localized site and page copy lives in `src/data`. Keep EN, JP, and CN content entries structurally aligned.
-- Route definitions and the Navbar/Footer labels live in `src/data/navigation.ts`; those labels are currently fixed English text, not localized content.
+- Route identities and localized Navbar/Footer labels live in `src/data/navigation.ts`.
 - The nine section routes use shared static-page foundations, and some content remains placeholder or coming-soon material.
 - Static assets live in `public`.
 
