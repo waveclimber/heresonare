@@ -22,12 +22,21 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - The nine section routes use shared static-page foundations, and some content remains placeholder or coming-soon material.
 - Static assets live in `public`.
 
+## Implementation rules
+
+- Treat navigation labels, CTA labels, accessibility labels, metadata, empty states, and status text as user-facing content.
+- Evaluate the EN, JP, and CN impact of every user-facing change, even when the visible text initially appears language-neutral.
+- Reuse existing shared components, data types, and content architecture before creating alternative implementations.
+- Check desktop and mobile responsive behavior for every visual or interactive change.
+- Check keyboard access, semantic HTML, focus behavior, and accessible names for every interactive change.
+
 ## Working agreement
 
-- Never work directly on `main`; create a purpose-specific branch from the latest `main`.
+- Never modify or commit directly to `main`; create a purpose-specific branch from the latest `main`.
 - Before editing, inspect `git status` and stop if unrelated changes could be overwritten.
 - Never commit secrets, credentials, `.env` files, or generated build output.
-- Do not force-push or merge to `main` unless explicitly instructed.
+- Never force-push.
+- Never merge automatically; leave merge approval and execution to the repository owners.
 - Prefer small, reviewable commits and document material behavior changes.
 
 ## Validation
@@ -39,4 +48,17 @@ npm ci
 npm run check
 ```
 
-For documentation-only work, still run the checks when project configuration or workflow files change.
+Always run `npm run check` before declaring completion. For documentation-only work, still run the checks when project configuration or workflow files change.
+
+## Codex review checklist
+
+Before committing, pushing, or declaring completion, review the complete diff for:
+
+- scope creep or unrelated changes;
+- accidental route, layout, styling, or visual changes;
+- hardcoded user-facing text that bypasses the content architecture;
+- EN, JP, or CN localization omissions;
+- keyboard, semantic HTML, focus, accessible-name, or other accessibility regressions;
+- dependency or lockfile changes that were not explicitly approved;
+- secrets, credentials, environment values, or other sensitive data exposure;
+- missing automated or manual validation evidence.
