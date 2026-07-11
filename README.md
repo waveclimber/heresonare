@@ -8,9 +8,9 @@ The public website repository for héReSonare, an entertainment label connecting
 - React 19 and TypeScript
 - Tailwind CSS 4
 - ESLint 9
-- Client-side English, Japanese, and Simplified Chinese content selection
+- Locale-prefixed English, Japanese, and Simplified Chinese routing
 
-The language choice is managed by `LanguageContext` and persisted in browser `localStorage`; it is not URL-based or server-side localization. Navbar and Footer route labels are currently fixed English labels. The nine section routes are implemented with shared static-page foundations, and some sections intentionally contain placeholder or coming-soon content.
+The active locale comes from the URL (`/en`, `/ja`, or `/zh-cn`) and is exposed to client components by `LanguageContext`. A preference cookie and the browser `Accept-Language` header select the redirect locale for legacy unprefixed routes. Navbar and Footer labels are localized, while the nine section routes continue to use shared static-page foundations and some sections intentionally contain placeholder or coming-soon content.
 
 ## Local development
 
@@ -39,11 +39,12 @@ npm run check
 
 ## Project structure
 
-- `src/app` — routes, root layout, and global styles
+- `src/app` — locale-prefixed routes, layouts, route handlers, and global styles
 - `src/components` — shared page and layout components
-- `src/context` — client-side language state and `localStorage` persistence
-- `src/data` — fixed-English navigation labels and localized site/page content
-- `src/lib` — shared metadata utilities
+- `src/context` — URL-derived client language context
+- `src/data` — localized navigation, interface, site, and page content
+- `src/i18n` — central locale configuration and path helpers
+- `src/lib` — shared locale-aware metadata utilities
 - `public` — static assets and brand imagery
 - `docs` — development workflow and roadmap
 

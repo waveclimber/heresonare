@@ -8,13 +8,13 @@ import { useLanguage } from "@/context/LanguageContext";
 import { siteContent } from "@/data/siteContent";
 
 export default function HomeContent() {
-  const { language } = useLanguage();
+  const { language, locale } = useLanguage();
 
   return (
     <main className="min-h-screen bg-black text-white">
       <Hero content={siteContent} language={language} />
 
-      <Products content={siteContent} language={language} />
+      <Products content={siteContent} language={language} locale={locale} />
 
       <About content={siteContent} language={language} />
 

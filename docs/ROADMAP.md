@@ -14,13 +14,15 @@ This ordered roadmap records direction, not fixed delivery dates. Each stage sho
 
 ## 2. Complete multilingual navigation and locale handling
 
+**Status:** Completed in the locale-routing foundation work.
+
 **Objective:** Make navigation and locale behavior consistent across English, Japanese, and Simplified Chinese.
 
-**Major deliverables:** Localized navigation and related interface labels, an explicit locale model, persistence and fallback behavior, and a decision on URL-based locale routing.
+**Major deliverables:** Localized navigation and related interface labels, a centralized locale model, locale-prefixed public routes, and cookie/`Accept-Language` fallback redirects for legacy routes.
 
 **Acceptance conditions:** Navbar and Footer labels display approved EN, JP, and CN text; locale changes behave consistently across routes and reloads; accessibility labels and metadata follow the approved locale strategy; fallback behavior is documented and tested.
 
-**Dependencies or risks:** Navigation labels are currently fixed English. Locale selection currently uses `LanguageContext` and `localStorage`; localization is not URL-based or server-selected. A routing change may affect metadata, caching, links, analytics, and SEO.
+**Dependencies or risks:** The URL is now the active locale source, with a preference cookie used only for legacy redirects. Language alternates require an approved production domain and canonical policy, so they remain deferred with sitemaps, robots, structured data, analytics, and social-image work to Stage 5.
 
 ## 3. Render the full static content model
 
@@ -50,7 +52,7 @@ This ordered roadmap records direction, not fixed delivery dates. Each stage sho
 
 **Acceptance conditions:** Every indexable route has accurate unique metadata; canonical, sitemap, robots, and social preview behavior validate in production-like builds; locale alternates are implemented only after the URL locale strategy is approved.
 
-**Dependencies or risks:** Current localization is client-side and not URL-based, so complete multilingual SEO cannot be claimed yet. SEO decisions depend on locale routing, detail-page URLs, production domains, and approved content.
+**Dependencies or risks:** Locale-prefixed routing is established, but language alternates and complete multilingual SEO still depend on approved canonical rules, detail-page URLs, production domains, and final social metadata content.
 
 ## 6. Introduce CMS or database-backed content
 

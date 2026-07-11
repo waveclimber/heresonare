@@ -1,21 +1,19 @@
 import type { Metadata } from "next";
 import { pageContent, type PageKey } from "@/data/pageContent";
+import { siteContent } from "@/data/siteContent";
+import {
+  contentLanguageByLocale,
+  openGraphLocaleByLocale,
+  type Locale,
+} from "@/i18n/config";
 
 const BRAND_NAME = "h\u00e9ReSonare";
 
-const routeTitles = {
-  artists: "Artists",
-  music: "Music",
-  productions: "Productions",
-  tour: "Tour",
-  venues: "Venues",
-  video: "Video",
-  store: "Store",
-  about: "About",
-  contact: "Contact",
-} satisfies Record<PageKey, string>;
-
-function buildMetadata(title: string, description: string): Metadata {
+function buildMetadata(
+  title: string,
+  description: string,
+  locale: Locale
+): Metadata {
   return {
     title,
     description,
@@ -23,7 +21,7 @@ function buildMetadata(title: string, description: string): Metadata {
       title,
       description,
       siteName: BRAND_NAME,
-      locale: "en_US",
+      locale: openGraphLocaleByLocale[locale],
       type: "website",
     },
     twitter: {
@@ -34,18 +32,52 @@ function buildMetadata(title: string, description: string): Metadata {
   };
 }
 
-export function createHomeMetadata(): Metadata {
+export function createSiteMetadata(locale: Locale): Metadata {
+  const language = contentLanguageByLocale[locale];
+  const content = siteContent[language];
+
+  return {
+    title: `${BRAND_NAME} | ${content.heroSubtitle}`,
+    description: content.heroDescription,
+    keywords: [
+      BRAND_NAME,
+      "Sound Beyond Boundaries",
+      "Audio Innovation",
+      "Creative Technology",
+      "Sound Design",
+      "Creative Brand",
+      "Future Experience",
+    ],
+    authors: [{ name: BRAND_NAME }],
+    creator: BRAND_NAME,
+    icons: {
+      icon: "/icon.png",
+      apple: "/apple-icon.png",
+    },
+  };
+}
+
+export function createHomeMetadata(locale: Locale): Metadata {
+  const language = contentLanguageByLocale[locale];
+  const content = siteContent[language];
+
   return buildMetadata(
-    `${BRAND_NAME} | Sound Beyond Boundaries`,
-    "An entertainment and creative platform where music, artists and imagination come together."
+    `${BRAND_NAME} | ${content.heroSubtitle}`,
+    content.heroDescription,
+    locale
   );
 }
 
-export function createPageMetadata(pageKey: PageKey): Metadata {
-  const page = pageContent.EN[pageKey];
+export function createPageMetadata(
+  pageKey: PageKey,
+  locale: Locale
+): Metadata {
+  const language = contentLanguageByLocale[locale];
+  const page = pageContent[language][pageKey];
 
   return buildMetadata(
-    `${routeTitles[pageKey]} | ${BRAND_NAME}`,
-    page.hero.description
+    `${page.hero.title} | ${BRAND_NAME}`,
+    page.hero.description,
+    locale
   );
 }

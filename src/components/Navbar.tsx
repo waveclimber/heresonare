@@ -2,27 +2,49 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { navigationItems } from "@/data/navigation";
-import type { Language, SiteContent } from "@/data/siteContent";
+import { interfaceContent } from "@/data/interfaceContent";
+import { getNavigationItems } from "@/data/navigation";
+import {
+  getLocalizedPath,
+  localeByContentLanguage,
+  type ContentLanguage,
+  type Locale,
+} from "@/i18n/config";
 
 type NavbarProps = {
-  content: SiteContent;
-  language: Language;
-  setLanguage: (language: Language) => void;
+  language: ContentLanguage;
+  locale: Locale;
 };
 
-export default function Navbar({ language, setLanguage }: NavbarProps) {
+export default function Navbar({ language, locale }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   const navLinkBaseClassName =
     "transition-all duration-300 hover:text-[var(--brand-blue)]";
-  const languageOptions: Language[] = ["EN", "JP", "CN"];
+  const languageOptions: ContentLanguage[] = ["EN", "JP", "CN"];
   const languageMenuId = "navbar-language-menu";
   const mobileMenuId = "navbar-mobile-menu";
+  const labels = interfaceContent[language];
+  const navigationItems = getNavigationItems(language, locale);
+
+  const selectLanguage = (newLanguage: ContentLanguage) => {
+    const newLocale = localeByContentLanguage[newLanguage];
+
+    setIsLanguageOpen(false);
+    setIsMenuOpen(false);
+    router.push(getLocalizedPath(pathname, newLocale));
+
+    void fetch("/api/locale", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ locale: newLocale }),
+    }).catch(() => undefined);
+  };
 
   const getNavLinkClassName = (href: string) =>
     `${navLinkBaseClassName} ${
@@ -34,7 +56,7 @@ export default function Navbar({ language, setLanguage }: NavbarProps) {
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-white/10 bg-black/40 backdrop-blur-md">
       <div className="mx-auto flex h-20 w-full max-w-[1440px] items-center justify-between px-6 lg:px-12">
-        <Link href="/" className="flex items-center gap-3">
+        <Link href={`/${locale}`} className="flex shrink-0 items-center gap-3">
           <Image
             src="/images/logo/logo-color.svg"
             alt="héReSonare"
@@ -48,10 +70,10 @@ export default function Navbar({ language, setLanguage }: NavbarProps) {
           </span>
         </Link>
 
-        <div className="hidden items-center gap-6 text-sm text-gray-300 lg:flex">
+        <div className="hidden items-center gap-4 whitespace-nowrap text-xs text-gray-300 xl:flex 2xl:gap-6 2xl:text-sm">
           {navigationItems.map((item) => (
             <Link
-              key={item.href}
+              key={item.key}
               href={item.href}
               className={getNavLinkClassName(item.href)}
               aria-current={pathname === item.href ? "page" : undefined}
@@ -67,6 +89,7 @@ export default function Navbar({ language, setLanguage }: NavbarProps) {
               onClick={() => setIsLanguageOpen(!isLanguageOpen)}
               aria-expanded={isLanguageOpen}
               aria-controls={languageMenuId}
+              aria-label={labels.languageSelector}
             >
               <span>{language}</span>
               <span
@@ -87,13 +110,10 @@ export default function Navbar({ language, setLanguage }: NavbarProps) {
                   <button
                     type="button"
                     key={lang}
-                    onClick={() => {
-                      setLanguage(lang);
-                      setIsLanguageOpen(false);
-                    }}
+                    onClick={() => selectLanguage(lang)}
                     className="block w-full rounded-lg px-3 py-2 text-left hover:bg-white/10"
                   >
-                    {lang === "EN" ? "English" : lang === "JP" ? "日本語" : "中文"}
+                    {labels.languageNames[lang]}
                   </button>
                 ))}
               </div>
@@ -103,12 +123,12 @@ export default function Navbar({ language, setLanguage }: NavbarProps) {
 
         <button
           type="button"
-          className="text-2xl lg:hidden"
+          className="text-2xl xl:hidden"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label={
             isMenuOpen
-              ? "Close navigation menu"
-              : "Open navigation menu"
+              ? labels.closeNavigationMenu
+              : labels.openNavigationMenu
           }
           aria-expanded={isMenuOpen}
           aria-controls={mobileMenuId}
@@ -119,12 +139,12 @@ export default function Navbar({ language, setLanguage }: NavbarProps) {
         {isMenuOpen && (
           <div
             id={mobileMenuId}
-            className="absolute left-0 top-20 w-full border-b border-white/10 bg-black/95 backdrop-blur-md lg:hidden animate-[mobileMenuFade_0.25s_ease-out]"
+            className="absolute left-0 top-20 w-full border-b border-white/10 bg-black/95 backdrop-blur-md xl:hidden animate-[mobileMenuFade_0.25s_ease-out]"
           >
             <div className="flex flex-col gap-4 p-6">
               {navigationItems.map((item) => (
                 <Link
-                  key={item.href}
+                  key={item.key}
                   href={item.href}
                   className={getNavLinkClassName(item.href)}
                   aria-current={pathname === item.href ? "page" : undefined}
@@ -135,7 +155,9 @@ export default function Navbar({ language, setLanguage }: NavbarProps) {
               ))}
 
               <div className="border-t border-white/10 pt-4">
-                <div className="mb-3 text-sm text-gray-500">Language</div>
+                <div className="mb-3 text-sm text-gray-500">
+                  {labels.language}
+                </div>
 
                 <div className="flex flex-col gap-3">
                   {languageOptions.map((lang) => (
@@ -143,12 +165,9 @@ export default function Navbar({ language, setLanguage }: NavbarProps) {
                       type="button"
                       key={lang}
                       className="text-left"
-                      onClick={() => {
-                        setLanguage(lang);
-                        setIsMenuOpen(false);
-                      }}
+                      onClick={() => selectLanguage(lang)}
                     >
-                      {lang === "EN" ? "English" : lang === "JP" ? "日本語" : "中文"}
+                      {labels.languageNames[lang]}
                     </button>
                   ))}
                 </div>

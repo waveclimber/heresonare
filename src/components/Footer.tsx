@@ -1,13 +1,17 @@
 import Link from "next/link";
-import { navigationItems } from "@/data/navigation";
+import { getNavigationItems } from "@/data/navigation";
 import type { Language, SiteContent } from "@/data/siteContent";
+import type { Locale } from "@/i18n/config";
 
 type ContentProps = {
   content: SiteContent;
   language: Language;
+  locale: Locale;
 };
 
-export default function Footer({ content, language }: ContentProps) {
+export default function Footer({ content, language, locale }: ContentProps) {
+  const navigationItems = getNavigationItems(language, locale);
+
   return (
     <footer className="relative overflow-hidden border-t border-white/10 px-6 py-20">
       <div className="absolute left-1/2 top-0 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-[var(--brand-blue)] opacity-10 blur-3xl" />
@@ -28,7 +32,7 @@ export default function Footer({ content, language }: ContentProps) {
           <nav className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
             {navigationItems.map((link) => (
               <Link
-                key={link.href}
+                key={link.key}
                 href={link.href}
                 className="text-sm tracking-[0.15em] text-gray-400 transition-all duration-300 hover:text-[var(--brand-blue)]"
               >

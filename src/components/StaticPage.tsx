@@ -10,13 +10,14 @@ import {
   type PageKey,
   type StaticPageContent,
 } from "@/data/pageContent";
+import { getLocalizedHref } from "@/i18n/config";
 
 type StaticPageProps = {
   pageKey: PageKey;
 };
 
 export default function StaticPage({ pageKey }: StaticPageProps) {
-  const { language } = useLanguage();
+  const { language, locale } = useLanguage();
   const page: StaticPageContent = pageContent[language][pageKey];
 
   return (
@@ -57,7 +58,11 @@ export default function StaticPage({ pageKey }: StaticPageProps) {
                         item.date ??
                         item.location
                       }
-                      href={item.href}
+                      href={
+                        item.href
+                          ? getLocalizedHref(item.href, locale)
+                          : undefined
+                      }
                     />
                   ))}
                 </div>
@@ -69,7 +74,17 @@ export default function StaticPage({ pageKey }: StaticPageProps) {
                     label={section.comingSoon.label}
                     title={section.comingSoon.title}
                     description={section.comingSoon.description}
-                    cta={section.comingSoon.cta}
+                    cta={
+                      section.comingSoon.cta
+                        ? {
+                            ...section.comingSoon.cta,
+                            href: getLocalizedHref(
+                              section.comingSoon.cta.href,
+                              locale
+                            ),
+                          }
+                        : undefined
+                    }
                   />
                 </div>
               )}
