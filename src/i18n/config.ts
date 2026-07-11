@@ -41,7 +41,7 @@ export function getLocaleFromAcceptLanguage(
     return defaultLocale;
   }
 
-  const preferredLanguage = acceptLanguage
+  const languagePreferences = acceptLanguage
     .split(",")
     .map((entry, index) => {
       const [language, ...parameters] = entry.trim().toLowerCase().split(";");
@@ -49,24 +49,33 @@ export function getLocaleFromAcceptLanguage(
         parameter.trim().startsWith("q=")
       );
       const quality = qualityParameter
-        ? Number.parseFloat(qualityParameter.trim().slice(2))
+        ? Number(qualityParameter.trim().slice(2))
         : 1;
 
       return {
         language,
-        quality: Number.isNaN(quality) ? 0 : quality,
+        quality,
         index,
       };
     })
-    .filter(({ language, quality }) => language && quality > 0)
-    .sort((a, b) => b.quality - a.quality || a.index - b.index)[0]?.language;
+    .filter(
+      ({ language, quality }) =>
+        language && Number.isFinite(quality) && quality > 0 && quality <= 1
+    )
+    .sort((a, b) => b.quality - a.quality || a.index - b.index);
 
-  if (preferredLanguage === "ja" || preferredLanguage?.startsWith("ja-")) {
-    return "ja";
-  }
+  for (const { language } of languagePreferences) {
+    if (language === "ja" || language.startsWith("ja-")) {
+      return "ja";
+    }
 
-  if (preferredLanguage === "zh" || preferredLanguage?.startsWith("zh-")) {
-    return "zh-cn";
+    if (language === "zh" || language.startsWith("zh-")) {
+      return "zh-cn";
+    }
+
+    if (language === "en" || language.startsWith("en-")) {
+      return "en";
+    }
   }
 
   return defaultLocale;
@@ -103,13 +112,4 @@ export function getLocalizedHref(href: string, locale: Locale): string {
   const pathname = suffixIndex === -1 ? href : href.slice(0, suffixIndex);
   const suffix = suffixIndex === -1 ? "" : href.slice(suffixIndex);
   return `${getLocalizedPath(pathname, locale)}${suffix}`;
-}
-
-export function getLanguageAlternates(pathname: string) {
-  return Object.fromEntries(
-    supportedLocales.map((locale) => [
-      htmlLangByLocale[locale],
-      getLocalizedPath(pathname, locale),
-    ])
-  );
 }

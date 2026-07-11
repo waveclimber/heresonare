@@ -22,7 +22,7 @@ This ordered roadmap records direction, not fixed delivery dates. Each stage sho
 
 **Acceptance conditions:** Navbar and Footer labels display approved EN, JP, and CN text; locale changes behave consistently across routes and reloads; accessibility labels and metadata follow the approved locale strategy; fallback behavior is documented and tested.
 
-**Dependencies or risks:** The URL is now the active locale source, with a preference cookie used only for legacy redirects. Locale-aware canonical policy, sitemaps, robots, structured data, analytics, and social-image work remain intentionally deferred to Stage 5.
+**Dependencies or risks:** The URL is now the active locale source, with a preference cookie used only for legacy redirects. Language alternates require an approved production domain and canonical policy, so they remain deferred with sitemaps, robots, structured data, analytics, and social-image work to Stage 5.
 
 ## 3. Render the full static content model
 
@@ -52,7 +52,7 @@ This ordered roadmap records direction, not fixed delivery dates. Each stage sho
 
 **Acceptance conditions:** Every indexable route has accurate unique metadata; canonical, sitemap, robots, and social preview behavior validate in production-like builds; locale alternates are implemented only after the URL locale strategy is approved.
 
-**Dependencies or risks:** Locale-prefixed routing and language alternates are established, but complete multilingual SEO still depends on approved canonical rules, detail-page URLs, production domains, and final social metadata content.
+**Dependencies or risks:** Locale-prefixed routing is established, but language alternates and complete multilingual SEO still depend on approved canonical rules, detail-page URLs, production domains, and final social metadata content.
 
 ## 6. Introduce CMS or database-backed content
 

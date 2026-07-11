@@ -3,7 +3,6 @@ import { pageContent, type PageKey } from "@/data/pageContent";
 import { siteContent } from "@/data/siteContent";
 import {
   contentLanguageByLocale,
-  getLanguageAlternates,
   openGraphLocaleByLocale,
   type Locale,
 } from "@/i18n/config";
@@ -13,15 +12,11 @@ const BRAND_NAME = "h\u00e9ReSonare";
 function buildMetadata(
   title: string,
   description: string,
-  locale: Locale,
-  pathname: string
+  locale: Locale
 ): Metadata {
   return {
     title,
     description,
-    alternates: {
-      languages: getLanguageAlternates(pathname),
-    },
     openGraph: {
       title,
       description,
@@ -69,8 +64,7 @@ export function createHomeMetadata(locale: Locale): Metadata {
   return buildMetadata(
     `${BRAND_NAME} | ${content.heroSubtitle}`,
     content.heroDescription,
-    locale,
-    "/"
+    locale
   );
 }
 
@@ -84,7 +78,6 @@ export function createPageMetadata(
   return buildMetadata(
     `${page.hero.title} | ${BRAND_NAME}`,
     page.hero.description,
-    locale,
-    `/${pageKey}`
+    locale
   );
 }

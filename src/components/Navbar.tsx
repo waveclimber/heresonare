@@ -32,17 +32,18 @@ export default function Navbar({ language, locale }: NavbarProps) {
   const labels = interfaceContent[language];
   const navigationItems = getNavigationItems(language, locale);
 
-  const selectLanguage = async (newLanguage: ContentLanguage) => {
+  const selectLanguage = (newLanguage: ContentLanguage) => {
     const newLocale = localeByContentLanguage[newLanguage];
 
-    await fetch("/api/locale", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ locale: newLocale }),
-    });
     setIsLanguageOpen(false);
     setIsMenuOpen(false);
     router.push(getLocalizedPath(pathname, newLocale));
+
+    void fetch("/api/locale", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ locale: newLocale }),
+    }).catch(() => undefined);
   };
 
   const getNavLinkClassName = (href: string) =>
@@ -109,7 +110,7 @@ export default function Navbar({ language, locale }: NavbarProps) {
                   <button
                     type="button"
                     key={lang}
-                    onClick={() => void selectLanguage(lang)}
+                    onClick={() => selectLanguage(lang)}
                     className="block w-full rounded-lg px-3 py-2 text-left hover:bg-white/10"
                   >
                     {labels.languageNames[lang]}
@@ -164,7 +165,7 @@ export default function Navbar({ language, locale }: NavbarProps) {
                       type="button"
                       key={lang}
                       className="text-left"
-                      onClick={() => void selectLanguage(lang)}
+                      onClick={() => selectLanguage(lang)}
                     >
                       {labels.languageNames[lang]}
                     </button>
