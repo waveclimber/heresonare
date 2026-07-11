@@ -10,6 +10,7 @@ import {
   type PageKey,
   type StaticPageContent,
 } from "@/data/pageContent";
+import { interfaceContent } from "@/data/interfaceContent";
 import { getLocalizedHref } from "@/i18n/config";
 
 type StaticPageProps = {
@@ -19,6 +20,7 @@ type StaticPageProps = {
 export default function StaticPage({ pageKey }: StaticPageProps) {
   const { language, locale } = useLanguage();
   const page: StaticPageContent = pageContent[language][pageKey];
+  const labels = interfaceContent[language].staticPage;
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -43,26 +45,9 @@ export default function StaticPage({ pageKey }: StaticPageProps) {
                   {section.items.map((item) => (
                     <ContentCard
                       key={item.id}
-                      title={item.title}
-                      description={item.description}
-                      subtitle={
-                        item.subtitle ??
-                        item.role ??
-                        item.type ??
-                        item.category
-                      }
-                      status={item.status}
-                      meta={
-                        item.meta ??
-                        item.year ??
-                        item.date ??
-                        item.location
-                      }
-                      href={
-                        item.href
-                          ? getLocalizedHref(item.href, locale)
-                          : undefined
-                      }
+                      item={item}
+                      labels={labels}
+                      locale={locale}
                     />
                   ))}
                 </div>
