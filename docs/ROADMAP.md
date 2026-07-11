@@ -26,6 +26,11 @@ This ordered roadmap records direction, not fixed delivery dates. Each stage sho
 
 ## 3. Render the full static content model
 
+**Status:** Completed through the shared static-content rendering work and the
+aligned English, Japanese, and Simplified Chinese content repair. Approved real
+production content and media may replace placeholder records later; those
+editorial replacements do not make the Stage 3 engineering incomplete.
+
 **Objective:** Render every approved field in the existing static page-content architecture consistently.
 
 **Major deliverables:** Complete shared renderers for supported hero, section, item, link, specification, feature, use-case, empty-state, and status content; aligned EN, JP, and CN data coverage.
