@@ -1,0 +1,55 @@
+name: Codex task
+description: Define a scoped implementation or maintenance task for Codex.
+title: "[Codex] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: Provide enough context and acceptance criteria for a focused, reviewable change.
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: What outcome should this task achieve?
+      placeholder: Describe the desired outcome and why it matters.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: List the files, pages, or systems that are in scope.
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+      description: Note anything that must not change, including visual, content, route, dependency, or compatibility constraints.
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Use a checklist of observable completion conditions.
+      placeholder: |
+        - [ ] Expected behavior is implemented
+        - [ ] Quality checks pass
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation
+      description: List required commands and any manual verification.
+      value: |
+        - npm ci
+        - npm run lint
+        - npm run typecheck
+        - npm run build
+    validations:
+      required: true
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Link designs, issues, discussions, or relevant files. Do not include secrets.
