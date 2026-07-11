@@ -558,7 +558,7 @@ const localizedPages = {
         tag: "h\u00e9ReSonare Artists",
         title: "共鳴する声",
         description:
-          "未来のアーティストプロフィール、コラボレーション、クリエイティブなアーティスト名簿のための基盤です。",
+          "未来のアーティストプロフィール、コラボレーション、クリエイティブなアーティストラインナップのための基盤です。",
       },
       sections: [
         {
@@ -958,7 +958,7 @@ const localizedPages = {
               useCases: [
                 "沉浸式聆听",
                 "互动装置",
-                "产品化声音识别",
+                "产品化的声音品牌标识",
               ],
               specs: [
                 { label: "形式", value: "模块化音频系统" },
@@ -993,7 +993,7 @@ const localizedPages = {
               type: "体验系统",
               subtitle: "Live Experience产品",
               status: "研究阶段",
-              description: "连接演出、场地环境与响应式声音时刻的Live Experience产品线。",
+              description: "连接演出、场地环境与会随互动变化的声音瞬间的Live Experience产品线。",
               features: [
                 "场地适配体验套件",
                 "现场声音互动层",

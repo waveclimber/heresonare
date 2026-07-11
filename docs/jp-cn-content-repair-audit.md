@@ -58,7 +58,7 @@ models:
 | In development | 開発中 | 开发中 |
 | Coming soon | 近日公開 | 即将公开 |
 | Research | 研究段階 | 研究阶段 |
-| Features | 特長 | 特点 |
+| Features | 特徴 | 特点 |
 | Use cases | 活用例 | 应用场景 |
 | Specifications | 仕様 | 规格 |
 | Format | 形式 | 形式 |
@@ -115,8 +115,7 @@ Screenshot evidence is stored in `docs/screenshots/jp-cn-content-repair/`:
 
 The translations are faithful to the placeholder English source and introduce
 no new claims. Product-owner review is recommended for the product-language
-choices `適応型レゾナンスレイヤー` / `自适应共鸣层`,
-`プロダクト化されたサウンドアイデンティティ` / `产品化声音识别`, and
+choices `適応型レゾナンスレイヤー` / `自适应共鸣层` and
 `会場とブランドのアクティベーション` / `场地与品牌活动`, because final
 brand terminology may prefer different wording when the underlying products are
 defined. The placeholder labels `基盤アイテム` and `基础商品` should also be
