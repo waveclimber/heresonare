@@ -1,9 +1,7 @@
 import { useId } from "react";
 import ContentCardDetails from "@/components/content-card/ContentCardDetails";
 import ContentCardLinks from "@/components/content-card/ContentCardLinks";
-import ContentCardMedia, {
-  getApprovedContentIcon,
-} from "@/components/content-card/ContentCardMedia";
+import ContentCardMedia from "@/components/content-card/ContentCardMedia";
 import {
   createContentCardHeadingId,
   normalizeSpecs,
@@ -11,6 +9,7 @@ import {
   type ContentCardLabels,
 } from "@/components/content-card/contentCardUtils";
 import type { PageContentItem } from "@/data/pageContent";
+import { isApprovedIconContentMedia } from "@/data/contentMedia";
 import type { Locale } from "@/i18n/config";
 
 type ContentCardProps = {
@@ -46,7 +45,9 @@ export default function ContentCard({
   const features = normalizeTextList(item.features);
   const useCases = normalizeTextList(item.useCases);
   const specs = normalizeSpecs(item.specs);
-  const icon = getApprovedContentIcon(item.media?.icon);
+  const icon = isApprovedIconContentMedia(item.media?.icon)
+    ? item.media.icon
+    : undefined;
 
   return (
     <article

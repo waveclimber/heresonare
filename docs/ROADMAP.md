@@ -26,6 +26,11 @@ This ordered roadmap records direction, not fixed delivery dates. Each stage sho
 
 ## 3. Render the full static content model
 
+**Status:** Completed through the shared static-content rendering work and the
+aligned English, Japanese, and Simplified Chinese content repair. Approved real
+production content and media may replace placeholder records later; those
+editorial replacements do not make the Stage 3 engineering incomplete.
+
 **Objective:** Render every approved field in the existing static page-content architecture consistently.
 
 **Major deliverables:** Complete shared renderers for supported hero, section, item, link, specification, feature, use-case, empty-state, and status content; aligned EN, JP, and CN data coverage.
@@ -36,6 +41,9 @@ This ordered roadmap records direction, not fixed delivery dates. Each stage sho
 
 ## 4. Add dynamic detail pages
 
+**Status:** In progress. Stage 4A delivers the production-only vertical slice;
+detail routes for every other content type remain deferred.
+
 **Objective:** Support stable detail routes for entities such as artists, releases, productions, events, venues, videos, and store items when approved content exists.
 
 **Major deliverables:** Route and slug conventions, typed detail models, shared detail layouts, not-found behavior, internal links, and localized detail content handling.
@@ -43,6 +51,18 @@ This ordered roadmap records direction, not fixed delivery dates. Each stage sho
 **Acceptance conditions:** Approved entities resolve to stable detail URLs; invalid slugs return the intended not-found experience; list-to-detail navigation, responsive behavior, keyboard access, metadata, and EN/JP/CN impact are validated.
 
 **Dependencies or risks:** Depends on a complete static content model and product-approved URL strategy. Premature route conventions could create migration and SEO costs when CMS-backed content arrives.
+
+**Stage 4A completed slice:** The approved `audio-innovation`,
+`creative-platform`, and `live-experience` records now generate nine localized
+production detail pages across EN, JP, and CN. Productions list cards link to
+those localized routes, nested pages retain the Productions Navbar state,
+localized detail metadata and back navigation are present, and missing product
+media continues to use the audited branded fallback without broken requests.
+Both locale and slug parameters remain statically closed; unknown slugs and
+unsupported locales use the framework-global 404 with Next.js `noindex`
+metadata. Application-wide localized unmatched-route handling remains outside
+this slice because `globalNotFound` is experimental. No other detail route is
+supported yet.
 
 ## 5. Complete SEO infrastructure
 

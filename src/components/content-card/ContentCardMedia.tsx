@@ -1,7 +1,7 @@
 import Image from "next/image";
 import {
   contentCardFallbackMedia,
-  isApprovedContentMediaPath,
+  isApprovedRasterContentMedia,
 } from "@/data/contentMedia";
 import type { PageContentItem } from "@/data/pageContent";
 
@@ -9,27 +9,10 @@ type ContentCardMediaProps = {
   item: PageContentItem;
 };
 
-function isApprovedRasterMedia(path: string | undefined): path is string {
-  return Boolean(
-    isApprovedContentMediaPath(path) &&
-      /\.(?:avif|jpe?g|png|webp)$/iu.test(path)
-  );
-}
-
-function isApprovedIconMedia(path: string | undefined): path is string {
-  return Boolean(
-    isApprovedContentMediaPath(path) && /\.(?:svg|png|webp)$/iu.test(path)
-  );
-}
-
 function getApprovedCardMedia(item: PageContentItem) {
   return [item.media?.card, item.image, item.media?.render].find(
-    isApprovedRasterMedia
+    isApprovedRasterContentMedia
   );
-}
-
-export function getApprovedContentIcon(path: string | undefined) {
-  return isApprovedIconMedia(path) ? path : undefined;
 }
 
 export function ContentCardIcon({ path }: { path: string }) {

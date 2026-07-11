@@ -46,9 +46,12 @@ export default function Navbar({ language, locale }: NavbarProps) {
     }).catch(() => undefined);
   };
 
+  const isActiveRoute = (href: string) =>
+    pathname === href || pathname.startsWith(`${href}/`);
+
   const getNavLinkClassName = (href: string) =>
     `${navLinkBaseClassName} ${
-      pathname === href
+      isActiveRoute(href)
         ? "text-[var(--brand-blue)]"
         : "text-gray-300"
     }`;
@@ -76,7 +79,7 @@ export default function Navbar({ language, locale }: NavbarProps) {
               key={item.key}
               href={item.href}
               className={getNavLinkClassName(item.href)}
-              aria-current={pathname === item.href ? "page" : undefined}
+              aria-current={isActiveRoute(item.href) ? "page" : undefined}
             >
               {item.label}
             </Link>
@@ -147,7 +150,7 @@ export default function Navbar({ language, locale }: NavbarProps) {
                   key={item.key}
                   href={item.href}
                   className={getNavLinkClassName(item.href)}
-                  aria-current={pathname === item.href ? "page" : undefined}
+                  aria-current={isActiveRoute(item.href) ? "page" : undefined}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.label}

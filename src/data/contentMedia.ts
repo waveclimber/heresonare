@@ -12,3 +12,20 @@ export function isApprovedContentMediaPath(
 ): path is string {
   return Boolean(path && approvedContentMediaPaths.has(path));
 }
+
+export function isApprovedRasterContentMedia(
+  path: string | undefined
+): path is string {
+  return Boolean(
+    isApprovedContentMediaPath(path) &&
+      /\.(?:avif|jpe?g|png|webp)$/iu.test(path)
+  );
+}
+
+export function isApprovedIconContentMedia(
+  path: string | undefined
+): path is string {
+  return Boolean(
+    isApprovedContentMediaPath(path) && /\.(?:svg|png|webp)$/iu.test(path)
+  );
+}

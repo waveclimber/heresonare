@@ -14,7 +14,13 @@ type InterfaceContent = {
     status: string;
     view: string;
   };
+  productionDetail: {
+    detailLabel: string;
+    backToList: string;
+  };
 };
+
+export type ProductionDetailLabels = InterfaceContent["productionDetail"];
 
 export const interfaceContent = {
   EN: {
@@ -35,6 +41,10 @@ export const interfaceContent = {
       status: "Status",
       view: "View",
     },
+    productionDetail: {
+      detailLabel: "Product Details",
+      backToList: "Back to list",
+    },
   },
   JP: {
     language: "言語",
@@ -54,6 +64,10 @@ export const interfaceContent = {
       status: "ステータス",
       view: "詳細を見る",
     },
+    productionDetail: {
+      detailLabel: "プロダクト詳細",
+      backToList: "一覧へ戻る",
+    },
   },
   CN: {
     language: "语言",
@@ -72,6 +86,10 @@ export const interfaceContent = {
       links: "链接",
       status: "状态",
       view: "查看详情",
+    },
+    productionDetail: {
+      detailLabel: "产品详情",
+      backToList: "返回列表",
     },
   },
 } as const satisfies Record<ContentLanguage, InterfaceContent>;
