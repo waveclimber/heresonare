@@ -22,9 +22,9 @@ variants unless noted otherwise.
 | `media.card` | 3 production items | First card-media candidate. |
 | `media.render` | 3 production items | Third card-media candidate when it is an audited raster asset. |
 | `media.icon` | 3 production items | Audited separately and rendered as a small decorative product icon, never as the card photograph. |
-| `features` | 3 production items | Rendered under a localized heading as a semantic unordered list. |
-| `useCases` | 3 production items | Rendered under a localized heading as a semantic unordered list. |
-| `specs` | 3 production items | Rendered under a localized heading as a definition list. Exact duplicate label/value pairs are removed; authored status-like specifications remain because they provide their own definition term. |
+| `features` | 3 production items | Values are trimmed, blank values and case-insensitive duplicates are removed in authored order, and the remaining values render under a localized heading as a semantic unordered list. |
+| `useCases` | 3 production items | Values are trimmed, blank values and case-insensitive duplicates are removed in authored order, and the remaining values render under a localized heading as a semantic unordered list. |
+| `specs` | 3 production items | Labels and values are trimmed; rows with either side blank and duplicate normalized label/value pairs are removed in authored order. Remaining rows render as a definition list. |
 | `links` | 4 artist and contact items | Rendered with their localized provided labels in a semantic list. Internal destinations retain the active locale; external and `mailto:` destinations remain unchanged. |
 | `href` | 13 items across every page except About | Added as the localized `View` fallback only when `links` does not already contain the same destination. No detail route is inferred from `slug`. |
 
@@ -34,18 +34,45 @@ semantic groups. Matching content is not silently discarded across unrelated
 groups: for example, a specification retains its authored term even when its
 value resembles an item status.
 
-`id` remains the stable render key and accessible-heading identifier. `slug`
-remains structural data for the future detail-route stage and is not converted
-into an unapproved route. `media.hero` is intentionally deferred because Stage
-3 only defines card-media priority; the current shared page hero has no item
-media slot.
+`id` remains the stable render key and contributes to the accessible heading
+identifier. `slug` remains structural data for the future detail-route stage and
+is not converted into an unapproved route. `media.hero` is intentionally
+deferred because Stage 3 only defines card-media priority; the current shared
+page hero has no item media slot.
+
+## Component structure
+
+- `ContentCard.tsx` orchestrates normalization, stable identifiers, media,
+  details, and links while preserving the existing `item`, `labels`, and
+  `locale` prop contract.
+- `content-card/ContentCardMedia.tsx` applies card media priority, validates
+  raster and icon formats against the approved manifest, and renders the
+  branded fallback.
+- `content-card/ContentCardDetails.tsx` owns visible headings, status, metadata,
+  normalized feature/use-case lists, and semantic specifications.
+- `content-card/ContentCardLinks.tsx` owns destination deduplication, active-
+  locale preservation, external and `mailto:` handling, and keyboard-focus
+  styling.
+- `content-card/contentCardUtils.ts` supplies shared ordered normalization and
+  valid heading-ID generation.
+
+Every card heading remains an `h3` and receives a stable ID derived from the
+item ID plus React's stable per-instance ID. The surrounding `article` references
+that visible heading with `aria-labelledby`. The encoded ID format contains no
+whitespace or unsafe punctuation and the per-instance component prevents
+collisions within a rendered page. Visible label lists retain their normal text
+semantics and do not use a redundant `aria-label`.
 
 ## Media audit
 
 No content-specific media file referenced by `pageContent.ts` currently exists
-under `public/`. The renderer checks candidates against the audited public
-asset list and therefore does not issue any request for these missing paths.
-It uses the existing héReSonare white SVG logo as a decorative branded fallback.
+under `public/`, so `src/data/contentMedia.ts` intentionally exports an empty
+approved-content manifest. A future path may be added only after its file exists
+under `public/`, has content approval, and its extension matches the binary
+format. The renderer only passes manifest entries to `next/image`, so it does
+not issue requests for missing content paths. The existing héReSonare white SVG
+logo is a separate explicit decorative fallback constant rather than a content
+manifest entry.
 
 Missing artist media:
 
@@ -81,5 +108,6 @@ the requested four responsive widths and all three locales.
 
 Browser checks found no document-level horizontal overflow, no card-level
 overflow, and no broken image elements at these widths. The JP and CN source
-page copy predates this change and contains question-mark placeholders; Stage 3
-preserves that existing content rather than inventing editorial replacements.
+page copy predates this change and contains question-mark placeholders. Their
+replacement is deferred editorial work and remains a separate blocker; Stage 3
+engineering preserves that existing content rather than inventing translations.
