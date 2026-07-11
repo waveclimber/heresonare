@@ -6,6 +6,14 @@ type InterfaceContent = {
   openNavigationMenu: string;
   closeNavigationMenu: string;
   languageNames: Record<ContentLanguage, string>;
+  staticPage: {
+    features: string;
+    useCases: string;
+    specifications: string;
+    links: string;
+    status: string;
+    view: string;
+  };
 };
 
 export const interfaceContent = {
@@ -19,6 +27,14 @@ export const interfaceContent = {
       JP: "日本語",
       CN: "中文",
     },
+    staticPage: {
+      features: "Features",
+      useCases: "Use Cases",
+      specifications: "Specifications",
+      links: "Links",
+      status: "Status",
+      view: "View",
+    },
   },
   JP: {
     language: "言語",
@@ -30,6 +46,14 @@ export const interfaceContent = {
       JP: "日本語",
       CN: "中国語",
     },
+    staticPage: {
+      features: "特徴",
+      useCases: "活用例",
+      specifications: "仕様",
+      links: "リンク",
+      status: "ステータス",
+      view: "詳細を見る",
+    },
   },
   CN: {
     language: "语言",
@@ -40,6 +64,14 @@ export const interfaceContent = {
       EN: "英语",
       JP: "日语",
       CN: "中文",
+    },
+    staticPage: {
+      features: "特点",
+      useCases: "应用场景",
+      specifications: "规格",
+      links: "链接",
+      status: "状态",
+      view: "查看详情",
     },
   },
 } as const satisfies Record<ContentLanguage, InterfaceContent>;

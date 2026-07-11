@@ -1,65 +1,74 @@
-import Link from "next/link";
+import { useId } from "react";
+import ContentCardDetails from "@/components/content-card/ContentCardDetails";
+import ContentCardLinks from "@/components/content-card/ContentCardLinks";
+import ContentCardMedia, {
+  getApprovedContentIcon,
+} from "@/components/content-card/ContentCardMedia";
+import {
+  createContentCardHeadingId,
+  normalizeSpecs,
+  normalizeTextList,
+  type ContentCardLabels,
+} from "@/components/content-card/contentCardUtils";
+import type { PageContentItem } from "@/data/pageContent";
+import type { Locale } from "@/i18n/config";
 
 type ContentCardProps = {
-  title: string;
-  description: string;
-  subtitle?: string;
-  status?: string;
-  meta?: string;
-  href?: string;
+  item: PageContentItem;
+  labels: ContentCardLabels;
+  locale: Locale;
 };
 
-function isExternalHref(href: string) {
-  return href.startsWith("http") || href.startsWith("mailto:");
-}
-
 export default function ContentCard({
-  title,
-  subtitle,
-  status,
-  description,
-  meta,
-  href,
+  item,
+  labels,
+  locale,
 }: ContentCardProps) {
-  const label = subtitle ?? status;
-  const linkClassName =
-    "mt-10 inline-flex text-sm uppercase tracking-[0.25em] text-[var(--brand-blue)] transition-all duration-300 hover:translate-x-1";
+  const instanceId = useId();
+  const headingId = createContentCardHeadingId(item.id, instanceId);
+  const primaryLabels = normalizeTextList([
+    item.subtitle,
+    item.role,
+    item.type,
+    item.category,
+  ]);
+  const excludedMetadata = new Set(
+    normalizeTextList([...primaryLabels, item.status]).map((value) =>
+      value.toLowerCase()
+    )
+  );
+  const metadata = normalizeTextList([
+    item.meta,
+    item.year,
+    item.date,
+    item.location,
+  ]).filter((value) => !excludedMetadata.has(value.toLowerCase()));
+  const features = normalizeTextList(item.features);
+  const useCases = normalizeTextList(item.useCases);
+  const specs = normalizeSpecs(item.specs);
+  const icon = getApprovedContentIcon(item.media?.icon);
 
   return (
-    <article className="group relative overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:border-[var(--brand-blue)]/60 hover:bg-white/[0.07] hover:shadow-[0_0_45px_rgba(14,108,178,0.14)]">
-      {label && (
-        <p className="text-xs uppercase tracking-[0.3em] text-[var(--brand-blue)]">
-          {label}
-        </p>
-      )}
+    <article
+      aria-labelledby={headingId}
+      className="group relative flex min-w-0 flex-col overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.04] backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:border-[var(--brand-blue)]/60 hover:bg-white/[0.07] hover:shadow-[0_0_45px_rgba(14,108,178,0.14)]"
+    >
+      <ContentCardMedia item={item} />
 
-      <h3 className="mt-5 text-2xl font-semibold text-white">
-        {title}
-      </h3>
-
-      <p className="mt-5 leading-8 text-gray-400">{description}</p>
-
-      {meta && (
-        <p className="mt-6 text-sm uppercase tracking-[0.2em] text-gray-500">
-          {meta}
-        </p>
-      )}
-
-      {href &&
-        (isExternalHref(href) ? (
-          <a
-            href={href}
-            className={linkClassName}
-            target={href.startsWith("http") ? "_blank" : undefined}
-            rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-          >
-            View
-          </a>
-        ) : (
-          <Link href={href} className={linkClassName}>
-            View
-          </Link>
-        ))}
+      <div className="flex flex-1 flex-col p-6 sm:p-8">
+        <ContentCardDetails
+          item={item}
+          labels={labels}
+          headingId={headingId}
+          primaryLabels={primaryLabels}
+          metadata={metadata}
+          features={features}
+          useCases={useCases}
+          specs={specs}
+          icon={icon}
+        />
+        <ContentCardLinks item={item} labels={labels} locale={locale} />
+      </div>
     </article>
   );
 }
