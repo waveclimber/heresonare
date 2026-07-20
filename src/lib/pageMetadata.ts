@@ -7,26 +7,45 @@ import {
 import { siteContent } from "@/data/siteContent";
 import {
   contentLanguageByLocale,
+  getLocalizedPath,
+  htmlLangByLocale,
   openGraphLocaleByLocale,
+  supportedLocales,
   type Locale,
 } from "@/i18n/config";
+import { getAbsoluteSiteUrl, siteUrl } from "@/lib/siteUrl";
 
 const BRAND_NAME = "h\u00e9ReSonare";
 
 function buildMetadata(
   title: string,
   description: string,
-  locale: Locale
+  locale: Locale,
+  pathname: string
 ): Metadata {
+  const canonicalPath = getLocalizedPath(pathname, locale);
+  const languages = Object.fromEntries([
+    ...supportedLocales.map((supportedLocale) => [
+      htmlLangByLocale[supportedLocale],
+      getAbsoluteSiteUrl(getLocalizedPath(pathname, supportedLocale)),
+    ]),
+    ["x-default", getAbsoluteSiteUrl(getLocalizedPath(pathname, "en"))],
+  ]);
+
   return {
     title,
     description,
+    alternates: {
+      canonical: getAbsoluteSiteUrl(canonicalPath),
+      languages,
+    },
     openGraph: {
       title,
       description,
       siteName: BRAND_NAME,
       locale: openGraphLocaleByLocale[locale],
       type: "website",
+      url: getAbsoluteSiteUrl(canonicalPath),
     },
     twitter: {
       card: "summary",
@@ -41,6 +60,7 @@ export function createSiteMetadata(locale: Locale): Metadata {
   const content = siteContent[language];
 
   return {
+    metadataBase: siteUrl,
     title: `${BRAND_NAME} | ${content.heroSubtitle}`,
     description: content.heroDescription,
     keywords: [
@@ -58,6 +78,17 @@ export function createSiteMetadata(locale: Locale): Metadata {
       icon: "/icon.png",
       apple: "/apple-icon.png",
     },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
+    },
   };
 }
 
@@ -68,7 +99,8 @@ export function createHomeMetadata(locale: Locale): Metadata {
   return buildMetadata(
     `${BRAND_NAME} | ${content.heroSubtitle}`,
     content.heroDescription,
-    locale
+    locale,
+    "/"
   );
 }
 
@@ -82,7 +114,8 @@ export function createPageMetadata(
   return buildMetadata(
     `${page.hero.title} | ${BRAND_NAME}`,
     page.hero.description,
-    locale
+    locale,
+    `/${pageKey}`
   );
 }
 
@@ -93,6 +126,7 @@ export function createProductionMetadata(
   return buildMetadata(
     `${production.title} | ${BRAND_NAME}`,
     production.description,
-    locale
+    locale,
+    `/productions/${production.slug}`
   );
 }

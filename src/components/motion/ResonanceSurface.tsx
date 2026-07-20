@@ -64,6 +64,7 @@ export function ResonanceSurface({
       aria-labelledby={ariaLabelledby}
       className={`group relative isolate overflow-hidden ${className ?? ""}`}
       initial={false}
+      tabIndex={interactive ? -1 : undefined}
       onBlurCapture={handleBlur}
       onFocusCapture={handleFocus}
       onPointerEnter={handlePointerEnter}

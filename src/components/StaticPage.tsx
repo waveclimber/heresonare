@@ -23,7 +23,11 @@ export default function StaticPage({ pageKey }: StaticPageProps) {
   const labels = interfaceContent[language].staticPage;
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="min-h-screen bg-black text-white focus:outline-none"
+    >
       <PageHero
         tag={page.hero.tag}
         title={page.hero.title}
