@@ -6,6 +6,7 @@ type ContentProps = {
 };
 
 export default function Hero({ content, language }: ContentProps) {
+  const localizedContent = content[language];
   const spectrumBars = [
     32, 56, 40, 72, 48, 88, 60, 96, 64, 84, 52, 70, 44, 58, 36,
   ];
@@ -22,46 +23,40 @@ export default function Hero({ content, language }: ContentProps) {
         <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
             <p className="text-xs font-medium tracking-[0.35em] text-[var(--brand-blue)]">
-              Music • Emotion • Resonance
+              {localizedContent.heroEyebrow}
             </p>
 
             <p className="mt-5 text-xs tracking-[0.4em] text-gray-500">
-              ENTERTAINMENT • LABEL • PRODUCTION
+              {localizedContent.heroBusinessAreas}
             </p>
 
             <h1 className="mt-10 text-5xl font-bold tracking-tight sm:text-6xl xl:text-[6rem]">
-              {content[language].heroTitle}
+              {localizedContent.heroTitle}
             </h1>
 
             <h2 className="mt-8 text-3xl font-semibold text-white">
-              {content[language].heroSubtitle}
+              {localizedContent.heroSubtitle}
             </h2>
 
             <p className="mt-6 max-w-xl text-lg leading-8 text-gray-400">
-              {content[language].heroDescription}
+              {localizedContent.heroDescription}
             </p>
 
             <div className="mt-12 flex flex-col gap-4 sm:flex-row">
               <button
-                onClick={() =>
-                  document.getElementById("featured")?.scrollIntoView({
-                    behavior: "smooth",
-                  })
-                }
+                type="button"
+                onClick={() => scrollToSection("featured")}
                 className="rounded-full bg-[var(--brand-blue)] px-10 py-4 text-white shadow-[0_0_25px_rgba(14,108,178,0.4)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_32px_rgba(14,108,178,0.6)]"
               >
-                {content[language].discover}
+                {localizedContent.discover}
               </button>
 
               <button
-                onClick={() =>
-                  document.getElementById("contact")?.scrollIntoView({
-                    behavior: "smooth",
-                  })
-                }
+                type="button"
+                onClick={() => scrollToSection("contact")}
                 className="rounded-full border border-white/20 px-10 py-4 text-gray-300 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--brand-blue)] hover:text-[var(--brand-blue)]"
               >
-                {content[language].contactButton}
+                {localizedContent.contactButton}
               </button>
             </div>
           </div>
@@ -69,19 +64,19 @@ export default function Hero({ content, language }: ContentProps) {
           <div>
             <div className="mx-auto max-w-lg rounded-[36px] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md shadow-[0_0_50px_rgba(14,108,178,0.12)]">
               <p className="text-xs tracking-[0.35em] text-gray-500">
-                LATEST RELEASE
+                {localizedContent.latestReleaseLabel}
               </p>
 
               <h3 className="mt-4 text-4xl font-bold text-white">
-                Coming Soon
+                {localizedContent.latestReleaseTitle}
               </h3>
 
               <p className="mt-3 text-sm tracking-[0.25em] text-[var(--brand-blue)]">
-                SINGLE · 2026
+                {localizedContent.latestReleaseMeta}
               </p>
 
               <p className="mt-4 text-gray-400">
-                New sound experiences are on the way.
+                {localizedContent.latestReleaseText}
               </p>
 
               <div className="mt-10 flex h-40 items-end justify-center gap-2">
@@ -103,4 +98,14 @@ export default function Hero({ content, language }: ContentProps) {
       </div>
     </section>
   );
+}
+
+function scrollToSection(sectionId: string) {
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  document.getElementById(sectionId)?.scrollIntoView({
+    behavior: prefersReducedMotion ? "auto" : "smooth",
+  });
 }

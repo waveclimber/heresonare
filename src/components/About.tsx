@@ -6,23 +6,24 @@ type ContentProps = {
 };
 
 export default function About({ content, language }: ContentProps) {
+  const localizedContent = content[language];
   const aboutCards = [
     {
       number: "01",
-      title: content[language].aboutStoryTitle,
-      text: content[language].aboutStoryText,
+      title: localizedContent.aboutStoryTitle,
+      text: localizedContent.aboutStoryText,
       color: "bg-[var(--brand-blue)]",
     },
     {
       number: "02",
-      title: content[language].aboutMissionTitle,
-      text: content[language].aboutMissionText,
+      title: localizedContent.aboutMissionTitle,
+      text: localizedContent.aboutMissionText,
       color: "bg-[var(--brand-pink)]",
     },
     {
       number: "03",
-      title: content[language].aboutVisionTitle,
-      text: content[language].aboutVisionText,
+      title: localizedContent.aboutVisionTitle,
+      text: localizedContent.aboutVisionText,
       color: "bg-[var(--brand-teal)]",
     },
   ];
@@ -36,21 +37,21 @@ export default function About({ content, language }: ContentProps) {
         <div className="grid gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <div className="sticky top-32">
             <p className="text-xs uppercase tracking-[0.35em] text-[var(--brand-blue)]">
-              {content[language].aboutTag}
+              {localizedContent.aboutTag}
             </p>
 
             <h2 className="mt-6 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
-              {content[language].aboutTitle}
+              {localizedContent.aboutTitle}
             </h2>
 
             <div className="mt-8 h-px w-32 bg-white/10" />
 
             <p className="mt-8 max-w-xl text-lg leading-8 text-gray-400">
-              {content[language].aboutText1}
+              {localizedContent.aboutText1}
             </p>
 
             <p className="mt-6 max-w-xl text-lg leading-8 text-gray-400">
-              {content[language].aboutText2}
+              {localizedContent.aboutText2}
             </p>
           </div>
 
@@ -67,7 +68,7 @@ export default function About({ content, language }: ContentProps) {
                 <div className={`mb-8 h-1 w-16 rounded-full ${card.color}`} />
 
                 <p className="text-xs tracking-[0.3em] text-gray-500">
-                  BRAND IDENTITY
+                  {localizedContent.aboutCardLabel}
                 </p>
 
                 <h3 className="mt-5 text-2xl font-semibold text-white">

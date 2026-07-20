@@ -9,22 +9,23 @@ type ContentProps = {
 };
 
 export default function Products({ content, language, locale }: ContentProps) {
+  const localizedContent = content[language];
   const featuredItems = [
     {
-      title: content[language].featuredArtistsTitle,
-      text: content[language].featuredArtistsText,
+      title: localizedContent.featuredArtistsTitle,
+      text: localizedContent.featuredArtistsText,
       href: getLocalizedPath("/artists", locale),
       number: "01",
     },
     {
-      title: content[language].featuredMusicTitle,
-      text: content[language].featuredMusicText,
+      title: localizedContent.featuredMusicTitle,
+      text: localizedContent.featuredMusicText,
       href: getLocalizedPath("/music", locale),
       number: "02",
     },
     {
-      title: content[language].featuredProductionsTitle,
-      text: content[language].featuredProductionsText,
+      title: localizedContent.featuredProductionsTitle,
+      text: localizedContent.featuredProductionsText,
       href: getLocalizedPath("/productions", locale),
       number: "03",
     },
@@ -37,11 +38,11 @@ export default function Products({ content, language, locale }: ContentProps) {
     >
       <div className="mb-16">
         <p className="text-xs tracking-[0.35em] text-[var(--brand-blue)]">
-          FEATURED
+          {localizedContent.featuredLabel}
         </p>
 
         <h2 className="mt-5 text-5xl font-bold">
-          {content[language].featuredTitle}
+          {localizedContent.featuredTitle}
         </h2>
 
         <div className="mt-6 h-px w-32 bg-white/10" />
@@ -59,7 +60,7 @@ export default function Products({ content, language, locale }: ContentProps) {
             </div>
 
             <p className="text-xs tracking-[0.35em] text-gray-500">
-              CATEGORY
+              {localizedContent.featuredCategoryLabel}
             </p>
 
             <h3 className="mt-8 text-3xl font-bold">
@@ -71,7 +72,7 @@ export default function Products({ content, language, locale }: ContentProps) {
             </p>
 
             <div className="mt-12 flex items-center gap-3 text-sm tracking-[0.25em] text-[var(--brand-blue)]">
-              DISCOVER
+              {localizedContent.featuredDiscoverLabel}
               <span className="transition-all duration-500 group-hover:translate-x-2">
                 →
               </span>
