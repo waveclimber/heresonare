@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { MediaSignalFrame } from "@/components/motion/MediaSignalFrame";
 import { ResonanceLink } from "@/components/motion/ResonanceLink";
 import { ResonanceSurface } from "@/components/motion/ResonanceSurface";
 
@@ -8,13 +9,13 @@ import {
   type ContentCardLabels,
 } from "@/components/content-card/contentCardUtils";
 import {
-  contentCardFallbackMedia,
   isApprovedIconContentMedia,
   isApprovedRasterContentMedia,
 } from "@/data/contentMedia";
 import type { ProductionDetailLabels } from "@/data/interfaceContent";
 import type { PageContentItem } from "@/data/pageContent";
 import { getLocalizedPath, type Locale } from "@/i18n/config";
+import { getMediaSignalVariant } from "@/lib/mediaSignal";
 
 type ProductionDetailProps = {
   production: PageContentItem;
@@ -62,31 +63,14 @@ function ProductionHeroMedia({
   heroMedia?: string;
 }) {
   return (
-    <div className="relative aspect-[16/11] min-w-0 overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_20%_20%,rgba(76,186,175,0.24),transparent_34%),radial-gradient(circle_at_80%_75%,rgba(14,108,178,0.38),transparent_40%),#111]">
-      {heroMedia ? (
-        <Image
-          src={heroMedia}
-          alt={production.title}
-          fill
-          priority
-          sizes="(max-width: 1023px) calc(100vw - 3rem), 50vw"
-          className="object-cover"
-        />
-      ) : (
-        <div
-          className="absolute inset-0 flex items-center justify-center p-10"
-          aria-hidden="true"
-        >
-          <Image
-            src={contentCardFallbackMedia}
-            alt=""
-            width={360}
-            height={90}
-            priority
-            className="h-auto w-full max-w-64 opacity-70"
-          />
-        </div>
-      )}
+    <div className="group relative aspect-[16/11] min-w-0 overflow-hidden rounded-[32px] border border-white/10">
+      <MediaSignalFrame
+        src={heroMedia}
+        alt={production.title}
+        priority
+        sizes="(max-width: 1023px) calc(100vw - 3rem), 50vw"
+        variant={getMediaSignalVariant(production.slug)}
+      />
     </div>
   );
 }
@@ -257,13 +241,12 @@ export default function ProductionDetail({
         )}
 
         {renderMedia && (
-          <div className="relative mt-8 aspect-[16/9] overflow-hidden rounded-[32px] border border-white/10">
-            <Image
+          <div className="group relative mt-8 aspect-[16/9] overflow-hidden rounded-[32px] border border-white/10">
+            <MediaSignalFrame
               src={renderMedia}
               alt={production.title}
-              fill
               sizes="(max-width: 1279px) calc(100vw - 3rem), 1280px"
-              className="object-cover"
+              variant={getMediaSignalVariant(production.slug)}
             />
           </div>
         )}

@@ -1,9 +1,11 @@
 import Image from "next/image";
+import { MediaSignalFrame } from "@/components/motion/MediaSignalFrame";
 import {
   contentCardFallbackMedia,
   isApprovedRasterContentMedia,
 } from "@/data/contentMedia";
 import type { PageContentItem } from "@/data/pageContent";
+import { getMediaSignalVariant } from "@/lib/mediaSignal";
 
 type ContentCardMediaProps = {
   item: PageContentItem;
@@ -33,13 +35,12 @@ export default function ContentCardMedia({ item }: ContentCardMediaProps) {
 
   return (
     <div className="relative aspect-[16/10] overflow-hidden border-b border-white/10 bg-[radial-gradient(circle_at_25%_20%,rgba(76,186,175,0.24),transparent_34%),radial-gradient(circle_at_80%_75%,rgba(14,108,178,0.34),transparent_38%),#111]">
-      {cardMedia ? (
-        <Image
+      {cardMedia || item.media ? (
+        <MediaSignalFrame
           src={cardMedia}
           alt={item.title}
-          fill
           sizes="(max-width: 767px) calc(100vw - 3rem), (max-width: 1279px) 50vw, 33vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          variant={getMediaSignalVariant(item.slug)}
         />
       ) : (
         <div

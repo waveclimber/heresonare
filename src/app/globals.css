@@ -203,6 +203,44 @@ body {
   will-change: opacity, transform;
 }
 
+.media-signal-scan {
+  opacity: 0;
+  transform: translateX(-130%);
+  transition:
+    opacity 240ms ease,
+    transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.media-signal-bar {
+  transform: scaleY(0.46);
+  transform-origin: bottom;
+  transition:
+    transform 620ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 320ms ease;
+}
+
+.group:focus-within .media-signal-scan {
+  opacity: 1;
+  transform: translateX(430%);
+}
+
+.group:focus-within .media-signal-bar {
+  opacity: 0.82;
+  transform: scaleY(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .group:hover .media-signal-scan {
+    opacity: 1;
+    transform: translateX(430%);
+  }
+
+  .group:hover .media-signal-bar {
+    opacity: 0.82;
+    transform: scaleY(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .spectrum-bar {
     animation: none;
@@ -219,6 +257,20 @@ body {
   .converge-target-ring {
     animation: none;
     opacity: 0.16;
+    transform: none;
+  }
+
+  .media-signal-bar,
+  .media-signal-scan {
+    transition: none;
+  }
+
+  .media-signal-scan {
+    display: none;
+  }
+
+  .media-signal-bar {
+    opacity: 0.62;
     transform: none;
   }
 }
