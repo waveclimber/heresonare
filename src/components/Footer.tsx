@@ -34,7 +34,7 @@ export default function Footer({ content, language, locale }: ContentProps) {
               <Link
                 key={link.key}
                 href={link.href}
-                className="text-sm tracking-[0.15em] text-gray-400 transition-all duration-300 hover:text-[var(--brand-blue)]"
+                className="resonance-link text-sm tracking-[0.15em] text-gray-400 transition-all duration-300 hover:text-[var(--brand-blue)]"
               >
                 {link.label}
               </Link>
@@ -43,7 +43,7 @@ export default function Footer({ content, language, locale }: ContentProps) {
 
           <a
             href="mailto:contact@heresonare.com"
-            className="mt-14 text-gray-400 transition-all duration-300 hover:text-[var(--brand-blue)]"
+            className="resonance-link mt-14 text-gray-400 transition-all duration-300 hover:text-[var(--brand-blue)]"
           >
             contact@heresonare.com
           </a>

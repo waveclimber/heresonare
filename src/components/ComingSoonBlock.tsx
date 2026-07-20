@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { ResonanceLink } from "@/components/motion/ResonanceLink";
 
 type ComingSoonBlockProps = {
   label: string;
@@ -36,25 +36,21 @@ export default function ComingSoonBlock({
 
         <p className="mt-6 leading-8 text-gray-400">{description}</p>
 
-        {cta &&
-          (isExternalHref(cta.href) ? (
-            <a
-              href={cta.href}
-              className={ctaClassName}
-              target={cta.href.startsWith("http") ? "_blank" : undefined}
-              rel={
-                cta.href.startsWith("http")
-                  ? "noopener noreferrer"
-                  : undefined
-              }
-            >
-              {cta.label}
-            </a>
-          ) : (
-            <Link href={cta.href} className={ctaClassName}>
-              {cta.label}
-            </Link>
-          ))}
+        {cta && (
+          <ResonanceLink
+            href={cta.href}
+            className={ctaClassName}
+            external={isExternalHref(cta.href)}
+            target={cta.href.startsWith("http") ? "_blank" : undefined}
+            rel={
+              cta.href.startsWith("http")
+                ? "noopener noreferrer"
+                : undefined
+            }
+          >
+            {cta.label}
+          </ResonanceLink>
+        )}
       </div>
     </section>
   );

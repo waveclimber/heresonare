@@ -1,5 +1,5 @@
-import Link from "next/link";
 import type { ContentCardLabels } from "@/components/content-card/contentCardUtils";
+import { ResonanceLink } from "@/components/motion/ResonanceLink";
 import type { PageContentItem, PageLink } from "@/data/pageContent";
 import { getLocalizedHref, type Locale } from "@/i18n/config";
 
@@ -40,19 +40,16 @@ function CardLink({ link, locale }: { link: PageLink; locale: Locale }) {
   const className =
     "inline-flex min-h-11 items-center rounded-full border border-[var(--brand-blue)]/60 px-5 py-2 text-sm font-medium text-[var(--brand-blue)] transition-colors hover:border-[var(--brand-blue)] hover:bg-[var(--brand-blue)] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--brand-yellow)]";
 
-  return internal && !link.external ? (
-    <Link href={href} className={className}>
-      {link.label}
-    </Link>
-  ) : (
-    <a
+  return (
+    <ResonanceLink
       href={href}
       className={className}
+      external={!internal || Boolean(link.external)}
       target={opensNewTab ? "_blank" : undefined}
       rel={opensNewTab ? "noopener noreferrer" : undefined}
     >
       {link.label}
-    </a>
+    </ResonanceLink>
   );
 }
 

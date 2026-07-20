@@ -35,6 +35,27 @@ export const motionOpacity = {
   visible: 1,
 } as const;
 
+export const motionSpring = {
+  pointer: {
+    type: "spring",
+    stiffness: 190,
+    damping: 22,
+    mass: 0.55,
+  },
+  scroll: {
+    type: "spring",
+    stiffness: 150,
+    damping: 34,
+    mass: 0.38,
+  },
+  surface: {
+    type: "spring",
+    stiffness: 220,
+    damping: 24,
+    mass: 0.65,
+  },
+} as const satisfies Record<string, Transition>;
+
 export type MotionDistance = keyof typeof motionDistance;
 export type MotionDuration = keyof typeof motionDuration;
 export type MotionStagger = keyof typeof motionStagger;

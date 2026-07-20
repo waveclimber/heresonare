@@ -2,6 +2,7 @@ import { useId } from "react";
 import ContentCardDetails from "@/components/content-card/ContentCardDetails";
 import ContentCardLinks from "@/components/content-card/ContentCardLinks";
 import ContentCardMedia from "@/components/content-card/ContentCardMedia";
+import { ResonanceSurface } from "@/components/motion/ResonanceSurface";
 import {
   createContentCardHeadingId,
   normalizeSpecs,
@@ -50,26 +51,30 @@ export default function ContentCard({
     : undefined;
 
   return (
-    <article
-      aria-labelledby={headingId}
-      className="group relative flex min-w-0 flex-col overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.04] backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:border-[var(--brand-blue)]/60 hover:bg-white/[0.07] hover:shadow-[0_0_45px_rgba(14,108,178,0.14)]"
+    <ResonanceSurface
+      as="article"
+      ariaLabelledby={headingId}
+      className="flex min-w-0 flex-col rounded-[32px] border border-white/10 bg-white/[0.04] backdrop-blur-md transition-[border-color,background-color,box-shadow] duration-500 hover:border-[var(--brand-blue)]/60 hover:bg-white/[0.07] hover:shadow-[0_0_45px_rgba(14,108,178,0.14)]"
+      interactive={Boolean(item.href || item.links?.length)}
     >
-      <ContentCardMedia item={item} />
+      <div className="flex h-full flex-col">
+        <ContentCardMedia item={item} />
 
-      <div className="flex flex-1 flex-col p-6 sm:p-8">
-        <ContentCardDetails
-          item={item}
-          labels={labels}
-          headingId={headingId}
-          primaryLabels={primaryLabels}
-          metadata={metadata}
-          features={features}
-          useCases={useCases}
-          specs={specs}
-          icon={icon}
-        />
-        <ContentCardLinks item={item} labels={labels} locale={locale} />
+        <div className="flex flex-1 flex-col p-6 sm:p-8">
+          <ContentCardDetails
+            item={item}
+            labels={labels}
+            headingId={headingId}
+            primaryLabels={primaryLabels}
+            metadata={metadata}
+            features={features}
+            useCases={useCases}
+            specs={specs}
+            icon={icon}
+          />
+          <ContentCardLinks item={item} labels={labels} locale={locale} />
+        </div>
       </div>
-    </article>
+    </ResonanceSurface>
   );
 }
