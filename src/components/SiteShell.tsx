@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { MotionProvider } from "@/components/motion/MotionProvider";
 import { useLanguage } from "@/context/LanguageContext";
 import { siteContent } from "@/data/siteContent";
 
@@ -15,15 +16,17 @@ export default function SiteShell({
   const { language, locale } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <Navbar
-        language={language}
-        locale={locale}
-      />
+    <MotionProvider>
+      <div className="min-h-screen bg-black text-white">
+        <Navbar
+          language={language}
+          locale={locale}
+        />
 
-      {children}
+        {children}
 
-      <Footer content={siteContent} language={language} locale={locale} />
-    </div>
+        <Footer content={siteContent} language={language} locale={locale} />
+      </div>
+    </MotionProvider>
   );
 }
