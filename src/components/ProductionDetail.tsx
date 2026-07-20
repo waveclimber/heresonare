@@ -111,7 +111,11 @@ export default function ProductionDetail({
     : undefined;
 
   return (
-    <main className="min-h-screen overflow-hidden bg-black px-6 pb-32 pt-28 text-white">
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="min-h-screen overflow-hidden bg-black px-6 pb-32 pt-28 text-white focus:outline-none"
+    >
       <article className="mx-auto max-w-7xl">
         <nav aria-label={detailLabels.backToList}>
           <ResonanceLink

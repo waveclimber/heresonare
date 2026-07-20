@@ -9,7 +9,7 @@ import {
 import { isLocale } from "@/i18n/config";
 import { createPageMetadata } from "@/lib/pageMetadata";
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   return navigationRoutes.map(({ key }) => ({ page: key }));

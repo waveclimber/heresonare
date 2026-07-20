@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { interfaceContent } from "@/data/interfaceContent";
 import { getNavigationItems } from "@/data/navigation";
 import {
@@ -32,6 +32,20 @@ export default function Navbar({ language, locale }: NavbarProps) {
   const labels = interfaceContent[language];
   const navigationItems = getNavigationItems(language, locale);
 
+  useEffect(() => {
+    if (!isMenuOpen && !isLanguageOpen) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMenuOpen(false);
+        setIsLanguageOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [isLanguageOpen, isMenuOpen]);
+
   const selectLanguage = (newLanguage: ContentLanguage) => {
     const newLocale = localeByContentLanguage[newLanguage];
 
@@ -59,10 +73,13 @@ export default function Navbar({ language, locale }: NavbarProps) {
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-white/10 bg-black/40 backdrop-blur-md">
       <div className="mx-auto flex h-20 w-full max-w-[1440px] items-center justify-between px-6 lg:px-12">
-        <Link href={`/${locale}`} className="resonance-logo group relative flex shrink-0 items-center gap-3 rounded-full">
+        <Link
+          href={`/${locale}`}
+          className="resonance-logo group relative flex shrink-0 items-center gap-3 rounded-full"
+        >
           <Image
             src="/images/logo/logo-color.svg"
-            alt="héReSonare"
+            alt=""
             width={48}
             height={48}
             className="relative z-10 h-12 w-auto transition-transform duration-500 group-hover:scale-105"
@@ -89,9 +106,13 @@ export default function Navbar({ language, locale }: NavbarProps) {
             <button
               type="button"
               className="resonance-control flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 transition-all duration-300 hover:border-[var(--brand-blue)] hover:text-white"
-              onClick={() => setIsLanguageOpen(!isLanguageOpen)}
+              onClick={() => {
+                setIsLanguageOpen(!isLanguageOpen);
+                setIsMenuOpen(false);
+              }}
               aria-expanded={isLanguageOpen}
               aria-controls={languageMenuId}
+              aria-haspopup="true"
               aria-label={labels.languageSelector}
             >
               <span>{language}</span>
@@ -114,6 +135,7 @@ export default function Navbar({ language, locale }: NavbarProps) {
                     type="button"
                     key={lang}
                     onClick={() => selectLanguage(lang)}
+                    aria-pressed={lang === language}
                     className="resonance-menu-item block w-full rounded-lg px-3 py-2 text-left hover:bg-white/10"
                   >
                     {labels.languageNames[lang]}
@@ -127,7 +149,10 @@ export default function Navbar({ language, locale }: NavbarProps) {
         <button
           type="button"
           className="resonance-control rounded-full p-2 text-2xl xl:hidden"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          onClick={() => {
+            setIsMenuOpen(!isMenuOpen);
+            setIsLanguageOpen(false);
+          }}
           aria-label={
             isMenuOpen
               ? labels.closeNavigationMenu
@@ -167,6 +192,7 @@ export default function Navbar({ language, locale }: NavbarProps) {
                     <button
                       type="button"
                       key={lang}
+                      aria-pressed={lang === language}
                       className="resonance-link w-fit text-left"
                       onClick={() => selectLanguage(lang)}
                     >

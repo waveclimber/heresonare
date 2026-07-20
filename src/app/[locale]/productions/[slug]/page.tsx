@@ -16,7 +16,7 @@ import {
 } from "@/i18n/config";
 import { createProductionMetadata } from "@/lib/pageMetadata";
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   return productionSlugs.map((slug) => ({ slug }));

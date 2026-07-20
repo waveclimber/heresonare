@@ -5,7 +5,14 @@ type InterfaceContent = {
   languageSelector: string;
   openNavigationMenu: string;
   closeNavigationMenu: string;
+  skipToContent: string;
   languageNames: Record<ContentLanguage, string>;
+  notFound: {
+    label: string;
+    title: string;
+    description: string;
+    backHome: string;
+  };
   staticPage: {
     features: string;
     useCases: string;
@@ -28,10 +35,18 @@ export const interfaceContent = {
     languageSelector: "Choose language",
     openNavigationMenu: "Open navigation menu",
     closeNavigationMenu: "Close navigation menu",
+    skipToContent: "Skip to main content",
     languageNames: {
       EN: "English",
       JP: "日本語",
       CN: "中文",
+    },
+    notFound: {
+      label: "404 / Signal Lost",
+      title: "This page is out of range.",
+      description:
+        "The address may have changed, or the page may not exist yet.",
+      backHome: "Return home",
     },
     staticPage: {
       features: "Features",
@@ -51,10 +66,18 @@ export const interfaceContent = {
     languageSelector: "言語を選択",
     openNavigationMenu: "ナビゲーションメニューを開く",
     closeNavigationMenu: "ナビゲーションメニューを閉じる",
+    skipToContent: "メインコンテンツへ移動",
     languageNames: {
       EN: "英語",
       JP: "日本語",
       CN: "中国語",
+    },
+    notFound: {
+      label: "404 / シグナルロスト",
+      title: "このページは受信範囲外です。",
+      description:
+        "アドレスが変更されたか、ページがまだ存在しない可能性があります。",
+      backHome: "ホームへ戻る",
     },
     staticPage: {
       features: "特徴",
@@ -74,10 +97,17 @@ export const interfaceContent = {
     languageSelector: "选择语言",
     openNavigationMenu: "打开导航菜单",
     closeNavigationMenu: "关闭导航菜单",
+    skipToContent: "跳到主要内容",
     languageNames: {
       EN: "英语",
       JP: "日语",
       CN: "中文",
+    },
+    notFound: {
+      label: "404 / 信号丢失",
+      title: "这个页面不在接收范围内。",
+      description: "地址可能已更改，或者这个页面尚未存在。",
+      backHome: "返回首页",
     },
     staticPage: {
       features: "特点",

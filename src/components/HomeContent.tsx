@@ -13,7 +13,11 @@ export default function HomeContent() {
   const localizedContent = siteContent[language];
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="min-h-screen bg-black text-white focus:outline-none"
+    >
       <Hero content={siteContent} language={language} />
 
       <ResonanceTicker
