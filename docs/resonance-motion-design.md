@@ -51,5 +51,6 @@ Motion+ source is not required or copied.
    panels, navigation, and inner-page headings.
 3. Brand story: connected About path and Contact/Footer Converge accents.
    Implemented with scroll-drawn traces and restrained convergence targets.
-4. Media pages: image reveal, coverflow, and restrained parallax after approved
-   media is available.
+4. Media pages: Productions now uses code-native Signal Media Frames and a
+   gated image-reveal path. Artist portraits, release covers, video thumbnails,
+   coverflow, and image parallax remain deferred until approved media exists.
