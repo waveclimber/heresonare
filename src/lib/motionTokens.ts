@@ -36,6 +36,7 @@ export const motionOpacity = {
 } as const;
 
 export type MotionDistance = keyof typeof motionDistance;
+export type MotionDuration = keyof typeof motionDuration;
 export type MotionStagger = keyof typeof motionStagger;
 export type RevealOrigin = "none" | "top" | "right" | "bottom" | "left";
 
@@ -70,9 +71,11 @@ function getRevealOffset(
 
 export function createRevealVariants({
   distance = "standard",
+  duration = "standard",
   origin = "bottom",
 }: {
   distance?: MotionDistance;
+  duration?: MotionDuration;
   origin?: RevealOrigin;
 } = {}): Variants {
   const offset = getRevealOffset(origin, distance);
@@ -86,7 +89,10 @@ export function createRevealVariants({
     visible: {
       opacity: motionOpacity.visible,
       ...(origin === "none" ? {} : { x: 0, y: 0 }),
-      transition: revealTransition,
+      transition: {
+        ...revealTransition,
+        duration: motionDuration[duration],
+      },
     },
   };
 }

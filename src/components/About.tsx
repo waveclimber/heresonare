@@ -1,4 +1,9 @@
 import type { Language, SiteContent } from "@/data/siteContent";
+import {
+  Reveal,
+  StaggerGroup,
+  StaggerItem,
+} from "@/components/motion/MotionPrimitives";
 
 type ContentProps = {
   content: SiteContent;
@@ -35,7 +40,7 @@ export default function About({ content, language }: ContentProps) {
 
       <div className="relative z-10 mx-auto max-w-7xl">
         <div className="grid gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-          <div className="sticky top-32">
+          <Reveal className="sticky top-32" distance="subtle">
             <p className="text-xs uppercase tracking-[0.35em] text-[var(--brand-blue)]">
               {localizedContent.aboutTag}
             </p>
@@ -53,34 +58,33 @@ export default function About({ content, language }: ContentProps) {
             <p className="mt-6 max-w-xl text-lg leading-8 text-gray-400">
               {localizedContent.aboutText2}
             </p>
-          </div>
+          </Reveal>
 
-          <div className="grid gap-6">
+          <StaggerGroup className="grid gap-6">
             {aboutCards.map((card) => (
-              <div
-                key={card.number}
-                className="group relative overflow-hidden rounded-[36px] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:border-[var(--brand-blue)]/50 hover:bg-white/[0.07] hover:shadow-[0_0_45px_rgba(14,108,178,0.14)]"
-              >
-                <div className="absolute right-8 top-8 text-6xl font-bold text-white/5 transition-all duration-500 group-hover:text-white/10">
-                  {card.number}
+              <StaggerItem key={card.number} className="h-full">
+                <div className="group relative h-full overflow-hidden rounded-[36px] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:border-[var(--brand-blue)]/50 hover:bg-white/[0.07] hover:shadow-[0_0_45px_rgba(14,108,178,0.14)]">
+                  <div className="absolute right-8 top-8 text-6xl font-bold text-white/5 transition-all duration-500 group-hover:text-white/10">
+                    {card.number}
+                  </div>
+
+                  <div className={`mb-8 h-1 w-16 rounded-full ${card.color}`} />
+
+                  <p className="text-xs tracking-[0.3em] text-gray-500">
+                    {localizedContent.aboutCardLabel}
+                  </p>
+
+                  <h3 className="mt-5 text-2xl font-semibold text-white">
+                    {card.title}
+                  </h3>
+
+                  <p className="mt-5 max-w-2xl leading-8 text-gray-400">
+                    {card.text}
+                  </p>
                 </div>
-
-                <div className={`mb-8 h-1 w-16 rounded-full ${card.color}`} />
-
-                <p className="text-xs tracking-[0.3em] text-gray-500">
-                  {localizedContent.aboutCardLabel}
-                </p>
-
-                <h3 className="mt-5 text-2xl font-semibold text-white">
-                  {card.title}
-                </h3>
-
-                <p className="mt-5 max-w-2xl leading-8 text-gray-400">
-                  {card.text}
-                </p>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerGroup>
         </div>
       </div>
     </section>

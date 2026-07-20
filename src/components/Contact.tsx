@@ -1,4 +1,9 @@
 import type { Language, SiteContent } from "@/data/siteContent";
+import {
+  Reveal,
+  StaggerGroup,
+  StaggerItem,
+} from "@/components/motion/MotionPrimitives";
 
 type ContentProps = {
   content: SiteContent;
@@ -38,7 +43,7 @@ export default function Contact({ content, language }: ContentProps) {
 
       <div className="relative z-10 mx-auto max-w-7xl">
         <div className="grid gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-          <div>
+          <Reveal distance="subtle">
             <p className="text-xs uppercase tracking-[0.35em] text-[var(--brand-blue)]">
               {localizedContent.contactTag}
             </p>
@@ -61,35 +66,34 @@ export default function Contact({ content, language }: ContentProps) {
                 {localizedContent.contactEmailLabel}
               </a>
             </div>
-          </div>
+          </Reveal>
 
-          <div className="grid gap-6">
+          <StaggerGroup className="grid gap-6">
             {contactItems.map((item) => (
-              <div
-                key={item.number}
-                className={`group relative overflow-hidden rounded-[36px] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:bg-white/[0.07] hover:shadow-[0_0_45px_rgba(14,108,178,0.14)] ${item.border}`}
-              >
-                <div className="absolute right-8 top-8 text-6xl font-bold text-white/5 transition-all duration-500 group-hover:text-white/10">
-                  {item.number}
+              <StaggerItem key={item.number} className="h-full">
+                <div className={`group relative h-full overflow-hidden rounded-[36px] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:bg-white/[0.07] hover:shadow-[0_0_45px_rgba(14,108,178,0.14)] ${item.border}`}>
+                  <div className="absolute right-8 top-8 text-6xl font-bold text-white/5 transition-all duration-500 group-hover:text-white/10">
+                    {item.number}
+                  </div>
+
+                  <div className={`mb-8 h-1 w-16 rounded-full ${item.color}`} />
+
+                  <p className="text-xs tracking-[0.3em] text-gray-500">
+                    {localizedContent.contactCardLabel}
+                  </p>
+
+                  <h3 className="mt-5 text-2xl font-semibold text-white">
+                    {item.title}
+                  </h3>
+
+                  <p className="mt-5 max-w-2xl leading-8 text-gray-400">
+                    {item.text}
+                  </p>
                 </div>
-
-                <div className={`mb-8 h-1 w-16 rounded-full ${item.color}`} />
-
-                <p className="text-xs tracking-[0.3em] text-gray-500">
-                  {localizedContent.contactCardLabel}
-                </p>
-
-                <h3 className="mt-5 text-2xl font-semibold text-white">
-                  {item.title}
-                </h3>
-
-                <p className="mt-5 max-w-2xl leading-8 text-gray-400">
-                  {item.text}
-                </p>
-              </div>
+              </StaggerItem>
             ))}
 
-            <div className="flex flex-wrap gap-3 pt-2">
+            <StaggerItem className="flex flex-wrap gap-3 pt-2" distance="subtle">
               <a
                 href="https://xhslink.com/m/2DWzE9YLlI2"
                 target="_blank"
@@ -106,8 +110,8 @@ export default function Contact({ content, language }: ContentProps) {
               <span className="rounded-full border border-white/10 px-5 py-2 text-sm text-gray-500">
                 {localizedContent.xStatus}
               </span>
-            </div>
-          </div>
+            </StaggerItem>
+          </StaggerGroup>
         </div>
       </div>
     </section>

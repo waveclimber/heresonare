@@ -1,4 +1,9 @@
 import type { Language, SiteContent } from "@/data/siteContent";
+import {
+  Reveal,
+  StaggerGroup,
+  StaggerItem,
+} from "@/components/motion/MotionPrimitives";
 
 type ContentProps = {
   content: SiteContent;
@@ -21,28 +26,58 @@ export default function Hero({ content, language }: ContentProps) {
 
       <div className="relative z-10 mx-auto max-w-7xl">
         <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
-          <div>
-            <p className="text-xs font-medium tracking-[0.35em] text-[var(--brand-blue)]">
+          <StaggerGroup as="div" stagger="compact">
+            <StaggerItem
+              as="p"
+              className="text-xs font-medium tracking-[0.35em] text-[var(--brand-blue)]"
+              distance="subtle"
+              duration="slow"
+            >
               {localizedContent.heroEyebrow}
-            </p>
+            </StaggerItem>
 
-            <p className="mt-5 text-xs tracking-[0.4em] text-gray-500">
+            <StaggerItem
+              as="p"
+              className="mt-5 text-xs tracking-[0.4em] text-gray-500"
+              distance="subtle"
+              duration="slow"
+            >
               {localizedContent.heroBusinessAreas}
-            </p>
+            </StaggerItem>
 
-            <h1 className="mt-10 text-5xl font-bold tracking-tight sm:text-6xl xl:text-[6rem]">
+            <StaggerItem
+              as="h1"
+              className="mt-10 text-5xl font-bold tracking-tight sm:text-6xl xl:text-[6rem]"
+              distance="subtle"
+              duration="slow"
+            >
               {localizedContent.heroTitle}
-            </h1>
+            </StaggerItem>
 
-            <h2 className="mt-8 text-3xl font-semibold text-white">
+            <StaggerItem
+              as="h2"
+              className="mt-8 text-3xl font-semibold text-white"
+              distance="subtle"
+              duration="slow"
+            >
               {localizedContent.heroSubtitle}
-            </h2>
+            </StaggerItem>
 
-            <p className="mt-6 max-w-xl text-lg leading-8 text-gray-400">
+            <StaggerItem
+              as="p"
+              className="mt-6 max-w-xl text-lg leading-8 text-gray-400"
+              distance="subtle"
+              duration="slow"
+            >
               {localizedContent.heroDescription}
-            </p>
+            </StaggerItem>
 
-            <div className="mt-12 flex flex-col gap-4 sm:flex-row">
+            <StaggerItem
+              as="div"
+              className="mt-12 flex flex-col gap-4 sm:flex-row"
+              distance="subtle"
+              duration="slow"
+            >
               <button
                 type="button"
                 onClick={() => scrollToSection("featured")}
@@ -58,11 +93,15 @@ export default function Hero({ content, language }: ContentProps) {
               >
                 {localizedContent.contactButton}
               </button>
-            </div>
-          </div>
+            </StaggerItem>
+          </StaggerGroup>
 
           <div>
-            <div className="mx-auto max-w-lg rounded-[36px] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md shadow-[0_0_50px_rgba(14,108,178,0.12)]">
+            <Reveal
+              className="mx-auto max-w-lg rounded-[36px] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md shadow-[0_0_50px_rgba(14,108,178,0.12)]"
+              distance="subtle"
+              duration="slow"
+            >
               <p className="text-xs tracking-[0.35em] text-gray-500">
                 {localizedContent.latestReleaseLabel}
               </p>
@@ -92,7 +131,7 @@ export default function Hero({ content, language }: ContentProps) {
                   />
                 ))}
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </div>
