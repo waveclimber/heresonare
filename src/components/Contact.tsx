@@ -4,6 +4,10 @@ import {
   StaggerGroup,
   StaggerItem,
 } from "@/components/motion/MotionPrimitives";
+import {
+  ContactConvergePath,
+  ConvergeTarget,
+} from "@/components/motion/ConvergePaths";
 import { ResonanceLink } from "@/components/motion/ResonanceLink";
 import { ResonanceSurface } from "@/components/motion/ResonanceSurface";
 
@@ -47,7 +51,8 @@ export default function Contact({ content, language }: ContentProps) {
       <div className="absolute left-[-160px] bottom-0 h-[420px] w-[420px] rounded-full bg-[var(--brand-pink)] opacity-10 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        <div className="grid gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+        <ContactConvergePath className="pointer-events-none absolute inset-0 z-0 hidden lg:block" />
+        <div className="relative z-10 grid gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <Reveal distance="subtle">
             <p className="text-xs uppercase tracking-[0.35em] text-[var(--brand-blue)]">
               {localizedContent.contactTag}
@@ -63,19 +68,23 @@ export default function Contact({ content, language }: ContentProps) {
               {localizedContent.contactText}
             </p>
 
-            <div className="mt-10">
+            <ConvergeTarget className="mt-10">
               <ResonanceLink
                 href="mailto:contact@heresonare.com"
                 className="inline-flex rounded-full bg-[var(--brand-blue)] px-8 py-3 text-white shadow-[0_0_25px_rgba(14,108,178,0.35)] transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_0_34px_rgba(14,108,178,0.62)]"
               >
                 {localizedContent.contactEmailLabel}
               </ResonanceLink>
-            </div>
+            </ConvergeTarget>
           </Reveal>
 
           <StaggerGroup className="grid gap-6">
             {contactItems.map((item) => (
-              <StaggerItem key={item.number} className="h-full">
+              <StaggerItem key={item.number} className="relative h-full">
+                <span
+                  aria-hidden="true"
+                  className={`absolute -left-1 top-1/2 z-20 hidden h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full shadow-[0_0_16px_currentColor] lg:block ${item.color}`}
+                />
                 <ResonanceSurface
                   className={`h-full rounded-[36px] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-[border-color,background-color,box-shadow] duration-500 hover:bg-white/[0.07] hover:shadow-[0_0_45px_rgba(14,108,178,0.12)] ${item.border}`}
                   glow={item.glow}

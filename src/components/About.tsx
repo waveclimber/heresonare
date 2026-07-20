@@ -4,6 +4,7 @@ import {
   StaggerGroup,
   StaggerItem,
 } from "@/components/motion/MotionPrimitives";
+import { StoryConvergePath } from "@/components/motion/ConvergePaths";
 import { ResonanceSurface } from "@/components/motion/ResonanceSurface";
 
 type ContentProps = {
@@ -64,34 +65,41 @@ export default function About({ content, language }: ContentProps) {
             </p>
           </Reveal>
 
-          <StaggerGroup className="grid gap-6">
-            {aboutCards.map((card) => (
-              <StaggerItem key={card.number} className="h-full">
-                <ResonanceSurface
-                  className="h-full rounded-[36px] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-[border-color,background-color,box-shadow] duration-500 hover:border-white/20 hover:bg-white/[0.07] hover:shadow-[0_0_45px_rgba(14,108,178,0.12)]"
-                  glow={card.glow}
-                >
-                  <div className="absolute right-8 top-8 text-6xl font-bold text-white/5 transition-all duration-500 group-hover:text-white/10">
-                    {card.number}
-                  </div>
+          <div className="relative">
+            <StoryConvergePath className="pointer-events-none absolute bottom-6 left-0 top-6 w-5 sm:w-10" />
+            <StaggerGroup className="relative grid gap-6 pl-5 sm:pl-10">
+              {aboutCards.map((card) => (
+                <StaggerItem key={card.number} className="relative h-full">
+                  <span
+                    aria-hidden="true"
+                    className={`absolute -left-[18px] top-1/2 z-20 h-2.5 w-2.5 -translate-y-1/2 rounded-full shadow-[0_0_16px_currentColor] sm:-left-[34px] ${card.color}`}
+                  />
+                  <ResonanceSurface
+                    className="h-full rounded-[36px] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-[border-color,background-color,box-shadow] duration-500 hover:border-white/20 hover:bg-white/[0.07] hover:shadow-[0_0_45px_rgba(14,108,178,0.12)]"
+                    glow={card.glow}
+                  >
+                    <div className="absolute right-8 top-8 text-6xl font-bold text-white/5 transition-all duration-500 group-hover:text-white/10">
+                      {card.number}
+                    </div>
 
-                  <div className={`mb-8 h-1 w-16 rounded-full ${card.color}`} />
+                    <div className={`mb-8 h-1 w-16 rounded-full ${card.color}`} />
 
-                  <p className="text-xs tracking-[0.3em] text-gray-500">
-                    {localizedContent.aboutCardLabel}
-                  </p>
+                    <p className="text-xs tracking-[0.3em] text-gray-500">
+                      {localizedContent.aboutCardLabel}
+                    </p>
 
-                  <h3 className="mt-5 text-2xl font-semibold text-white">
-                    {card.title}
-                  </h3>
+                    <h3 className="mt-5 text-2xl font-semibold text-white">
+                      {card.title}
+                    </h3>
 
-                  <p className="mt-5 max-w-2xl leading-8 text-gray-400">
-                    {card.text}
-                  </p>
-                </ResonanceSurface>
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
+                    <p className="mt-5 max-w-2xl leading-8 text-gray-400">
+                      {card.text}
+                    </p>
+                  </ResonanceSurface>
+                </StaggerItem>
+              ))}
+            </StaggerGroup>
+          </div>
         </div>
       </div>
     </section>

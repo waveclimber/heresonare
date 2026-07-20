@@ -50,5 +50,6 @@ Motion+ source is not required or copied.
 2. Global interaction: tiered light response for controls, cards, information
    panels, navigation, and inner-page headings.
 3. Brand story: connected About path and Contact/Footer Converge accents.
+   Implemented with scroll-drawn traces and restrained convergence targets.
 4. Media pages: image reveal, coverflow, and restrained parallax after approved
    media is available.
