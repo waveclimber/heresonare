@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
+import { ResonanceLink } from "@/components/motion/ResonanceLink";
+import { ResonanceSurface } from "@/components/motion/ResonanceSurface";
 
 import {
   normalizeSpecs,
@@ -129,13 +130,14 @@ export default function ProductionDetail({
     <main className="min-h-screen overflow-hidden bg-black px-6 pb-32 pt-28 text-white">
       <article className="mx-auto max-w-7xl">
         <nav aria-label={detailLabels.backToList}>
-          <Link
+          <ResonanceLink
             href={getLocalizedPath("/productions", locale)}
-            className="inline-flex min-h-11 items-center rounded-full border border-white/20 px-5 py-2 text-sm text-gray-300 transition-colors hover:border-[var(--brand-blue)] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--brand-yellow)]"
+            glow="teal"
+            className="inline-flex min-h-11 items-center rounded-full border border-white/20 px-5 py-2 text-sm text-gray-300 transition-[transform,border-color,color,box-shadow] hover:-translate-y-1 hover:border-[var(--brand-teal)] hover:text-white hover:shadow-[0_0_26px_rgba(76,186,175,0.18)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--brand-yellow)]"
           >
             <span aria-hidden="true">←</span>
             <span className="ml-2">{detailLabels.backToList}</span>
-          </Link>
+          </ResonanceLink>
         </nav>
 
         <header className="relative mt-10 grid min-w-0 items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16">
@@ -201,28 +203,36 @@ export default function ProductionDetail({
         </header>
 
         <div className="mt-20 grid min-w-0 gap-8 md:grid-cols-2">
-          <div className="min-w-0 rounded-[32px] border border-white/10 bg-white/[0.04] p-7 sm:p-9">
+          <ResonanceSurface
+            className="min-w-0 rounded-[32px] border border-white/10 bg-white/[0.04] p-7 sm:p-9"
+            glow="blue"
+          >
             <DetailList
               id="production-features"
               label={labels.features}
               values={features}
               markerClassName="marker:text-[var(--brand-blue)]"
             />
-          </div>
-          <div className="min-w-0 rounded-[32px] border border-white/10 bg-white/[0.04] p-7 sm:p-9">
+          </ResonanceSurface>
+          <ResonanceSurface
+            className="min-w-0 rounded-[32px] border border-white/10 bg-white/[0.04] p-7 sm:p-9"
+            glow="teal"
+          >
             <DetailList
               id="production-use-cases"
               label={labels.useCases}
               values={useCases}
               markerClassName="marker:text-[var(--brand-teal)]"
             />
-          </div>
+          </ResonanceSurface>
         </div>
 
         {specs.length > 0 && (
-          <section
+          <ResonanceSurface
+            as="article"
             className="mt-8 min-w-0 rounded-[32px] border border-white/10 bg-white/[0.04] p-7 sm:p-9"
-            aria-labelledby="production-specifications"
+            ariaLabelledby="production-specifications"
+            glow="yellow"
           >
             <h2
               id="production-specifications"
@@ -243,7 +253,7 @@ export default function ProductionDetail({
                 </div>
               ))}
             </dl>
-          </section>
+          </ResonanceSurface>
         )}
 
         {renderMedia && (

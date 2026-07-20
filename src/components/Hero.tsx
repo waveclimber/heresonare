@@ -4,6 +4,7 @@ import {
   StaggerGroup,
   StaggerItem,
 } from "@/components/motion/MotionPrimitives";
+import { ResonanceButton } from "@/components/motion/ResonanceButton";
 
 type ContentProps = {
   content: SiteContent;
@@ -78,21 +79,22 @@ export default function Hero({ content, language }: ContentProps) {
               distance="subtle"
               duration="slow"
             >
-              <button
+              <ResonanceButton
                 type="button"
                 onClick={() => scrollToSection("featured")}
-                className="rounded-full bg-[var(--brand-blue)] px-10 py-4 text-white shadow-[0_0_25px_rgba(14,108,178,0.4)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_32px_rgba(14,108,178,0.6)]"
+                className="rounded-full bg-[var(--brand-blue)] px-10 py-4 text-white shadow-[0_0_25px_rgba(14,108,178,0.4)] transition-[box-shadow] duration-300 hover:shadow-[0_0_34px_rgba(14,108,178,0.68)]"
               >
                 {localizedContent.discover}
-              </button>
+              </ResonanceButton>
 
-              <button
+              <ResonanceButton
                 type="button"
+                glow="teal"
                 onClick={() => scrollToSection("contact")}
-                className="rounded-full border border-white/20 px-10 py-4 text-gray-300 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--brand-blue)] hover:text-[var(--brand-blue)]"
+                className="rounded-full border border-white/20 px-10 py-4 text-gray-300 transition-[border-color,color,box-shadow] duration-300 hover:border-[var(--brand-teal)] hover:text-white hover:shadow-[0_0_28px_rgba(76,186,175,0.2)]"
               >
                 {localizedContent.contactButton}
-              </button>
+              </ResonanceButton>
             </StaggerItem>
           </StaggerGroup>
 
@@ -118,9 +120,12 @@ export default function Hero({ content, language }: ContentProps) {
                 {localizedContent.latestReleaseText}
               </p>
 
-              <div className="mt-10 flex h-40 items-end justify-center gap-2">
+              <div
+                aria-hidden="true"
+                className="mt-10 flex h-40 items-end justify-center gap-2"
+              >
                 {spectrumBars.map((height, index) => (
-                  <div
+                  <span
                     key={index}
                     className="spectrum-bar w-4 rounded-full bg-[var(--brand-blue)] shadow-[0_0_24px_rgba(14,108,178,0.9)]"
                     style={{

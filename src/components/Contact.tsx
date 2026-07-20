@@ -4,6 +4,8 @@ import {
   StaggerGroup,
   StaggerItem,
 } from "@/components/motion/MotionPrimitives";
+import { ResonanceLink } from "@/components/motion/ResonanceLink";
+import { ResonanceSurface } from "@/components/motion/ResonanceSurface";
 
 type ContentProps = {
   content: SiteContent;
@@ -19,6 +21,7 @@ export default function Contact({ content, language }: ContentProps) {
       text: localizedContent.contactArtistsText,
       color: "bg-[var(--brand-blue)]",
       border: "hover:border-[var(--brand-blue)]/50",
+      glow: "blue" as const,
     },
     {
       number: "02",
@@ -26,6 +29,7 @@ export default function Contact({ content, language }: ContentProps) {
       text: localizedContent.contactPartnersText,
       color: "bg-[var(--brand-pink)]",
       border: "hover:border-[var(--brand-pink)]/50",
+      glow: "pink" as const,
     },
     {
       number: "03",
@@ -33,6 +37,7 @@ export default function Contact({ content, language }: ContentProps) {
       text: localizedContent.contactVenuesText,
       color: "bg-[var(--brand-teal)]",
       border: "hover:border-[var(--brand-teal)]/50",
+      glow: "teal" as const,
     },
   ];
 
@@ -59,19 +64,22 @@ export default function Contact({ content, language }: ContentProps) {
             </p>
 
             <div className="mt-10">
-              <a
+              <ResonanceLink
                 href="mailto:contact@heresonare.com"
-                className="inline-flex rounded-full bg-[var(--brand-blue)] px-8 py-3 text-white shadow-[0_0_25px_rgba(14,108,178,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_32px_rgba(14,108,178,0.55)]"
+                className="inline-flex rounded-full bg-[var(--brand-blue)] px-8 py-3 text-white shadow-[0_0_25px_rgba(14,108,178,0.35)] transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_0_34px_rgba(14,108,178,0.62)]"
               >
                 {localizedContent.contactEmailLabel}
-              </a>
+              </ResonanceLink>
             </div>
           </Reveal>
 
           <StaggerGroup className="grid gap-6">
             {contactItems.map((item) => (
               <StaggerItem key={item.number} className="h-full">
-                <div className={`group relative h-full overflow-hidden rounded-[36px] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:bg-white/[0.07] hover:shadow-[0_0_45px_rgba(14,108,178,0.14)] ${item.border}`}>
+                <ResonanceSurface
+                  className={`h-full rounded-[36px] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-[border-color,background-color,box-shadow] duration-500 hover:bg-white/[0.07] hover:shadow-[0_0_45px_rgba(14,108,178,0.12)] ${item.border}`}
+                  glow={item.glow}
+                >
                   <div className="absolute right-8 top-8 text-6xl font-bold text-white/5 transition-all duration-500 group-hover:text-white/10">
                     {item.number}
                   </div>
@@ -89,19 +97,21 @@ export default function Contact({ content, language }: ContentProps) {
                   <p className="mt-5 max-w-2xl leading-8 text-gray-400">
                     {item.text}
                   </p>
-                </div>
+                </ResonanceSurface>
               </StaggerItem>
             ))}
 
             <StaggerItem className="flex flex-wrap gap-3 pt-2" distance="subtle">
-              <a
+              <ResonanceLink
                 href="https://xhslink.com/m/2DWzE9YLlI2"
+                external
+                glow="pink"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-full border border-white/10 px-5 py-2 text-sm text-gray-300 transition-all duration-300 hover:border-[var(--brand-pink)] hover:text-[var(--brand-pink)]"
               >
                 {localizedContent.xiaohongshuLabel}
-              </a>
+              </ResonanceLink>
 
               <span className="rounded-full border border-white/10 px-5 py-2 text-sm text-gray-500">
                 {localizedContent.instagramStatus}

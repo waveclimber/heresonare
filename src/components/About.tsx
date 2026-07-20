@@ -4,6 +4,7 @@ import {
   StaggerGroup,
   StaggerItem,
 } from "@/components/motion/MotionPrimitives";
+import { ResonanceSurface } from "@/components/motion/ResonanceSurface";
 
 type ContentProps = {
   content: SiteContent;
@@ -18,18 +19,21 @@ export default function About({ content, language }: ContentProps) {
       title: localizedContent.aboutStoryTitle,
       text: localizedContent.aboutStoryText,
       color: "bg-[var(--brand-blue)]",
+      glow: "blue" as const,
     },
     {
       number: "02",
       title: localizedContent.aboutMissionTitle,
       text: localizedContent.aboutMissionText,
       color: "bg-[var(--brand-pink)]",
+      glow: "pink" as const,
     },
     {
       number: "03",
       title: localizedContent.aboutVisionTitle,
       text: localizedContent.aboutVisionText,
       color: "bg-[var(--brand-teal)]",
+      glow: "teal" as const,
     },
   ];
 
@@ -63,7 +67,10 @@ export default function About({ content, language }: ContentProps) {
           <StaggerGroup className="grid gap-6">
             {aboutCards.map((card) => (
               <StaggerItem key={card.number} className="h-full">
-                <div className="group relative h-full overflow-hidden rounded-[36px] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:border-[var(--brand-blue)]/50 hover:bg-white/[0.07] hover:shadow-[0_0_45px_rgba(14,108,178,0.14)]">
+                <ResonanceSurface
+                  className="h-full rounded-[36px] border border-white/10 bg-white/[0.04] p-8 backdrop-blur-md transition-[border-color,background-color,box-shadow] duration-500 hover:border-white/20 hover:bg-white/[0.07] hover:shadow-[0_0_45px_rgba(14,108,178,0.12)]"
+                  glow={card.glow}
+                >
                   <div className="absolute right-8 top-8 text-6xl font-bold text-white/5 transition-all duration-500 group-hover:text-white/10">
                     {card.number}
                   </div>
@@ -81,7 +88,7 @@ export default function About({ content, language }: ContentProps) {
                   <p className="mt-5 max-w-2xl leading-8 text-gray-400">
                     {card.text}
                   </p>
-                </div>
+                </ResonanceSurface>
               </StaggerItem>
             ))}
           </StaggerGroup>
