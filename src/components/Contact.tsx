@@ -6,25 +6,26 @@ type ContentProps = {
 };
 
 export default function Contact({ content, language }: ContentProps) {
+  const localizedContent = content[language];
   const contactItems = [
     {
       number: "01",
-      title: "Artists",
-      text: "Artist management, collaboration and creative opportunities.",
+      title: localizedContent.contactArtistsTitle,
+      text: localizedContent.contactArtistsText,
       color: "bg-[var(--brand-blue)]",
       border: "hover:border-[var(--brand-blue)]/50",
     },
     {
       number: "02",
-      title: "Partners",
-      text: "Business partnerships, brand collaborations and production projects.",
+      title: localizedContent.contactPartnersTitle,
+      text: localizedContent.contactPartnersText,
       color: "bg-[var(--brand-pink)]",
       border: "hover:border-[var(--brand-pink)]/50",
     },
     {
       number: "03",
-      title: "Venues",
-      text: "Live events, venues, performances and future stage experiences.",
+      title: localizedContent.contactVenuesTitle,
+      text: localizedContent.contactVenuesText,
       color: "bg-[var(--brand-teal)]",
       border: "hover:border-[var(--brand-teal)]/50",
     },
@@ -39,17 +40,17 @@ export default function Contact({ content, language }: ContentProps) {
         <div className="grid gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <div>
             <p className="text-xs uppercase tracking-[0.35em] text-[var(--brand-blue)]">
-              {content[language].contactTag}
+              {localizedContent.contactTag}
             </p>
 
             <h2 className="mt-6 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
-              {content[language].contactTitle}
+              {localizedContent.contactTitle}
             </h2>
 
             <div className="mt-8 h-px w-32 bg-white/10" />
 
             <p className="mt-8 max-w-xl text-lg leading-8 text-gray-400">
-              {content[language].contactText}
+              {localizedContent.contactText}
             </p>
 
             <div className="mt-10">
@@ -57,7 +58,7 @@ export default function Contact({ content, language }: ContentProps) {
                 href="mailto:contact@heresonare.com"
                 className="inline-flex rounded-full bg-[var(--brand-blue)] px-8 py-3 text-white shadow-[0_0_25px_rgba(14,108,178,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_32px_rgba(14,108,178,0.55)]"
               >
-                contact@heresonare.com
+                {localizedContent.contactEmailLabel}
               </a>
             </div>
           </div>
@@ -75,7 +76,7 @@ export default function Contact({ content, language }: ContentProps) {
                 <div className={`mb-8 h-1 w-16 rounded-full ${item.color}`} />
 
                 <p className="text-xs tracking-[0.3em] text-gray-500">
-                  CONTACT TYPE
+                  {localizedContent.contactCardLabel}
                 </p>
 
                 <h3 className="mt-5 text-2xl font-semibold text-white">
@@ -95,15 +96,15 @@ export default function Contact({ content, language }: ContentProps) {
                 rel="noopener noreferrer"
                 className="rounded-full border border-white/10 px-5 py-2 text-sm text-gray-300 transition-all duration-300 hover:border-[var(--brand-pink)] hover:text-[var(--brand-pink)]"
               >
-                小红书
+                {localizedContent.xiaohongshuLabel}
               </a>
 
               <span className="rounded-full border border-white/10 px-5 py-2 text-sm text-gray-500">
-                Instagram Coming Soon
+                {localizedContent.instagramStatus}
               </span>
 
               <span className="rounded-full border border-white/10 px-5 py-2 text-sm text-gray-500">
-                X Coming Soon
+                {localizedContent.xStatus}
               </span>
             </div>
           </div>

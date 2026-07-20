@@ -1,11 +1,95 @@
+import type { ContentLanguage } from "@/i18n/config";
+
+type SitePageContent = {
+  tag: string;
+  title: string;
+  description: string;
+};
+
+type SiteContentEntry = {
+  heroEyebrow: string;
+  heroBusinessAreas: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  heroDescription: string;
+  discover: string;
+  contactButton: string;
+  latestReleaseLabel: string;
+  latestReleaseTitle: string;
+  latestReleaseMeta: string;
+  latestReleaseText: string;
+  productsTitle: string;
+  product1Title: string;
+  product1Text: string;
+  product2Title: string;
+  product2Text: string;
+  product3Title: string;
+  product3Text: string;
+  featuredLabel: string;
+  featuredTitle: string;
+  featuredCategoryLabel: string;
+  featuredDiscoverLabel: string;
+  featuredArtistsTitle: string;
+  featuredArtistsText: string;
+  featuredMusicTitle: string;
+  featuredMusicText: string;
+  featuredProductionsTitle: string;
+  featuredProductionsText: string;
+  aboutTag: string;
+  aboutTitle: string;
+  aboutText1: string;
+  aboutText2: string;
+  aboutCardLabel: string;
+  aboutStoryTitle: string;
+  aboutStoryText: string;
+  aboutMissionTitle: string;
+  aboutMissionText: string;
+  aboutVisionTitle: string;
+  aboutVisionText: string;
+  contactTag: string;
+  contactTitle: string;
+  contactText: string;
+  contactEmailLabel: string;
+  contactCardLabel: string;
+  contactArtistsTitle: string;
+  contactArtistsText: string;
+  contactPartnersTitle: string;
+  contactPartnersText: string;
+  contactVenuesTitle: string;
+  contactVenuesText: string;
+  xiaohongshuLabel: string;
+  instagramStatus: string;
+  xStatus: string;
+  footerSlogan: string;
+  footerCopyright: string;
+  pages: Record<
+    | "artists"
+    | "music"
+    | "productions"
+    | "venues"
+    | "tour"
+    | "video"
+    | "store"
+    | "about"
+    | "contact",
+    SitePageContent
+  >;
+};
+
 export const siteContent = {
     EN: {
+        heroEyebrow: "Music • Emotion • Resonance",
+        heroBusinessAreas: "ENTERTAINMENT • LABEL • PRODUCTION",
         heroTitle: "héReSonare",
         heroSubtitle: "Resonate with the Future",
         heroDescription:
           "An entertainment and creative platform where music, artists and imagination come together.",
           discover: "Discover",
         contactButton: "Contact",
+        latestReleaseLabel: "LATEST RELEASE",
+        latestReleaseTitle: "Coming Soon",
+        latestReleaseMeta: "SINGLE · 2026",
+        latestReleaseText: "New sound experiences are on the way.",
       
         productsTitle: "Products",
         product1Title: "Audio Innovation",
@@ -18,7 +102,10 @@ export const siteContent = {
         product3Text:
           "Exploring new possibilities where creativity, emotion and innovation meet.",
       
+        featuredLabel: "FEATURED",
         featuredTitle: "Featured Content",
+        featuredCategoryLabel: "CATEGORY",
+        featuredDiscoverLabel: "DISCOVER",
       
         featuredArtistsTitle: "ARTISTS",
         featuredArtistsText:
@@ -38,6 +125,7 @@ export const siteContent = {
           "héReSonare believes that sound is more than a medium of communication. It is a bridge connecting creativity, emotion, technology and human experience.",
         aboutText2:
           "Through artistic expression and technological innovation, we explore new ways for people, brands and communities to resonate with each other.",
+        aboutCardLabel: "BRAND IDENTITY",
       
         aboutStoryTitle: "Brand Story",
         aboutStoryText:
@@ -55,6 +143,20 @@ export const siteContent = {
         contactTitle: "Let's Create Resonance Together",
         contactText:
           "Whether you are a creator, partner or innovator, we would love to hear from you.",
+        contactEmailLabel: "contact@heresonare.com",
+        contactCardLabel: "CONTACT TYPE",
+        contactArtistsTitle: "Artists",
+        contactArtistsText:
+          "Artist management, collaboration and creative opportunities.",
+        contactPartnersTitle: "Partners",
+        contactPartnersText:
+          "Business partnerships, brand collaborations and production projects.",
+        contactVenuesTitle: "Venues",
+        contactVenuesText:
+          "Live events, venues, performances and future stage experiences.",
+        xiaohongshuLabel: "小红书",
+        instagramStatus: "Instagram Coming Soon",
+        xStatus: "X Coming Soon",
       
         footerSlogan: "Sound Beyond Boundaries",
         footerCopyright:
@@ -110,12 +212,18 @@ export const siteContent = {
       },
   
       JP: {
+        heroEyebrow: "音楽 • 感情 • 共鳴",
+        heroBusinessAreas: "エンターテインメント • レーベル • プロダクション",
         heroTitle: "héReSonare",
         heroSubtitle: "未来と共鳴する。",
         heroDescription:
           "音楽、アーティスト、そして創造性が交差するエンターテインメントとクリエイティブのプラットフォーム。",
           discover: "探索する",
         contactButton: "お問い合わせ",
+        latestReleaseLabel: "最新リリース",
+        latestReleaseTitle: "近日公開",
+        latestReleaseMeta: "シングル · 2026",
+        latestReleaseText: "新しいサウンド体験をまもなくお届けします。",
       
         productsTitle: "製品",
         product1Title: "音響イノベーション",
@@ -128,7 +236,10 @@ export const siteContent = {
         product3Text:
           "創造性、感情、革新が交わる新しい可能性を探求します。",
       
+        featuredLabel: "注目",
         featuredTitle: "注目コンテンツ",
+        featuredCategoryLabel: "カテゴリー",
+        featuredDiscoverLabel: "詳しく見る",
       
         featuredArtistsTitle: "アーティスト",
         featuredArtistsText:
@@ -148,6 +259,7 @@ export const siteContent = {
           "héReSonareは、音を単なるコミュニケーション手段ではなく、創造性・感情・技術・人間体験をつなぐ架け橋だと考えています。",
         aboutText2:
           "芸術表現と技術革新を通じて、人々、ブランド、コミュニティが共鳴する新しい方法を探求します。",
+        aboutCardLabel: "ブランドアイデンティティ",
       
         aboutStoryTitle: "ブランドストーリー",
         aboutStoryText:
@@ -165,6 +277,20 @@ export const siteContent = {
         contactTitle: "共に新しい共鳴を創りましょう",
         contactText:
           "クリエイター、パートナー、イノベーターの皆様からのご連絡をお待ちしております。",
+        contactEmailLabel: "contact@heresonare.com",
+        contactCardLabel: "お問い合わせ種別",
+        contactArtistsTitle: "アーティスト",
+        contactArtistsText:
+          "アーティストマネジメント、コラボレーション、創作活動のご相談。",
+        contactPartnersTitle: "パートナー",
+        contactPartnersText:
+          "ビジネス提携、ブランドコラボレーション、制作プロジェクトのご相談。",
+        contactVenuesTitle: "会場",
+        contactVenuesText:
+          "ライブイベント、会場、公演、未来のステージ体験のご相談。",
+        xiaohongshuLabel: "小红书",
+        instagramStatus: "Instagram 近日公開",
+        xStatus: "X 近日公開",
       
         footerSlogan: "Sound Beyond Boundaries",
         footerCopyright:
@@ -237,12 +363,18 @@ export const siteContent = {
       },
   
       CN: {
+        heroEyebrow: "音乐 • 情感 • 共鸣",
+        heroBusinessAreas: "娱乐 • 厂牌 • 制作",
         heroTitle: "héReSonare",
         heroSubtitle: "与未来共鸣",
         heroDescription:
           "一个汇聚音乐、艺人与创造力的娱乐与创意平台。",
           discover: "探索",
         contactButton: "联系我们",
+        latestReleaseLabel: "最新发行",
+        latestReleaseTitle: "即将发布",
+        latestReleaseMeta: "单曲 · 2026",
+        latestReleaseText: "全新的声音体验即将到来。",
       
         productsTitle: "产品",
         product1Title: "声音创新",
@@ -255,7 +387,10 @@ export const siteContent = {
         product3Text:
           "探索创造力、情感与创新交汇处的全新可能。",
       
+        featuredLabel: "精选",
         featuredTitle: "精选内容",
+        featuredCategoryLabel: "类别",
+        featuredDiscoverLabel: "探索",
       
         featuredArtistsTitle: "艺人",
         featuredArtistsText:
@@ -275,6 +410,7 @@ export const siteContent = {
           "héReSonare 认为声音不仅仅是传播媒介，它是连接创造力、情感、技术与人类体验的桥梁。",
         aboutText2:
           "通过艺术表达与技术创新，我们探索人与人、品牌与社区之间产生共鸣的新方式。",
+        aboutCardLabel: "品牌理念",
       
         aboutStoryTitle: "品牌故事",
         aboutStoryText:
@@ -292,6 +428,17 @@ export const siteContent = {
         contactTitle: "一起创造新的共鸣",
         contactText:
           "无论您是创作者、合作伙伴还是创新者，我们都期待与您交流。",
+        contactEmailLabel: "contact@heresonare.com",
+        contactCardLabel: "联系类型",
+        contactArtistsTitle: "艺人",
+        contactArtistsText: "艺人管理、合作与创意机会。",
+        contactPartnersTitle: "合作伙伴",
+        contactPartnersText: "商务合作、品牌联动与制作项目。",
+        contactVenuesTitle: "场地",
+        contactVenuesText: "现场活动、场地、演出与未来舞台体验。",
+        xiaohongshuLabel: "小红书",
+        instagramStatus: "Instagram 即将上线",
+        xStatus: "X 即将上线",
       
         footerSlogan: "超越边界的声音",
         footerCopyright:
@@ -363,7 +510,7 @@ export const siteContent = {
             },
           },
       },
-  };
+  } as const satisfies Record<ContentLanguage, SiteContentEntry>;
 
   export type SiteContent = typeof siteContent;
   export type Language = keyof typeof siteContent;
