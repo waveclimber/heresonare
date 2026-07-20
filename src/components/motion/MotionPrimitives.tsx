@@ -8,6 +8,7 @@ import {
   createRevealVariants,
   createStaggerGroupVariants,
   type MotionDistance,
+  type MotionDuration,
   type MotionStagger,
   type RevealOrigin,
 } from "@/lib/motionTokens";
@@ -17,11 +18,15 @@ const semanticMotionElements = {
   aside: m.aside,
   div: m.div,
   footer: m.footer,
+  h1: m.h1,
+  h2: m.h2,
+  h3: m.h3,
   header: m.header,
   li: m.li,
   main: m.main,
   nav: m.nav,
   ol: m.ol,
+  p: m.p,
   section: m.section,
   span: m.span,
   ul: m.ul,
@@ -38,6 +43,7 @@ type MotionPrimitiveProps = {
 type RevealProps = MotionPrimitiveProps & {
   amount?: "some" | "all" | number;
   distance?: MotionDistance;
+  duration?: MotionDuration;
   from?: RevealOrigin;
   once?: boolean;
 };
@@ -50,6 +56,7 @@ type StaggerGroupProps = MotionPrimitiveProps & {
 
 type StaggerItemProps = MotionPrimitiveProps & {
   distance?: MotionDistance;
+  duration?: MotionDuration;
   from?: RevealOrigin;
 };
 
@@ -71,6 +78,7 @@ export function Reveal({
   children,
   className,
   distance = "standard",
+  duration = "standard",
   from = "bottom",
   once = true,
 }: RevealProps) {
@@ -82,7 +90,7 @@ export function Reveal({
       animate={hasHydrated ? "hidden" : "visible"}
       className={className}
       initial={false}
-      variants={createRevealVariants({ distance, origin: from })}
+      variants={createRevealVariants({ distance, duration, origin: from })}
       viewport={{ amount, once }}
       whileInView="visible"
     >
@@ -121,6 +129,7 @@ export function StaggerItem({
   children,
   className,
   distance = "standard",
+  duration = "standard",
   from = "bottom",
 }: StaggerItemProps) {
   const Component = semanticMotionElements[as];
@@ -128,7 +137,7 @@ export function StaggerItem({
   return (
     <Component
       className={className}
-      variants={createRevealVariants({ distance, origin: from })}
+      variants={createRevealVariants({ distance, duration, origin: from })}
     >
       {children}
     </Component>
