@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { interfaceContent } from "@/data/interfaceContent";
 import { getNavigationItems } from "@/data/navigation";
 import {
@@ -23,6 +23,8 @@ export default function Navbar({ language, locale }: NavbarProps) {
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const languageButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
 
   const navLinkBaseClassName =
     "transition-all duration-300 hover:text-[var(--brand-blue)]";
@@ -37,8 +39,14 @@ export default function Navbar({ language, locale }: NavbarProps) {
 
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        event.preventDefault();
+        const trigger = isLanguageOpen
+          ? languageButtonRef.current
+          : mobileMenuButtonRef.current;
+
         setIsMenuOpen(false);
         setIsLanguageOpen(false);
+        trigger?.focus();
       }
     };
 
@@ -104,6 +112,7 @@ export default function Navbar({ language, locale }: NavbarProps) {
 
           <div className="relative">
             <button
+              ref={languageButtonRef}
               type="button"
               className="resonance-control flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 transition-all duration-300 hover:border-[var(--brand-blue)] hover:text-white"
               onClick={() => {
@@ -147,6 +156,7 @@ export default function Navbar({ language, locale }: NavbarProps) {
         </div>
 
         <button
+          ref={mobileMenuButtonRef}
           type="button"
           className="resonance-control rounded-full p-2 text-2xl xl:hidden"
           onClick={() => {

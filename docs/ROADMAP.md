@@ -96,3 +96,10 @@ with `noindex`, while unsupported locales continue to use the framework-global
 **Acceptance conditions:** Releases are reproducible from reviewed commits; CI and required approvals protect production; rollback is tested; monitoring ownership is defined; repository synchronization direction, conflict handling, credentials, and audit expectations are documented.
 
 **Dependencies or risks:** Requires repository-owner decisions about hosting, branch protection, company remote authority, secrets management, and incident ownership. Divergent histories or automated bidirectional synchronization could overwrite reviewed work if not carefully controlled.
+
+**Current cross-site QA baseline:** The supported route shapes now pass focused
+desktop, tablet, and mobile overflow checks. Escape-key menu dismissal restores
+focus to its trigger, the skip link and visible focus treatment are verified,
+and the compiled Reduced Motion contract covers CSS and Motion-driven effects.
+Representative operating-system and device checks remain part of the final
+pre-launch validation.
