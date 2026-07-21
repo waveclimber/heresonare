@@ -3,6 +3,7 @@
 import { useId, useRef, type CSSProperties, type ReactNode } from "react";
 import {
   useReducedMotion,
+  useInView,
   useScroll,
   useSpring,
   useTransform,
@@ -257,9 +258,17 @@ export function ConvergeTarget({
   className?: string;
   color?: keyof typeof targetColorClassNames;
 }) {
+  const targetRef = useRef<HTMLDivElement>(null);
+  const isTargetActive = useInView(targetRef, {
+    amount: "some",
+    margin: "120px 0px",
+  });
+
   return (
     <div
+      ref={targetRef}
       className={`converge-target relative isolate w-fit ${className ?? ""}`}
+      data-motion-active={isTargetActive}
       style={{ "--converge-delay": "0.9s" } as CSSProperties}
     >
       <span

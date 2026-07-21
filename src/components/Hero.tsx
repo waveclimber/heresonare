@@ -1,3 +1,8 @@
+"use client";
+
+import { useRef } from "react";
+import { useInView } from "motion/react";
+
 import type { Language, SiteContent } from "@/data/siteContent";
 import {
   Reveal,
@@ -13,6 +18,11 @@ type ContentProps = {
 
 export default function Hero({ content, language }: ContentProps) {
   const localizedContent = content[language];
+  const spectrumRef = useRef<HTMLDivElement>(null);
+  const isSpectrumActive = useInView(spectrumRef, {
+    amount: "some",
+    margin: "120px 0px",
+  });
   const spectrumBars = [
     32, 56, 40, 72, 48, 88, 60, 96, 64, 84, 52, 70, 44, 58, 36,
   ];
@@ -121,8 +131,10 @@ export default function Hero({ content, language }: ContentProps) {
               </p>
 
               <div
+                ref={spectrumRef}
                 aria-hidden="true"
                 className="mt-10 flex h-40 items-end justify-center gap-2"
+                data-motion-active={isSpectrumActive}
               >
                 {spectrumBars.map((height, index) => (
                   <span
