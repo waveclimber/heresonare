@@ -39,6 +39,10 @@ editorial replacements do not make the Stage 3 engineering incomplete.
 
 **Dependencies or risks:** Several routes still contain placeholder or coming-soon content. Editorial approval and structurally aligned EN, JP, and CN data are required before placeholders can be treated as production content.
 
+Concept records without stable detail destinations now render as informational
+cards rather than linking back to their own list pages. A data-level assertion
+protects that interaction contract while approved content remains pending.
+
 ## 4. Add dynamic detail pages
 
 **Status:** In progress. Stage 4A delivers the production-only vertical slice;
