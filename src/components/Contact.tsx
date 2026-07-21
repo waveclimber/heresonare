@@ -10,6 +10,8 @@ import {
 } from "@/components/motion/ConvergePaths";
 import { ResonanceLink } from "@/components/motion/ResonanceLink";
 import { ResonanceSurface } from "@/components/motion/ResonanceSurface";
+import { interfaceContent } from "@/data/interfaceContent";
+import { officialSocialLinks } from "@/data/socialLinks";
 
 type ContentProps = {
   content: SiteContent;
@@ -42,6 +44,33 @@ export default function Contact({ content, language }: ContentProps) {
       color: "bg-[var(--brand-teal)]",
       border: "hover:border-[var(--brand-teal)]/50",
       glow: "teal" as const,
+    },
+  ];
+  const opensInNewTab = interfaceContent[language].staticPage.opensInNewTab;
+  const socialLinks = [
+    {
+      key: "instagram",
+      href: officialSocialLinks.instagram,
+      label: localizedContent.instagramLabel,
+      glow: "blue" as const,
+      hover:
+        "hover:border-[var(--brand-blue)] hover:text-[var(--brand-blue)]",
+    },
+    {
+      key: "xiaohongshu",
+      href: officialSocialLinks.xiaohongshu,
+      label: localizedContent.xiaohongshuLabel,
+      glow: "pink" as const,
+      hover:
+        "hover:border-[var(--brand-pink)] hover:text-[var(--brand-pink)]",
+    },
+    {
+      key: "douyin",
+      href: officialSocialLinks.douyin,
+      label: localizedContent.douyinLabel,
+      glow: "teal" as const,
+      hover:
+        "hover:border-[var(--brand-teal)] hover:text-[var(--brand-teal)]",
     },
   ];
 
@@ -110,25 +139,33 @@ export default function Contact({ content, language }: ContentProps) {
               </StaggerItem>
             ))}
 
-            <StaggerItem className="flex flex-wrap gap-3 pt-2" distance="subtle">
-              <ResonanceLink
-                href="https://xhslink.com/m/2DWzE9YLlI2"
-                external
-                glow="pink"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full border border-white/10 px-5 py-2 text-sm text-gray-300 transition-all duration-300 hover:border-[var(--brand-pink)] hover:text-[var(--brand-pink)]"
-              >
-                {localizedContent.xiaohongshuLabel}
-              </ResonanceLink>
-
-              <span className="rounded-full border border-white/10 px-5 py-2 text-sm text-gray-500">
-                {localizedContent.instagramStatus}
-              </span>
-
-              <span className="rounded-full border border-white/10 px-5 py-2 text-sm text-gray-500">
-                {localizedContent.xStatus}
-              </span>
+            <StaggerItem className="pt-3" distance="subtle">
+              <nav aria-label={localizedContent.socialChannelsLabel}>
+                <p className="mb-4 text-xs uppercase tracking-[0.3em] text-gray-500">
+                  {localizedContent.socialChannelsLabel}
+                </p>
+                <ul className="flex flex-wrap gap-3">
+                  {socialLinks.map((socialLink) => (
+                    <li key={socialLink.key}>
+                      <ResonanceLink
+                        href={socialLink.href}
+                        external
+                        glow={socialLink.glow}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`inline-flex min-h-11 items-center rounded-full border border-white/10 px-5 py-2 text-sm text-gray-300 transition-all duration-300 hover:-translate-y-0.5 ${socialLink.hover}`}
+                      >
+                        <span aria-hidden="true">
+                          {socialLink.label} ↗
+                        </span>
+                        <span className="sr-only">
+                          {socialLink.label}, {opensInNewTab}
+                        </span>
+                      </ResonanceLink>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
             </StaggerItem>
           </StaggerGroup>
         </div>

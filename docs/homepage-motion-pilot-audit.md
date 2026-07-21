@@ -44,7 +44,7 @@ was present at every size, and the desktop/mobile navigation breakpoint
 remained unchanged.
 
 The heading levels, native Hero buttons, Featured `Link` elements, mail link,
-and external social link retain their existing accessible names and targets.
+and external social links retain their accessible names and approved targets.
 Motion wrappers are neutral `div` elements around cards, and direct motion
 elements preserve the original `h1`, `h2`, `h3`, and `p` semantics. Static
 keyboard review confirms the interactive controls remain native buttons or
