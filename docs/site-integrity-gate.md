@@ -4,8 +4,8 @@
 
 This task turns the existing release-readiness spot checks into a repeatable
 production-build gate. It changes no page content, routes, metadata policy,
-visual design, motion behavior, dependencies, Vercel configuration, or company
-mirror state.
+page visual design, motion behavior, dependencies, Vercel configuration, or
+company mirror state.
 
 `npm run check:site` runs after `next build`. It inspects generated HTML and
 metadata outputs, starts the production server on an available local port,
@@ -46,6 +46,16 @@ checks runtime responses, and always stops the temporary server afterward.
 - Concept production detail pages are not mislabeled as products, offers, or
   other unapproved entity types.
 
+### Social sharing images
+
+- Every public page exposes exactly one locale-matching Open Graph image and
+  one locale-matching Twitter image.
+- Both channels publish a localized, non-empty, matching alternative text and
+  use the large Twitter card format.
+- Metadata declares PNG output at exactly 1200 by 630 pixels.
+- The production server must return all six locale/channel endpoints as valid
+  PNG files at the declared dimensions and no larger than 5 MB.
+
 ### Redirects and errors
 
 - Legacy unprefixed routes redirect using `Accept-Language`.
@@ -64,7 +74,8 @@ generated snapshot to approve itself automatically.
 
 The check uses only Node.js and the installed Next.js package. It adds no test
 framework or runtime dependency. Browser interaction and subjective visual or
-motion acceptance remain separate when a task changes the interface.
+motion acceptance remain separate when a task changes the interface or a
+generated social asset.
 
 ## Validation results
 
@@ -75,6 +86,8 @@ The full local quality gate passed against the production build:
 - All 39 internal destinations formed a closed, locale-preserving route set.
 - Metadata and language alternates passed for all 39 public pages.
 - Structured data and localized breadcrumbs passed for all 39 public pages.
+- Three localized Open Graph and three localized Twitter image endpoints
+  returned valid 1200 by 630 PNG files.
 - Generated and runtime sitemap and robots checks passed.
 - Three representative locale redirects and three localized 404 responses
   passed.
