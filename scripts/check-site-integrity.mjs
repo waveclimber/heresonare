@@ -62,6 +62,164 @@ function getTags(html, expression) {
   return [...html.matchAll(expression)].map(([tag]) => tag);
 }
 
+function checkStructuredData({
+  html,
+  route,
+  routeShape,
+  locale,
+  htmlLang,
+  canonicalUrl,
+  title,
+  description,
+}) {
+  const scripts = [
+    ...html.matchAll(
+      /<script type="application\/ld\+json">([\s\S]*?)<\/script>/gu,
+    ),
+  ];
+  record(
+    scripts.length === 1,
+    `${route} has ${scripts.length} JSON-LD scripts instead of one.`,
+  );
+  if (scripts.length !== 1) return;
+
+  let structuredData;
+  try {
+    structuredData = JSON.parse(scripts[0][1]);
+  } catch {
+    failures.push(`${route} has invalid JSON-LD.`);
+    return;
+  }
+
+  record(
+    structuredData?.["@context"] === "https://schema.org",
+    `${route} has the wrong JSON-LD context.`,
+  );
+  const graph = Array.isArray(structuredData?.["@graph"])
+    ? structuredData["@graph"]
+    : [];
+  record(graph.length > 0, `${route} has no JSON-LD graph.`);
+
+  const expectedTypes =
+    routeShape === "/"
+      ? ["Organization", "WebSite", "WebPage"]
+      : ["WebPage", "BreadcrumbList"];
+  const actualTypes = graph.map((node) => node?.["@type"]);
+  record(
+    actualTypes.length === expectedTypes.length &&
+      expectedTypes.every((type) => actualTypes.includes(type)),
+    `${route} has an unexpected JSON-LD type set.`,
+  );
+
+  const webPage = graph.find((node) => node?.["@type"] === "WebPage");
+  record(Boolean(webPage), `${route} is missing WebPage structured data.`);
+  if (webPage) {
+    record(
+      webPage["@id"] === `${canonicalUrl}#webpage`,
+      `${route} has the wrong WebPage ID.`,
+    );
+    record(
+      webPage.url === canonicalUrl,
+      `${route} has the wrong WebPage URL.`,
+    );
+    record(
+      webPage.name === decodeHtmlAttribute(title ?? ""),
+      `${route} has a WebPage name that differs from its title.`,
+    );
+    record(
+      webPage.description === decodeHtmlAttribute(description ?? ""),
+      `${route} has a WebPage description that differs from its metadata.`,
+    );
+    record(
+      webPage.inLanguage === htmlLang,
+      `${route} has the wrong structured-data language.`,
+    );
+    record(
+      webPage.isPartOf?.["@id"] === `${siteOrigin}/#website`,
+      `${route} has the wrong WebSite reference.`,
+    );
+    record(
+      webPage.about?.["@id"] === `${siteOrigin}/#organization`,
+      `${route} has the wrong Organization reference.`,
+    );
+    if (routeShape !== "/") {
+      record(
+        webPage.breadcrumb?.["@id"] === `${canonicalUrl}#breadcrumb`,
+        `${route} has the wrong breadcrumb reference.`,
+      );
+    }
+  }
+
+  if (routeShape === "/") {
+    const organization = graph.find(
+      (node) => node?.["@type"] === "Organization",
+    );
+    const website = graph.find((node) => node?.["@type"] === "WebSite");
+    record(
+      organization?.["@id"] === `${siteOrigin}/#organization` &&
+        organization?.name === "h\u00e9ReSonare" &&
+        organization?.url === `${siteOrigin}/` &&
+        organization?.logo === `${siteOrigin}/icon.png`,
+      `${route} has invalid Organization structured data.`,
+    );
+    record(
+      website?.["@id"] === `${siteOrigin}/#website` &&
+        website?.url === `${siteOrigin}/` &&
+        website?.name === "h\u00e9ReSonare" &&
+        Array.isArray(website?.inLanguage) &&
+        website.inLanguage.length === localeDefinitions.length &&
+        localeDefinitions.every(({ htmlLang: language }) =>
+          website.inLanguage.includes(language),
+        ) &&
+        website?.publisher?.["@id"] === `${siteOrigin}/#organization`,
+      `${route} has invalid WebSite structured data.`,
+    );
+    return;
+  }
+
+  const breadcrumb = graph.find(
+    (node) => node?.["@type"] === "BreadcrumbList",
+  );
+  const routeParts = routeShape.split("/").filter(Boolean);
+  const breadcrumbShapes =
+    routeParts[0] === "productions" && routeParts.length === 2
+      ? ["/", "/productions", routeShape]
+      : ["/", routeShape];
+  const breadcrumbItems = Array.isArray(breadcrumb?.itemListElement)
+    ? breadcrumb.itemListElement
+    : [];
+
+  record(
+    breadcrumb?.["@id"] === `${canonicalUrl}#breadcrumb`,
+    `${route} has the wrong BreadcrumbList ID.`,
+  );
+  record(
+    breadcrumbItems.length === breadcrumbShapes.length,
+    `${route} has an incomplete breadcrumb trail.`,
+  );
+  for (const [index, shape] of breadcrumbShapes.entries()) {
+    const item = breadcrumbItems[index];
+    const expectedItemUrl = `${siteOrigin}${localizeRoute(shape, locale)}`;
+    record(
+      item?.["@type"] === "ListItem" &&
+        item?.position === index + 1 &&
+        typeof item?.name === "string" &&
+        item.name.trim().length > 0 &&
+        item?.item === expectedItemUrl,
+      `${route} has an invalid breadcrumb at position ${index + 1}.`,
+    );
+  }
+
+  const currentName = decodeHtmlAttribute(title ?? "").replace(
+    / \| h\u00e9ReSonare$/u,
+    "",
+  );
+  record(
+    breadcrumbItems.at(-1)?.name === currentName,
+    `${route} has a breadcrumb name that differs from its page title.`,
+  );
+}
+
 function record(condition, message) {
   if (!condition) failures.push(message);
 }
@@ -126,6 +284,7 @@ function checkStaticPages() {
       const descriptionTag = html.match(
         /<meta name="description"[^>]*>/u,
       )?.[0];
+      const description = getAttribute(descriptionTag ?? "", "content");
 
       record(
         getAttribute(htmlTag, "lang") === htmlLang,
@@ -133,7 +292,7 @@ function checkStaticPages() {
       );
       record(Boolean(title?.trim()), `${route} is missing a title.`);
       record(
-        Boolean(getAttribute(descriptionTag ?? "", "content")?.trim()),
+        Boolean(description?.trim()),
         `${route} is missing a description.`,
       );
       record(
@@ -172,6 +331,17 @@ function checkStaticPages() {
           `${route} has an invalid ${hrefLang} alternate.`,
         );
       }
+
+      checkStructuredData({
+        html,
+        route,
+        routeShape,
+        locale,
+        htmlLang,
+        canonicalUrl,
+        title,
+        description,
+      });
 
       const anchorTags = getTags(html, /<a\b[^>]*\bhref="[^"]+"[^>]*>/gu);
       for (const tag of anchorTags) {
@@ -446,6 +616,7 @@ console.table([
   {
     "Public routes": expectedRoutes.length,
     "Internal destinations": internalLinkCount,
+    "Structured-data pages": expectedRoutes.length,
     "Localized 404 cases": 3,
     "Legacy redirects": 3,
   },

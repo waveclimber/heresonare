@@ -14,8 +14,7 @@ import {
   type Locale,
 } from "@/i18n/config";
 import { getAbsoluteSiteUrl, siteUrl } from "@/lib/siteUrl";
-
-const BRAND_NAME = "h\u00e9ReSonare";
+import { brandName } from "@/lib/siteIdentity";
 
 function buildMetadata(
   title: string,
@@ -42,7 +41,7 @@ function buildMetadata(
     openGraph: {
       title,
       description,
-      siteName: BRAND_NAME,
+      siteName: brandName,
       locale: openGraphLocaleByLocale[locale],
       type: "website",
       url: getAbsoluteSiteUrl(canonicalPath),
@@ -61,10 +60,10 @@ export function createSiteMetadata(locale: Locale): Metadata {
 
   return {
     metadataBase: siteUrl,
-    title: `${BRAND_NAME} | ${content.heroSubtitle}`,
+    title: `${brandName} | ${content.heroSubtitle}`,
     description: content.heroDescription,
     keywords: [
-      BRAND_NAME,
+      brandName,
       "Sound Beyond Boundaries",
       "Audio Innovation",
       "Creative Technology",
@@ -72,8 +71,8 @@ export function createSiteMetadata(locale: Locale): Metadata {
       "Creative Brand",
       "Future Experience",
     ],
-    authors: [{ name: BRAND_NAME }],
-    creator: BRAND_NAME,
+    authors: [{ name: brandName }],
+    creator: brandName,
     icons: {
       icon: "/icon.png",
       apple: "/apple-icon.png",
@@ -97,7 +96,7 @@ export function createHomeMetadata(locale: Locale): Metadata {
   const content = siteContent[language];
 
   return buildMetadata(
-    `${BRAND_NAME} | ${content.heroSubtitle}`,
+    `${brandName} | ${content.heroSubtitle}`,
     content.heroDescription,
     locale,
     "/"
@@ -112,7 +111,7 @@ export function createPageMetadata(
   const page = pageContent[language][pageKey];
 
   return buildMetadata(
-    `${page.hero.title} | ${BRAND_NAME}`,
+    `${page.hero.title} | ${brandName}`,
     page.hero.description,
     locale,
     `/${pageKey}`
@@ -124,7 +123,7 @@ export function createProductionMetadata(
   locale: Locale
 ): Metadata {
   return buildMetadata(
-    `${production.title} | ${BRAND_NAME}`,
+    `${production.title} | ${brandName}`,
     production.description,
     locale,
     `/productions/${production.slug}`

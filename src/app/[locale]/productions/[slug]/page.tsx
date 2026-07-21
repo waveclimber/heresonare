@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import ProductionDetail from "@/components/ProductionDetail";
+import StructuredData from "@/components/StructuredData";
 import { interfaceContent } from "@/data/interfaceContent";
 import {
   getLocalizedProduction,
@@ -15,6 +16,7 @@ import {
   isLocale,
 } from "@/i18n/config";
 import { createProductionMetadata } from "@/lib/pageMetadata";
+import { createProductionStructuredData } from "@/lib/structuredData";
 
 export const dynamicParams = true;
 
@@ -52,11 +54,19 @@ export default async function ProductionPage({ params }: ProductionPageProps) {
   const language = contentLanguageByLocale[result.locale];
 
   return (
-    <ProductionDetail
-      production={result.production}
-      locale={result.locale}
-      labels={interfaceContent[language].staticPage}
-      detailLabels={interfaceContent[language].productionDetail}
-    />
+    <>
+      <StructuredData
+        data={createProductionStructuredData(
+          result.production,
+          result.locale,
+        )}
+      />
+      <ProductionDetail
+        production={result.production}
+        locale={result.locale}
+        labels={interfaceContent[language].staticPage}
+        detailLabels={interfaceContent[language].productionDetail}
+      />
+    </>
   );
 }

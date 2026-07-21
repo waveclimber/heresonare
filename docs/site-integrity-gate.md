@@ -36,6 +36,16 @@ checks runtime responses, and always stops the temporary server afterward.
   production host and sitemap URL.
 - Both endpoints return HTTP 200 from the production server.
 
+### Structured data
+
+- Every public page contains exactly one parseable JSON-LD graph.
+- `WebPage` identity, URL, copy, and language match the rendered metadata.
+- Localized homepages contain the stable `Organization` and multilingual
+  `WebSite` entities.
+- Inner pages contain complete locale-preserving `BreadcrumbList` trails.
+- Concept production detail pages are not mislabeled as products, offers, or
+  other unapproved entity types.
+
 ### Redirects and errors
 
 - Legacy unprefixed routes redirect using `Accept-Language`.
@@ -64,6 +74,7 @@ The full local quality gate passed against the production build:
 - All 39 public localized routes returned HTTP 200.
 - All 39 internal destinations formed a closed, locale-preserving route set.
 - Metadata and language alternates passed for all 39 public pages.
+- Structured data and localized breadcrumbs passed for all 39 public pages.
 - Generated and runtime sitemap and robots checks passed.
 - Three representative locale redirects and three localized 404 responses
   passed.
