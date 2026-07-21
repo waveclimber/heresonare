@@ -70,8 +70,8 @@ with `noindex`, while unsupported locales continue to use the framework-global
 ## 5. Complete SEO infrastructure
 
 **Status:** In progress. Canonical URLs, language alternates, page metadata,
-sitemap, robots policy, and the minimal structured-data foundation are now in
-place. Dedicated social imagery and final production-domain confirmation remain
+sitemap, robots policy, the minimal structured-data foundation, and localized
+social imagery are now in place. Final production-domain confirmation remains
 open.
 
 **Objective:** Provide technically complete, locale-aware discovery and sharing metadata.
@@ -82,9 +82,8 @@ open.
 
 **Dependencies or risks:** The canonical origin defaults to
 `https://heresonare.com` and remains configurable until the production domain
-is confirmed. Dedicated social imagery requires approved brand artwork. More
-specific rich-result entity types depend on approved public content and must not
-be inferred from concept records.
+is confirmed. More specific rich-result entity types depend on approved public
+content and must not be inferred from concept records.
 
 ## 6. Introduce CMS or database-backed content
 
@@ -135,3 +134,10 @@ sanitized, locale-aware JSON-LD graph. Homepages identify the organization and
 multilingual website; inner pages provide WebPage identity and localized
 breadcrumbs. Concept production records deliberately make no product, offer,
 event, or availability claims.
+
+**Current social-sharing baseline:** EN, JP, and CN pages now publish dedicated
+1200 by 630 Open Graph and large Twitter cards. The shared design applies the
+brand's pulse, ripple, orbit, and spectrum language without changing the page
+interface; localized copy and alternative text are generated from the existing
+content model. Runtime image validity, dimensions, type, and size are protected
+by the site-integrity gate.

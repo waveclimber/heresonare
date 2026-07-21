@@ -15,6 +15,11 @@ import {
 } from "@/i18n/config";
 import { getAbsoluteSiteUrl, siteUrl } from "@/lib/siteUrl";
 import { brandName } from "@/lib/siteIdentity";
+import {
+  getSocialCardAlt,
+  socialCardContentType,
+  socialCardSize,
+} from "@/lib/socialCard";
 
 function buildMetadata(
   title: string,
@@ -23,6 +28,19 @@ function buildMetadata(
   pathname: string
 ): Metadata {
   const canonicalPath = getLocalizedPath(pathname, locale);
+  const socialCardAlt = getSocialCardAlt(locale);
+  const openGraphImage = {
+    url: getAbsoluteSiteUrl(`/${locale}/opengraph-image/brand-share`),
+    ...socialCardSize,
+    alt: socialCardAlt,
+    type: socialCardContentType,
+  };
+  const twitterImage = {
+    url: getAbsoluteSiteUrl(`/${locale}/twitter-image/brand-share`),
+    ...socialCardSize,
+    alt: socialCardAlt,
+    type: socialCardContentType,
+  };
   const languages = Object.fromEntries([
     ...supportedLocales.map((supportedLocale) => [
       htmlLangByLocale[supportedLocale],
@@ -45,11 +63,13 @@ function buildMetadata(
       locale: openGraphLocaleByLocale[locale],
       type: "website",
       url: getAbsoluteSiteUrl(canonicalPath),
+      images: [openGraphImage],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title,
       description,
+      images: [twitterImage],
     },
   };
 }

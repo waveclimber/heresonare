@@ -34,6 +34,10 @@ const expectedRoutes = routeShapes.flatMap((shape) =>
 );
 const expectedRouteSet = new Set(expectedRoutes);
 const failures = [];
+const socialImageUrls = {
+  openGraph: new Set(),
+  twitter: new Set(),
+};
 
 function localizeRoute(shape, locale) {
   return shape === "/" ? `/${locale}` : `/${locale}${shape}`;
@@ -60,6 +64,113 @@ function decodeHtmlAttribute(value) {
 
 function getTags(html, expression) {
   return [...html.matchAll(expression)].map(([tag]) => tag);
+}
+
+function getMetaTags(html, attribute, value) {
+  return getTags(
+    html,
+    new RegExp(`<meta ${attribute}="${value}"[^>]*>`, "gu"),
+  );
+}
+
+function checkSocialMetadata({ html, route, locale }) {
+  const definitions = [
+    {
+      channel: "Open Graph",
+      key: "openGraph",
+      attribute: "property",
+      prefix: "og",
+      routeName: "opengraph-image",
+    },
+    {
+      channel: "Twitter",
+      key: "twitter",
+      attribute: "name",
+      prefix: "twitter",
+      routeName: "twitter-image",
+    },
+  ];
+
+  for (const definition of definitions) {
+    const imageTags = getMetaTags(
+      html,
+      definition.attribute,
+      `${definition.prefix}:image`,
+    );
+    record(
+      imageTags.length === 1,
+      `${route} has ${imageTags.length} ${definition.channel} images instead of one.`,
+    );
+    if (imageTags.length !== 1) continue;
+
+    const imageUrl = decodeHtmlAttribute(
+      getAttribute(imageTags[0], "content") ?? "",
+    );
+    let parsedImageUrl;
+    try {
+      parsedImageUrl = new URL(imageUrl);
+    } catch {
+      record(false, `${route} has an invalid ${definition.channel} image URL.`);
+      continue;
+    }
+
+    record(
+      parsedImageUrl.origin === siteOrigin &&
+        parsedImageUrl.pathname ===
+          `/${locale}/${definition.routeName}/brand-share`,
+      `${route} has the wrong ${definition.channel} image URL.`,
+    );
+    socialImageUrls[definition.key].add(imageUrl);
+
+    for (const [field, expected] of [
+      ["type", "image/png"],
+      ["width", "1200"],
+      ["height", "630"],
+    ]) {
+      const tags = getMetaTags(
+        html,
+        definition.attribute,
+        `${definition.prefix}:image:${field}`,
+      );
+      record(
+        tags.length === 1 && getAttribute(tags[0], "content") === expected,
+        `${route} has invalid ${definition.channel} image ${field}.`,
+      );
+    }
+
+    const altTags = getMetaTags(
+      html,
+      definition.attribute,
+      `${definition.prefix}:image:alt`,
+    );
+    const alt = decodeHtmlAttribute(
+      getAttribute(altTags[0] ?? "", "content") ?? "",
+    );
+    record(
+      altTags.length === 1 && alt.trim().length > 0,
+      `${route} is missing localized ${definition.channel} image alt text.`,
+    );
+  }
+
+  const openGraphAlt = getAttribute(
+    getMetaTags(html, "property", "og:image:alt")[0] ?? "",
+    "content",
+  );
+  const twitterAlt = getAttribute(
+    getMetaTags(html, "name", "twitter:image:alt")[0] ?? "",
+    "content",
+  );
+  record(
+    Boolean(openGraphAlt) && openGraphAlt === twitterAlt,
+    `${route} has mismatched social image alt text.`,
+  );
+
+  const twitterCardTags = getMetaTags(html, "name", "twitter:card");
+  record(
+    twitterCardTags.length === 1 &&
+      getAttribute(twitterCardTags[0], "content") === "summary_large_image",
+    `${route} does not use the large Twitter card format.`,
+  );
 }
 
 function checkStructuredData({
@@ -342,6 +453,7 @@ function checkStaticPages() {
         title,
         description,
       });
+      checkSocialMetadata({ html, route, locale });
 
       const anchorTags = getTags(html, /<a\b[^>]*\bhref="[^"]+"[^>]*>/gu);
       for (const tag of anchorTags) {
@@ -384,6 +496,15 @@ function checkStaticPages() {
       `No rendered internal link reaches ${route}.`,
     );
   }
+
+  record(
+    socialImageUrls.openGraph.size === localeDefinitions.length,
+    `Found ${socialImageUrls.openGraph.size} unique Open Graph images instead of three.`,
+  );
+  record(
+    socialImageUrls.twitter.size === localeDefinitions.length,
+    `Found ${socialImageUrls.twitter.size} unique Twitter images instead of three.`,
+  );
 
   return discoveredInternalRoutes.size;
 }
@@ -525,6 +646,39 @@ async function checkRuntimeRoutes() {
       record(status === 200, `${route} returned HTTP ${status}.`);
     }
 
+    const runtimeSocialImages = [
+      ...socialImageUrls.openGraph,
+      ...socialImageUrls.twitter,
+    ];
+    for (const imageUrl of runtimeSocialImages) {
+      const productionUrl = new URL(imageUrl);
+      const response = await fetch(
+        `${runtimeOrigin}${productionUrl.pathname}${productionUrl.search}`,
+      );
+      const buffer = Buffer.from(await response.arrayBuffer());
+      const contentType = response.headers.get("content-type") ?? "";
+      const isPng =
+        buffer.length >= 24 &&
+        buffer.subarray(0, 8).equals(Buffer.from("89504e470d0a1a0a", "hex"));
+
+      record(response.status === 200, `${productionUrl.pathname} returned HTTP ${response.status}.`);
+      record(
+        contentType.startsWith("image/png"),
+        `${productionUrl.pathname} returned ${contentType || "no content type"}.`,
+      );
+      record(isPng, `${productionUrl.pathname} is not a valid PNG.`);
+      record(
+        buffer.length > 0 && buffer.length <= 5 * 1024 * 1024,
+        `${productionUrl.pathname} exceeds the 5 MB social image limit.`,
+      );
+      if (isPng) {
+        record(
+          buffer.readUInt32BE(16) === 1200 && buffer.readUInt32BE(20) === 630,
+          `${productionUrl.pathname} is not 1200x630.`,
+        );
+      }
+    }
+
     const redirectCases = [
       { path: "/", acceptLanguage: "ja", expected: "/ja" },
       { path: "/about", acceptLanguage: "zh-CN", expected: "/zh-cn/about" },
@@ -616,6 +770,7 @@ console.table([
   {
     "Public routes": expectedRoutes.length,
     "Internal destinations": internalLinkCount,
+    "Social images": 6,
     "Structured-data pages": expectedRoutes.length,
     "Localized 404 cases": 3,
     "Legacy redirects": 3,
