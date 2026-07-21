@@ -57,9 +57,10 @@ type SiteContentEntry = {
   contactPartnersText: string;
   contactVenuesTitle: string;
   contactVenuesText: string;
+  socialChannelsLabel: string;
+  instagramLabel: string;
   xiaohongshuLabel: string;
-  instagramStatus: string;
-  xStatus: string;
+  douyinLabel: string;
   footerSlogan: string;
   footerCopyright: string;
   pages: Record<
@@ -154,9 +155,10 @@ export const siteContent = {
         contactVenuesTitle: "Venues",
         contactVenuesText:
           "Live events, venues, performances and future stage experiences.",
-        xiaohongshuLabel: "小红书",
-        instagramStatus: "Instagram Coming Soon",
-        xStatus: "X Coming Soon",
+        socialChannelsLabel: "Official Social Channels",
+        instagramLabel: "Instagram",
+        xiaohongshuLabel: "Xiaohongshu",
+        douyinLabel: "Douyin",
       
         footerSlogan: "Sound Beyond Boundaries",
         footerCopyright:
@@ -288,9 +290,10 @@ export const siteContent = {
         contactVenuesTitle: "会場",
         contactVenuesText:
           "ライブイベント、会場、公演、未来のステージ体験のご相談。",
-        xiaohongshuLabel: "小红书",
-        instagramStatus: "Instagram 近日公開",
-        xStatus: "X 近日公開",
+        socialChannelsLabel: "公式ソーシャルチャンネル",
+        instagramLabel: "Instagram",
+        xiaohongshuLabel: "小紅書",
+        douyinLabel: "Douyin（抖音）",
       
         footerSlogan: "Sound Beyond Boundaries",
         footerCopyright:
@@ -436,9 +439,10 @@ export const siteContent = {
         contactPartnersText: "商务合作、品牌联动与制作项目。",
         contactVenuesTitle: "场地",
         contactVenuesText: "现场活动、场地、演出与未来舞台体验。",
+        socialChannelsLabel: "官方社交平台",
+        instagramLabel: "Instagram",
         xiaohongshuLabel: "小红书",
-        instagramStatus: "Instagram 即将上线",
-        xStatus: "X 即将上线",
+        douyinLabel: "抖音",
       
         footerSlogan: "超越边界的声音",
         footerCopyright:

@@ -10,9 +10,32 @@ const siteOrigin = new URL(
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://heresonare.com",
 ).origin;
 const localeDefinitions = [
-  { locale: "en", htmlLang: "en", hrefLang: "en" },
-  { locale: "ja", htmlLang: "ja", hrefLang: "ja" },
-  { locale: "zh-cn", htmlLang: "zh-CN", hrefLang: "zh-CN" },
+  {
+    locale: "en",
+    htmlLang: "en",
+    hrefLang: "en",
+    socialLabels: ["Instagram", "Xiaohongshu", "Douyin"],
+    opensInNewTab: "opens in a new tab",
+  },
+  {
+    locale: "ja",
+    htmlLang: "ja",
+    hrefLang: "ja",
+    socialLabels: ["Instagram", "小紅書", "Douyin（抖音）"],
+    opensInNewTab: "新しいタブで開きます",
+  },
+  {
+    locale: "zh-cn",
+    htmlLang: "zh-CN",
+    hrefLang: "zh-CN",
+    socialLabels: ["Instagram", "小红书", "抖音"],
+    opensInNewTab: "在新标签页中打开",
+  },
+];
+const officialSocialLinks = [
+  "https://www.instagram.com/heresonare?igsh=MTEzZzU2M2MydmhlbA==",
+  "https://xhslink.com/m/mUmNZgni6O",
+  "https://v.douyin.com/8hmJo5Ukq7o/",
 ];
 const routeShapes = [
   "/",
@@ -60,6 +83,12 @@ function decodeHtmlAttribute(value) {
     .replaceAll("&amp;", "&")
     .replaceAll("&quot;", '"')
     .replaceAll("&#x27;", "'");
+}
+
+function getElementText(element) {
+  return decodeHtmlAttribute(element.replace(/<[^>]+>/gu, ""))
+    .replace(/\s+/gu, " ")
+    .trim();
 }
 
 function getTags(html, expression) {
@@ -363,7 +392,12 @@ function checkStaticPages() {
       ["x-default", `${siteOrigin}${localizeRoute(routeShape, "en")}`],
     ]);
 
-    for (const { locale, htmlLang } of localeDefinitions) {
+    for (const {
+      locale,
+      htmlLang,
+      socialLabels,
+      opensInNewTab,
+    } of localeDefinitions) {
       const route = localizeRoute(routeShape, locale);
       const htmlPath = getHtmlPath(route);
 
@@ -474,6 +508,43 @@ function checkStaticPages() {
           pathname === `/${locale}` || pathname.startsWith(`/${locale}/`),
           `${route} has a cross-locale internal link: ${pathname}`,
         );
+      }
+
+      if (["/", "/contact"].includes(routeShape)) {
+        const anchorElements = getTags(
+          html,
+          /<a\b[^>]*\bhref="[^"]+"[^>]*>[\s\S]*?<\/a>/gu,
+        );
+
+        for (const [index, expectedHref] of officialSocialLinks.entries()) {
+          const matchingAnchors = anchorElements.filter(
+            (anchor) =>
+              decodeHtmlAttribute(getAttribute(anchor, "href") ?? "") ===
+              expectedHref,
+          );
+          record(
+            matchingAnchors.length === 1,
+            `${route} has ${matchingAnchors.length} links to ${expectedHref} instead of one.`,
+          );
+          if (matchingAnchors.length !== 1) continue;
+
+          const anchor = matchingAnchors[0];
+          const relation = new Set(
+            (getAttribute(anchor, "rel") ?? "").split(/\s+/u),
+          );
+          const text = getElementText(anchor);
+          record(
+            getAttribute(anchor, "target") === "_blank" &&
+              relation.has("noopener") &&
+              relation.has("noreferrer"),
+            `${route} has unsafe external-link behavior for ${expectedHref}.`,
+          );
+          record(
+            text.includes(socialLabels[index]) &&
+              text.includes(opensInNewTab),
+            `${route} has incomplete localized link text for ${expectedHref}.`,
+          );
+        }
       }
 
       const imageTags = getTags(html, /<img\b[^>]*>/gu);
@@ -771,6 +842,7 @@ console.table([
     "Public routes": expectedRoutes.length,
     "Internal destinations": internalLinkCount,
     "Social images": 6,
+    "Social contact routes": 6,
     "Structured-data pages": expectedRoutes.length,
     "Localized 404 cases": 3,
     "Legacy redirects": 3,

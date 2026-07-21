@@ -29,7 +29,7 @@ and activating real inputs later.
 | P2 | Tour | Confirmed event title, date/time zone, city, venue, ticket state, and destination | Approved event poster when required |
 | P2 | Venues | Real venue identity, location, description, availability, and destination | Licensed venue photography |
 | P2 | Store | Commerce platform, region policy, price/currency, inventory state, fulfilment, returns, and localized copy | Product gallery with consistent crops |
-| P2 | Contact and social | Approved public channels, ownership, response expectations, and privacy handling | Platform artwork only when rights and brand usage are approved |
+| P2 | Contact and social | Instagram, Xiaohongshu, and Douyin public profile links are approved; ownership, response expectations, and privacy handling remain open | Platform artwork only when rights and brand usage are approved |
 
 About-page copy should receive explicit brand-owner approval with the P0 copy
 review even though it does not currently need content imagery.

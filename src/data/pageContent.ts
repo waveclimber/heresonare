@@ -1,5 +1,6 @@
 import type { Language } from "@/data/siteContent";
 import { getProductionDetailPath } from "@/data/productionRoutes";
+import { officialSocialLinks } from "@/data/socialLinks";
 
 export type PageKey =
   | "artists"
@@ -493,6 +494,40 @@ const englishPages = {
           },
         ],
       },
+      {
+        id: "official-social-channels",
+        label: "Social",
+        title: "Official Social Channels",
+        description:
+          "Follow héReSonare through our official public profiles.",
+        items: [
+          {
+            id: "contact-socials",
+            slug: "official-socials",
+            title: "Follow héReSonare",
+            subtitle: "Official Profiles",
+            description:
+              "Discover current updates, creative work, and new signals from héReSonare.",
+            links: [
+              {
+                label: "Instagram",
+                href: officialSocialLinks.instagram,
+                external: true,
+              },
+              {
+                label: "Xiaohongshu",
+                href: officialSocialLinks.xiaohongshu,
+                external: true,
+              },
+              {
+                label: "Douyin",
+                href: officialSocialLinks.douyin,
+                external: true,
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
 } satisfies Record<PageKey, StaticPageContent>;
@@ -855,6 +890,24 @@ const localizedPages = {
             },
           ],
         },
+        {
+          label: "ソーシャル",
+          title: "公式ソーシャルチャンネル",
+          description: "héReSonareの公式公開プロフィールをご案内します。",
+          items: [
+            {
+              title: "héReSonareをフォロー",
+              subtitle: "公式アカウント",
+              description:
+                "héReSonareの最新情報、クリエイティブ活動、新しい発信をご覧いただけます。",
+              links: [
+                { label: "Instagram" },
+                { label: "小紅書" },
+                { label: "Douyin（抖音）" },
+              ],
+            },
+          ],
+        },
       ],
     },
   },
@@ -1151,6 +1204,23 @@ const localizedPages = {
               subtitle: "商务",
               description: "品牌合作、产品合作关系与战略业务关系相关咨询。",
               links: [{ label: "电子邮件" }],
+            },
+          ],
+        },
+        {
+          label: "社交平台",
+          title: "官方社交平台",
+          description: "通过 héReSonare 的官方公开主页关注我们的动态。",
+          items: [
+            {
+              title: "关注 héReSonare",
+              subtitle: "官方账号",
+              description: "查看 héReSonare 的最新动态、创意作品与全新内容。",
+              links: [
+                { label: "Instagram" },
+                { label: "小红书" },
+                { label: "抖音" },
+              ],
             },
           ],
         },

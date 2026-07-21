@@ -27,6 +27,10 @@ checks runtime responses, and always stops the temporary server afterward.
 - Internal links preserve the active locale.
 - Every public route is reachable from at least one rendered internal link.
 - Local image sources rendered into HTML resolve to files under `public/`.
+- The homepage Contact section and standalone Contact page in every locale each
+  expose exactly one approved Instagram, Xiaohongshu, and Douyin link.
+- Contact social links retain localized labels and new-tab announcements plus
+  `noopener noreferrer` protection.
 
 ### Discovery endpoints
 
@@ -88,6 +92,8 @@ The full local quality gate passed against the production build:
 - Structured data and localized breadcrumbs passed for all 39 public pages.
 - Three localized Open Graph and three localized Twitter image endpoints
   returned valid 1200 by 630 PNG files.
+- Six localized Contact surfaces exposed all three approved social profiles
+  with localized accessible text and safe external-link behavior.
 - Generated and runtime sitemap and robots checks passed.
 - Three representative locale redirects and three localized 404 responses
   passed.

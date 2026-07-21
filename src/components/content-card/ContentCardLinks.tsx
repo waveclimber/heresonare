@@ -33,7 +33,15 @@ function getCardLinks(item: PageContentItem, locale: Locale, viewLabel: string) 
   });
 }
 
-function CardLink({ link, locale }: { link: PageLink; locale: Locale }) {
+function CardLink({
+  link,
+  locale,
+  opensInNewTabLabel,
+}: {
+  link: PageLink;
+  locale: Locale;
+  opensInNewTabLabel: string;
+}) {
   const href = normalizeHref(link.href, locale);
   const internal = isInternalHref(link.href);
   const opensNewTab = Boolean(link.external && !href.startsWith("mailto:"));
@@ -48,7 +56,16 @@ function CardLink({ link, locale }: { link: PageLink; locale: Locale }) {
       target={opensNewTab ? "_blank" : undefined}
       rel={opensNewTab ? "noopener noreferrer" : undefined}
     >
-      {link.label}
+      {opensNewTab ? (
+        <>
+          <span aria-hidden="true">{link.label} ↗</span>
+          <span className="sr-only">
+            {link.label}, {opensInNewTabLabel}
+          </span>
+        </>
+      ) : (
+        link.label
+      )}
     </ResonanceLink>
   );
 }
@@ -70,7 +87,11 @@ export default function ContentCardLinks({
       <ul className="flex flex-wrap gap-3">
         {links.map((link) => (
           <li key={`${link.href}-${link.label}`}>
-            <CardLink link={link} locale={locale} />
+            <CardLink
+              link={link}
+              locale={locale}
+              opensInNewTabLabel={labels.opensInNewTab}
+            />
           </li>
         ))}
       </ul>

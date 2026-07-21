@@ -20,6 +20,7 @@ type InterfaceContent = {
     links: string;
     status: string;
     view: string;
+    opensInNewTab: string;
   };
   productionDetail: {
     detailLabel: string;
@@ -55,6 +56,7 @@ export const interfaceContent = {
       links: "Links",
       status: "Status",
       view: "View",
+      opensInNewTab: "opens in a new tab",
     },
     productionDetail: {
       detailLabel: "Product Details",
@@ -86,6 +88,7 @@ export const interfaceContent = {
       links: "リンク",
       status: "ステータス",
       view: "詳細を見る",
+      opensInNewTab: "新しいタブで開きます",
     },
     productionDetail: {
       detailLabel: "プロダクト詳細",
@@ -116,6 +119,7 @@ export const interfaceContent = {
       links: "链接",
       status: "状态",
       view: "查看详情",
+      opensInNewTab: "在新标签页中打开",
     },
     productionDetail: {
       detailLabel: "产品详情",
