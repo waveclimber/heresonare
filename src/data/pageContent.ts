@@ -34,6 +34,7 @@ export type PageContentItem = {
   type?: string;
   category?: string;
   status?: string;
+  /** Stable primary destination. Omit until a distinct route exists. */
   href?: string;
   image?: string;
   media?: {
@@ -52,6 +53,7 @@ export type PageContentItem = {
     label: string;
     value: string;
   }[];
+  /** Explicit supplementary or external actions. */
   links?: PageLink[];
 };
 
@@ -108,9 +110,7 @@ const englishPages = {
             status: "In development",
             description:
               "A voice connecting emotion, technology, and future-facing sound.",
-            href: "/artists",
             image: "/images/placeholders/artist-01.jpg",
-            links: [{ label: "Profile", href: "/artists" }],
           },
           {
             id: "artist-02",
@@ -121,9 +121,7 @@ const englishPages = {
             status: "In development",
             description:
               "A producer shaping immersive music experiences for digital and live spaces.",
-            href: "/artists",
             image: "/images/placeholders/artist-02.jpg",
-            links: [{ label: "Profile", href: "/artists" }],
           },
         ],
       },
@@ -153,7 +151,6 @@ const englishPages = {
             description:
               "A futuristic soundscape built around emotion, clarity, and movement.",
             year: "2026",
-            href: "/music",
           },
           {
             id: "release-blue-signal",
@@ -165,7 +162,6 @@ const englishPages = {
             description:
               "Electronic textures and melodic storytelling shaped for a new era.",
             year: "2026",
-            href: "/music",
           },
         ],
       },
@@ -318,7 +314,6 @@ const englishPages = {
               "A placeholder event record for future route, date, and venue data.",
             date: "TBA",
             location: "TBA",
-            href: "/tour",
           },
         ],
       },
@@ -348,7 +343,6 @@ const englishPages = {
             description:
               "A modular space for intimate performances and immersive sound tests.",
             location: "TBA",
-            href: "/venues",
           },
         ],
       },
@@ -378,7 +372,6 @@ const englishPages = {
             description:
               "A visual concept for future music and story-driven releases.",
             year: "2026",
-            href: "/video",
           },
         ],
       },
@@ -413,7 +406,6 @@ const englishPages = {
             status: "Coming soon",
             description:
               "A placeholder item for future product content and storefront data.",
-            href: "/store",
           },
         ],
       },
@@ -574,7 +566,6 @@ const localizedPages = {
               subtitle: "ボーカルアーティスト",
               status: "開発中",
               description: "感情、テクノロジー、未来志向のサウンドをつなぐ歌声。",
-              links: [{ label: "プロフィール" }],
             },
             {
               title: "アーティスト 02",
@@ -583,7 +574,6 @@ const localizedPages = {
               status: "開発中",
               description:
                 "デジタル空間とライブ空間に向け、没入感のある音楽体験を形づくるプロデューサー。",
-              links: [{ label: "プロフィール" }],
             },
           ],
         },
@@ -887,7 +877,6 @@ const localizedPages = {
               subtitle: "声乐艺人",
               status: "开发中",
               description: "连接情感、科技与未来感声音的嗓音。",
-              links: [{ label: "艺人档案" }],
             },
             {
               title: "艺人 02",
@@ -895,7 +884,6 @@ const localizedPages = {
               subtitle: "制作人／作曲家",
               status: "开发中",
               description: "为数字与现场空间塑造沉浸式音乐体验的制作人。",
-              links: [{ label: "艺人档案" }],
             },
           ],
         },
@@ -1471,6 +1459,36 @@ function localizePages(
     contact: localizePage(englishPages.contact, pages.contact, "contact"),
   };
 }
+
+function assertDistinctItemDestinations(
+  pages: Record<PageKey, StaticPageContent>
+) {
+  for (const pageKey of Object.keys(pages) as PageKey[]) {
+    const page = pages[pageKey];
+    const listPath = `/${pageKey}`;
+
+    for (const section of page.sections) {
+      for (const item of section.items ?? []) {
+        const destinations = [
+          item.href,
+          ...(item.links ?? []).map((link) => link.href),
+        ].filter((href): href is string => Boolean(href));
+
+        if (
+          destinations.some(
+            (href) => href === listPath || href === `${listPath}/`
+          )
+        ) {
+          throw new Error(
+            `Self-referential content action for ${pageKey}.${item.id}.`
+          );
+        }
+      }
+    }
+  }
+}
+
+assertDistinctItemDestinations(englishPages);
 
 export const pageContent = {
   EN: englishPages,
