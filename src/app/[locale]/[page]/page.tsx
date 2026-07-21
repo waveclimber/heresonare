@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import StaticPage from "@/components/StaticPage";
+import StructuredData from "@/components/StructuredData";
 import {
   isNavigationKey,
   navigationRoutes,
 } from "@/data/navigation";
 import { isLocale } from "@/i18n/config";
 import { createPageMetadata } from "@/lib/pageMetadata";
+import { createPageStructuredData } from "@/lib/structuredData";
 
 export const dynamicParams = true;
 
@@ -40,5 +42,10 @@ export default async function PublicPage({
     notFound();
   }
 
-  return <StaticPage pageKey={page} />;
+  return (
+    <>
+      <StructuredData data={createPageStructuredData(page, locale)} />
+      <StaticPage pageKey={page} />
+    </>
+  );
 }

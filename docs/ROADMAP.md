@@ -69,13 +69,22 @@ with `noindex`, while unsupported locales continue to use the framework-global
 
 ## 5. Complete SEO infrastructure
 
+**Status:** In progress. Canonical URLs, language alternates, page metadata,
+sitemap, robots policy, and the minimal structured-data foundation are now in
+place. Dedicated social imagery and final production-domain confirmation remain
+open.
+
 **Objective:** Provide technically complete, locale-aware discovery and sharing metadata.
 
 **Major deliverables:** Canonical URL rules, sitemap, robots policy, Open Graph and social images, structured data where appropriate, detail-page metadata, and an approved multilingual SEO strategy.
 
 **Acceptance conditions:** Every indexable route has accurate unique metadata; canonical, sitemap, robots, and social preview behavior validate in production-like builds; locale alternates are implemented only after the URL locale strategy is approved.
 
-**Dependencies or risks:** Locale-prefixed routing is established, but language alternates and complete multilingual SEO still depend on approved canonical rules, detail-page URLs, production domains, and final social metadata content.
+**Dependencies or risks:** The canonical origin defaults to
+`https://heresonare.com` and remains configurable until the production domain
+is confirmed. Dedicated social imagery requires approved brand artwork. More
+specific rich-result entity types depend on approved public content and must not
+be inferred from concept records.
 
 ## 6. Introduce CMS or database-backed content
 
@@ -120,3 +129,9 @@ approve before concept records or branded fallbacks are replaced.
 all 39 public localized URLs, internal-link closure, canonical and language
 metadata, sitemap and robots output, legacy locale redirects, localized 404
 behavior, and rendered local image existence against a production build.
+
+**Current structured-data baseline:** All 39 public pages now expose one
+sanitized, locale-aware JSON-LD graph. Homepages identify the organization and
+multilingual website; inner pages provide WebPage identity and localized
+breadcrumbs. Concept production records deliberately make no product, offer,
+event, or availability claims.
