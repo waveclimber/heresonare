@@ -1,9 +1,13 @@
+import approvedContentMedia from "@/data/approvedContentMedia.json";
+
 /**
  * Content media is opt-in. Add a public path here only after confirming that
  * the file exists under `public/`, is approved for use, and matches its stated
  * file extension. Unlisted content paths are never sent to `next/image`.
  */
-export const approvedContentMediaPaths: ReadonlySet<string> = new Set([]);
+export const approvedContentMediaPaths: ReadonlySet<string> = new Set(
+  approvedContentMedia
+);
 
 export const contentCardFallbackMedia = "/images/logo/logo-white.svg";
 

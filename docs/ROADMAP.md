@@ -109,3 +109,9 @@ automated HTML, JavaScript, CSS, and font asset budget in the local quality
 gate. Decorative spectrum and converge-target loops pause outside the viewport,
 while the established Motion identity and Reduced Motion contract remain
 unchanged. Final-host field monitoring and ownership are still Stage 7 inputs.
+
+**Current content-intake baseline:** Real content media remains opt-in. A
+reviewable JSON approval list and automated repository check now protect file
+existence, directory, type, size, casing, and content-reference consistency.
+The prioritized copy/media intake checklist defines what the product owner must
+approve before concept records or branded fallbacks are replaced.
