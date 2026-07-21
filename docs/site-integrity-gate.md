@@ -1,0 +1,73 @@
+# Automated site integrity gate
+
+## Scope
+
+This task turns the existing release-readiness spot checks into a repeatable
+production-build gate. It changes no page content, routes, metadata policy,
+visual design, motion behavior, dependencies, Vercel configuration, or company
+mirror state.
+
+`npm run check:site` runs after `next build`. It inspects generated HTML and
+metadata outputs, starts the production server on an available local port,
+checks runtime responses, and always stops the temporary server afterward.
+
+## Protected contracts
+
+### Public routes and localization
+
+- All 39 public URLs exist: 13 route shapes across EN, JA, and ZH-CN.
+- Generated pages use `en`, `ja`, or `zh-CN` as the matching HTML language.
+- Every page has a title, description, `main-content` landmark, canonical URL,
+  Open Graph URL, and explicit `index, follow` policy.
+- Every page has exact `en`, `ja`, `zh-CN`, and `x-default` alternates.
+
+### Navigation and local assets
+
+- Every rendered root-relative link resolves to a supported public route.
+- Internal links preserve the active locale.
+- Every public route is reachable from at least one rendered internal link.
+- Local image sources rendered into HTML resolve to files under `public/`.
+
+### Discovery endpoints
+
+- `sitemap.xml` contains exactly 39 unique canonical URLs.
+- Every sitemap entry has EN, JA, and ZH-CN alternates.
+- `robots.txt` allows public pages, blocks `/api/`, and uses the configured
+  production host and sitemap URL.
+- Both endpoints return HTTP 200 from the production server.
+
+### Redirects and errors
+
+- Legacy unprefixed routes redirect using `Accept-Language`.
+- A valid locale preference cookie overrides the language header.
+- Representative EN, JA, and ZH-CN unknown routes return HTTP 404, include
+  `noindex`, and retain their HTML language and locale context in the streamed
+  React Server Component payload used by the localized not-found experience.
+- An unsupported locale returns HTTP 404.
+
+## Maintenance rule
+
+The route fixture is intentionally explicit. Adding, removing, or renaming a
+public route must update the site code and this gate in the same reviewed
+change. This makes route and SEO surface changes visible instead of allowing a
+generated snapshot to approve itself automatically.
+
+The check uses only Node.js and the installed Next.js package. It adds no test
+framework or runtime dependency. Browser interaction and subjective visual or
+motion acceptance remain separate when a task changes the interface.
+
+## Validation results
+
+The full local quality gate passed against the production build:
+
+- Next.js generated 44 static pages.
+- All 39 public localized routes returned HTTP 200.
+- All 39 internal destinations formed a closed, locale-preserving route set.
+- Metadata and language alternates passed for all 39 public pages.
+- Generated and runtime sitemap and robots checks passed.
+- Three representative locale redirects and three localized 404 responses
+  passed.
+- Existing performance budgets passed without threshold changes.
+
+No browser-based visual acceptance was required because this task changes no
+rendered interface, content, or motion behavior.

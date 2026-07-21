@@ -115,3 +115,8 @@ reviewable JSON approval list and automated repository check now protect file
 existence, directory, type, size, casing, and content-reference consistency.
 The prioritized copy/media intake checklist defines what the product owner must
 approve before concept records or branded fallbacks are replaced.
+
+**Current site-integrity baseline:** The local and CI quality gate now verifies
+all 39 public localized URLs, internal-link closure, canonical and language
+metadata, sitemap and robots output, legacy locale redirects, localized 404
+behavior, and rendered local image existence against a production build.
