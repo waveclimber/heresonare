@@ -51,6 +51,11 @@ button:focus-visible {
 .spectrum-bar {
   transform-origin: bottom;
   animation: spectrum-wave 3.4s ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+
+[data-motion-active="true"] > .spectrum-bar {
+  animation-play-state: running;
   will-change: transform;
 }
 
@@ -206,6 +211,11 @@ button:focus-visible {
   animation: converge-target-breathe 5.2s cubic-bezier(0.16, 1, 0.3, 1)
     infinite;
   animation-delay: var(--converge-delay, 0s);
+  animation-play-state: paused;
+}
+
+.converge-target[data-motion-active="true"] .converge-target-ring {
+  animation-play-state: running;
   will-change: opacity, transform;
 }
 

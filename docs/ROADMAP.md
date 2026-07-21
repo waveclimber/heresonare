@@ -103,3 +103,9 @@ focus to its trigger, the skip link and visible focus treatment are verified,
 and the compiled Reduced Motion contract covers CSS and Motion-driven effects.
 Representative operating-system and device checks remain part of the final
 pre-launch validation.
+
+**Current performance baseline:** Representative production routes now have an
+automated HTML, JavaScript, CSS, and font asset budget in the local quality
+gate. Decorative spectrum and converge-target loops pause outside the viewport,
+while the established Motion identity and Reduced Motion contract remain
+unchanged. Final-host field monitoring and ownership are still Stage 7 inputs.
