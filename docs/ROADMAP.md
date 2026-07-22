@@ -131,6 +131,15 @@ preference responses are protected by the production-server integrity gate.
 HSTS, CDN configuration, external monitoring, and incident ownership remain
 deferred until the domain and hosting platform are approved.
 
+**Current CI and release-security baseline:** The quality workflow now pins
+every external Action to the immutable commit behind a reviewed upstream
+release, keeps the token read-only, removes persisted checkout credentials,
+uses the shared `.nvmrc` Node baseline, and rejects new critical production
+dependency advisories. A local contract protects those settings. The active
+`main` ruleset and a hosting-independent release and rollback procedure are
+documented; production approval count, hosting commands, monitoring ownership,
+rollback drill, and company-mirror policy remain owner decisions.
+
 **Current cross-site QA baseline:** The supported route shapes now pass focused
 desktop, tablet, and mobile overflow checks. Escape-key menu dismissal restores
 focus to its trigger, the skip link and visible focus treatment are verified,
