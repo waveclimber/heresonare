@@ -3,13 +3,21 @@ import "server-only";
 import { cache } from "react";
 
 import { staticContentRepository } from "@/content/staticContentRepository";
+import {
+  assertProductionContent,
+  assertSiteContent,
+  assertStaticPageContent,
+} from "@/content/validation.mjs";
 import type {
   HomePageContent,
+  PublicContentRepository,
   SiteShellContent,
 } from "@/content/contracts";
+import type { PageKey } from "@/data/pageContent";
+import type { ProductionSlug } from "@/data/productionRoutes";
 import type { ContentLanguage } from "@/i18n/config";
 
-const contentRepository = staticContentRepository;
+const contentRepository: PublicContentRepository = staticContentRepository;
 const homePageExcludedFields = [
   "footerCopyright",
   "footerSlogan",
@@ -34,9 +42,11 @@ function omitFields<T extends object, K extends keyof T>(
   ) as Omit<T, K>;
 }
 
-export const getSiteContent = cache(
-  contentRepository.getSiteContent.bind(contentRepository),
-);
+export const getSiteContent = cache(async (language: ContentLanguage) => {
+  const content = await contentRepository.getSiteContent(language);
+  assertSiteContent(content, { language });
+  return content;
+});
 export const getHomePageContent = cache(async (language: ContentLanguage) => {
   const content = await getSiteContent(language);
 
@@ -54,8 +64,26 @@ export const getSiteShellContent = cache(async (language: ContentLanguage) => {
   } satisfies SiteShellContent;
 });
 export const getPageContent = cache(
-  contentRepository.getPageContent.bind(contentRepository),
+  async (
+    language: ContentLanguage,
+    pageKey: PageKey,
+  ) => {
+    const content = await contentRepository.getPageContent(language, pageKey);
+    if (content !== null) {
+      assertStaticPageContent(content, { language, pageKey });
+    }
+    return content;
+  },
 );
 export const getProductionContent = cache(
-  contentRepository.getProductionContent.bind(contentRepository),
+  async (
+    language: ContentLanguage,
+    slug: ProductionSlug,
+  ) => {
+    const content = await contentRepository.getProductionContent(language, slug);
+    if (content !== null) {
+      assertProductionContent(content, { language, slug });
+    }
+    return content;
+  },
 );

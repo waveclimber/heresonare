@@ -1363,12 +1363,18 @@ function localizeSpecs(
   }));
 }
 
+function omitUndefinedOptionalFields<T extends object>(value: T): T {
+  return Object.fromEntries(
+    Object.entries(value).filter(([, fieldValue]) => fieldValue !== undefined)
+  ) as T;
+}
+
 function localizeItem(
   item: PageContentItem,
   localizedItem: LocalizedPageContentItem,
   context: string
 ): PageContentItem {
-  return {
+  return omitUndefinedOptionalFields({
     ...item,
     title: localizedItem.title,
     description: localizedItem.description,
@@ -1409,7 +1415,7 @@ function localizeItem(
     ),
     specs: localizeSpecs(item.specs, localizedItem.specs, context + ".specs"),
     links: localizeLinks(item.links, localizedItem.links, context + ".links"),
-  };
+  });
 }
 
 function localizeItems(
@@ -1446,7 +1452,7 @@ function localizeComingSoon(
     throw new Error("Missing localized coming soon content for " + context + ".");
   }
 
-  return {
+  return omitUndefinedOptionalFields({
     ...comingSoon,
     label: localizedComingSoon.label,
     title: localizedComingSoon.title,
@@ -1462,7 +1468,7 @@ function localizeComingSoon(
               context + ".comingSoon.cta.label"
             ),
           },
-  };
+  });
 }
 
 function localizeSection(
@@ -1470,7 +1476,7 @@ function localizeSection(
   localizedSection: LocalizedPageSectionContent,
   context: string
 ): PageSectionContent {
-  return {
+  return omitUndefinedOptionalFields({
     ...section,
     label: localizedSection.label,
     title: localizedSection.title,
@@ -1485,7 +1491,7 @@ function localizeSection(
       localizedSection.comingSoon,
       context + ".comingSoon"
     ),
-  };
+  });
 }
 
 function localizePage(
