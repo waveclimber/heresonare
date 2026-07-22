@@ -62,6 +62,12 @@ brand-consistent recovery screens without exposing internal diagnostics. See
 [docs/runtime-error-recovery.md](./docs/runtime-error-recovery.md) for the
 retry, 404 separation, information-safety, and future provider rules.
 
+Unexpected server request failures also emit a fixed, redacted JSON event to
+standard error through the framework instrumentation hook. No monitoring
+vendor or network exporter is connected. See
+[docs/server-error-observability.md](./docs/server-error-observability.md) for
+the event schema, excluded data, and remaining operational decisions.
+
 Production-like checks also protect security headers, cache ownership, the
 minimal `/api/health` response, and hardened locale-preference handling. See
 [docs/production-http-contract.md](./docs/production-http-contract.md) before

@@ -24,10 +24,13 @@ a route that should be available.
 ## Information safety
 
 The public screen never renders an error message, stack, cause, or digest.
-Client diagnostics log only the framework digest when one is available. A
-future monitoring integration may use that digest to correlate the user-safe
-screen with server-side logs, but it must not send content records,
-credentials, or personal data by default.
+Client diagnostics log only the framework digest when one is available. The
+server error hook emits a separately sanitized structured event that can use
+the same digest for correlation. See
+`docs/server-error-observability.md` for the fixed schema and its privacy
+boundary. A future monitoring integration must consume that sanitized event;
+it must not send raw errors, requests, content records, credentials, or
+personal data.
 
 ## Future provider requirements
 
