@@ -147,6 +147,15 @@ dependency advisories. A local contract protects those settings. The active
 documented; production approval count, hosting commands, monitoring ownership,
 rollback drill, and company-mirror policy remain owner decisions.
 
+**Current server-observability baseline:** Unexpected server request failures
+now emit one fixed JSON event through the stable framework instrumentation
+hook. The event contains a generated event ID, safe framework digest, route
+template, request method, and bounded execution context; it excludes raw error
+details, requested URLs, query values, headers, cookies, authorization data,
+content, and personal identifiers. No exporter or monitoring vendor is
+connected. Hosting log collection, access, retention, alert routing, sampling,
+and incident ownership remain deployment decisions.
+
 **Current cross-site QA baseline:** The supported route shapes now pass focused
 desktop, tablet, and mobile overflow checks. Escape-key menu dismissal restores
 focus to its trigger, the skip link and visible focus treatment are verified,
