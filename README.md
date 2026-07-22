@@ -62,6 +62,11 @@ minimal `/api/health` response, and hardened locale-preference handling. See
 [docs/production-http-contract.md](./docs/production-http-contract.md) before
 placing a CDN, proxy, or bound domain in front of the application.
 
+The quality workflow's immutable Actions, read-only token, dependency-audit
+threshold, protected-branch assumptions, release evidence, and rollback rules
+are documented in
+[docs/ci-release-security-contract.md](./docs/ci-release-security-contract.md).
+
 ## Project structure
 
 - `src/app` — locale-prefixed routes, layouts, route handlers, and global styles

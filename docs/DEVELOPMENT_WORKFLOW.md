@@ -20,6 +20,12 @@ Codex creates a branch from the latest `main`, implements the scoped change, run
 
 GitHub Actions independently validates every pull request with the repository quality workflow. It installs from the lockfile and runs linting, type checking, and the production build through `npm run check`. CI supplements but does not replace local validation or human review.
 
+External Actions are pinned to reviewed immutable commits, checkout credentials
+do not persist, and the workflow token remains read-only. CI also rejects new
+critical production dependency advisories. See
+`docs/ci-release-security-contract.md` for the protected workflow rules,
+current `main` ruleset, release evidence, and rollback contract.
+
 ### Cursor
 
 Cursor is optional. It may be used for local visual inspection and precise manual adjustment when a task benefits from interactive editing. It does not replace the scoped task, automated validation, pull request review, or product-owner acceptance.
