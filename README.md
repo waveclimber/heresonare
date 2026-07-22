@@ -50,9 +50,12 @@ npm run check
 ```
 
 The gate also verifies that public content is read through the server-only
-repository boundary. See
+repository boundary and that adapter results satisfy the runtime public DTO,
+identity, link, and media-path contract. See
 [docs/content-repository-boundary.md](./docs/content-repository-boundary.md)
-for the current static adapter and the future database/CMS requirements.
+for the current static adapter and future database/CMS requirements, and
+[docs/content-runtime-contract.md](./docs/content-runtime-contract.md) for the
+validation and failure rules.
 
 Production-like checks also protect security headers, cache ownership, the
 minimal `/api/health` response, and hardened locale-preference handling. See

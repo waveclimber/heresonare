@@ -14,7 +14,9 @@ Access Layer guidance while keeping the current static build deterministic.
 
 Public routes, metadata, structured data, and social-card generation read
 content through `src/content/repository.ts`. That server-only module exposes
-cached asynchronous functions backed by `staticContentRepository` today.
+cached asynchronous functions backed by `staticContentRepository` today. Every
+non-null adapter result passes the provider-independent runtime contract before
+it reaches an application consumer.
 
 The public contract supports three reads:
 
@@ -38,12 +40,18 @@ allowlists remain code-owned rather than database-owned.
 - Unknown locales, page keys, and slugs are rejected before repository access.
 - Repository results are public DTOs only. Future adapters must not return
   credentials, internal workflow notes, author records, or provider payloads.
+- Runtime validation rejects unknown public fields, incomplete nested shapes,
+  unsafe links or media paths, duplicate page identities, and requested-route
+  identity mismatches. Errors never echo rejected content values.
 - Reads have no mutation side effects. Drafting and publishing require a
   separately reviewed authorization and write-path design.
 
 `npm run check:content-boundary` protects the server-only modules, prevents
 client imports of the repository, and blocks direct static-content imports
 from application pages, components, and libraries.
+`npm run check:content-contract` exercises valid and invalid provider-shaped payloads;
+the production build validates the complete current static corpus. See
+`docs/content-runtime-contract.md` for the exact rules and failure behavior.
 
 ## Database or CMS adapter checklist
 
@@ -51,7 +59,7 @@ Complete these decisions before replacing the static adapter:
 
 1. Approve the provider, region, pricing, ownership, backup, and exit policy.
 2. Map provider records into the existing public content DTOs without leaking
-   provider-specific types into components.
+   provider-specific types into components or bypassing runtime validation.
 3. Define stable IDs, locale uniqueness, slugs, draft/published states, media
    references, and required-field validation.
 4. Keep route allowlists code-owned until URL migration and redirect policy is

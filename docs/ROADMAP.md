@@ -107,6 +107,14 @@ database dependency, credential, network read, publishing workflow, or visual
 change. A future provider must map into the public DTOs and preserve the
 localized 404, route-allowlist, and full quality-gate contracts.
 
+Every non-null repository result now also passes a provider-independent runtime
+contract. Exact public fields, nested content shapes, requested identities,
+unique page IDs, safe links, and normalized media paths are enforced before
+content reaches a route. Negative fixtures and the complete static corpus are
+part of the local and CI quality gate. Provider selection, remote access,
+preview and publication workflows, credentials, and cache invalidation remain
+open decisions.
+
 ## 7. Harden deployment and company-repository synchronization
 
 **Objective:** Make preview, production, rollback, monitoring, and synchronization with the company repository reliable and auditable.
