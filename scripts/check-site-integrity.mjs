@@ -3,12 +3,12 @@ import { existsSync, readFileSync } from "node:fs";
 import { createServer } from "node:net";
 import { join } from "node:path";
 
+import { resolveSiteUrlFromEnvironment } from "../src/config/site.mjs";
+
 const projectRoot = process.cwd();
 const buildDirectory = join(projectRoot, ".next");
 const publicDirectory = join(projectRoot, "public");
-const siteOrigin = new URL(
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://heresonare.com",
-).origin;
+const siteOrigin = resolveSiteUrlFromEnvironment().origin;
 const localeDefinitions = [
   {
     locale: "en",

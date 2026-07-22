@@ -80,10 +80,11 @@ open.
 
 **Acceptance conditions:** Every indexable route has accurate unique metadata; canonical, sitemap, robots, and social preview behavior validate in production-like builds; locale alternates are implemented only after the URL locale strategy is approved.
 
-**Dependencies or risks:** The canonical origin defaults to
-`https://heresonare.com` and remains configurable until the production domain
-is confirmed. More specific rich-result entity types depend on approved public
-content and must not be inferred from concept records.
+**Dependencies or risks:** No production domain is bound. The canonical origin
+defaults to the candidate `https://heresonare.com` and remains configurable
+through the server-side `SITE_URL` until the production domain is confirmed.
+More specific rich-result entity types depend on approved public content and
+must not be inferred from concept records.
 
 ## 6. Introduce CMS or database-backed content
 
@@ -128,6 +129,11 @@ approve before concept records or branded fallbacks are replaced.
 all 39 public localized URLs, internal-link closure, canonical and language
 metadata, sitemap and robots output, legacy locale redirects, localized 404
 behavior, and rendered local image existence against a production build.
+
+**Current site-configuration baseline:** A validated server-only production
+origin, safe environment template, Node.js baseline, and automated negative
+configuration cases prepare the application for later domain binding. They do
+not configure DNS, HTTPS, hosting, a database, or the company mirror.
 
 **Current structured-data baseline:** All 39 public pages now expose one
 sanitized, locale-aware JSON-LD graph. Homepages identify the organization and
