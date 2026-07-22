@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { useInView } from "motion/react";
 
-import type { Language, SiteContent } from "@/data/siteContent";
+import type { HomePageContent } from "@/content/contracts";
 import {
   Reveal,
   StaggerGroup,
@@ -12,12 +12,10 @@ import {
 import { ResonanceButton } from "@/components/motion/ResonanceButton";
 
 type ContentProps = {
-  content: SiteContent;
-  language: Language;
+  content: HomePageContent;
 };
 
-export default function Hero({ content, language }: ContentProps) {
-  const localizedContent = content[language];
+export default function Hero({ content }: ContentProps) {
   const spectrumRef = useRef<HTMLDivElement>(null);
   const isSpectrumActive = useInView(spectrumRef, {
     amount: "some",
@@ -44,7 +42,7 @@ export default function Hero({ content, language }: ContentProps) {
               distance="subtle"
               duration="slow"
             >
-              {localizedContent.heroEyebrow}
+              {content.heroEyebrow}
             </StaggerItem>
 
             <StaggerItem
@@ -53,7 +51,7 @@ export default function Hero({ content, language }: ContentProps) {
               distance="subtle"
               duration="slow"
             >
-              {localizedContent.heroBusinessAreas}
+              {content.heroBusinessAreas}
             </StaggerItem>
 
             <StaggerItem
@@ -62,7 +60,7 @@ export default function Hero({ content, language }: ContentProps) {
               distance="subtle"
               duration="slow"
             >
-              {localizedContent.heroTitle}
+              {content.heroTitle}
             </StaggerItem>
 
             <StaggerItem
@@ -71,7 +69,7 @@ export default function Hero({ content, language }: ContentProps) {
               distance="subtle"
               duration="slow"
             >
-              {localizedContent.heroSubtitle}
+              {content.heroSubtitle}
             </StaggerItem>
 
             <StaggerItem
@@ -80,7 +78,7 @@ export default function Hero({ content, language }: ContentProps) {
               distance="subtle"
               duration="slow"
             >
-              {localizedContent.heroDescription}
+              {content.heroDescription}
             </StaggerItem>
 
             <StaggerItem
@@ -94,7 +92,7 @@ export default function Hero({ content, language }: ContentProps) {
                 onClick={() => scrollToSection("featured")}
                 className="rounded-full bg-[var(--brand-blue)] px-10 py-4 text-white shadow-[0_0_25px_rgba(14,108,178,0.4)] transition-[box-shadow] duration-300 hover:shadow-[0_0_34px_rgba(14,108,178,0.68)]"
               >
-                {localizedContent.discover}
+                {content.discover}
               </ResonanceButton>
 
               <ResonanceButton
@@ -103,7 +101,7 @@ export default function Hero({ content, language }: ContentProps) {
                 onClick={() => scrollToSection("contact")}
                 className="rounded-full border border-white/20 px-10 py-4 text-gray-300 transition-[border-color,color,box-shadow] duration-300 hover:border-[var(--brand-teal)] hover:text-white hover:shadow-[0_0_28px_rgba(76,186,175,0.2)]"
               >
-                {localizedContent.contactButton}
+                {content.contactButton}
               </ResonanceButton>
             </StaggerItem>
           </StaggerGroup>
@@ -115,19 +113,19 @@ export default function Hero({ content, language }: ContentProps) {
               duration="slow"
             >
               <p className="text-xs tracking-[0.35em] text-gray-500">
-                {localizedContent.latestReleaseLabel}
+                {content.latestReleaseLabel}
               </p>
 
               <h3 className="mt-4 text-4xl font-bold text-white">
-                {localizedContent.latestReleaseTitle}
+                {content.latestReleaseTitle}
               </h3>
 
               <p className="mt-3 text-sm tracking-[0.25em] text-[var(--brand-blue)]">
-                {localizedContent.latestReleaseMeta}
+                {content.latestReleaseMeta}
               </p>
 
               <p className="mt-4 text-gray-400">
-                {localizedContent.latestReleaseText}
+                {content.latestReleaseText}
               </p>
 
               <div

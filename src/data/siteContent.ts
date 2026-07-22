@@ -6,7 +6,7 @@ type SitePageContent = {
   description: string;
 };
 
-type SiteContentEntry = {
+export type SiteContentEntry = {
   heroEyebrow: string;
   heroBusinessAreas: string;
   heroTitle: string;

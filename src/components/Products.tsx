@@ -5,35 +5,33 @@ import {
   StaggerItem,
 } from "@/components/motion/MotionPrimitives";
 import { ResonanceSurface } from "@/components/motion/ResonanceSurface";
-import type { Language, SiteContent } from "@/data/siteContent";
+import type { HomePageContent } from "@/content/contracts";
 import { getLocalizedPath, type Locale } from "@/i18n/config";
 
 type ContentProps = {
-  content: SiteContent;
-  language: Language;
+  content: HomePageContent;
   locale: Locale;
 };
 
-export default function Products({ content, language, locale }: ContentProps) {
-  const localizedContent = content[language];
+export default function Products({ content, locale }: ContentProps) {
   const featuredItems = [
     {
-      title: localizedContent.featuredArtistsTitle,
-      text: localizedContent.featuredArtistsText,
+      title: content.featuredArtistsTitle,
+      text: content.featuredArtistsText,
       href: getLocalizedPath("/artists", locale),
       number: "01",
       glow: "pink" as const,
     },
     {
-      title: localizedContent.featuredMusicTitle,
-      text: localizedContent.featuredMusicText,
+      title: content.featuredMusicTitle,
+      text: content.featuredMusicText,
       href: getLocalizedPath("/music", locale),
       number: "02",
       glow: "blue" as const,
     },
     {
-      title: localizedContent.featuredProductionsTitle,
-      text: localizedContent.featuredProductionsText,
+      title: content.featuredProductionsTitle,
+      text: content.featuredProductionsText,
       href: getLocalizedPath("/productions", locale),
       number: "03",
       glow: "teal" as const,
@@ -47,11 +45,11 @@ export default function Products({ content, language, locale }: ContentProps) {
     >
       <Reveal className="mb-16" distance="subtle">
         <p className="text-xs tracking-[0.35em] text-[var(--brand-blue)]">
-          {localizedContent.featuredLabel}
+          {content.featuredLabel}
         </p>
 
         <h2 className="mt-5 text-5xl font-bold">
-          {localizedContent.featuredTitle}
+          {content.featuredTitle}
         </h2>
 
         <div className="mt-6 h-px w-32 bg-white/10" />
@@ -74,7 +72,7 @@ export default function Products({ content, language, locale }: ContentProps) {
                 </div>
 
                 <p className="text-xs tracking-[0.35em] text-gray-500">
-                  {localizedContent.featuredCategoryLabel}
+                  {content.featuredCategoryLabel}
                 </p>
 
                 <h3 className="mt-8 text-3xl font-bold">
@@ -86,7 +84,7 @@ export default function Products({ content, language, locale }: ContentProps) {
                 </p>
 
                 <div className="mt-12 flex items-center gap-3 text-sm tracking-[0.25em] text-[var(--brand-blue)]">
-                  {localizedContent.featuredDiscoverLabel}
+                  {content.featuredDiscoverLabel}
                   <span className="transition-all duration-500 group-hover:translate-x-2">
                     →
                   </span>

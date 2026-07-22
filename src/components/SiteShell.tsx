@@ -5,14 +5,16 @@ import type { ReactNode } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { MotionProvider } from "@/components/motion/MotionProvider";
+import type { SiteShellContent } from "@/content/contracts";
 import { useLanguage } from "@/context/LanguageContext";
-import { siteContent } from "@/data/siteContent";
 import { interfaceContent } from "@/data/interfaceContent";
 
 export default function SiteShell({
   children,
+  content,
 }: {
   children: ReactNode;
+  content: SiteShellContent;
 }) {
   const { language, locale } = useLanguage();
   const labels = interfaceContent[language];
@@ -33,7 +35,7 @@ export default function SiteShell({
 
         {children}
 
-        <Footer content={siteContent} language={language} locale={locale} />
+        <Footer content={content} language={language} locale={locale} />
       </div>
     </MotionProvider>
   );

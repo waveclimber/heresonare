@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import {
-  pageContent,
-  type PageContentItem,
-  type PageKey,
+import type {
+  PageContentItem,
+  StaticPageContent,
 } from "@/data/pageContent";
-import { siteContent } from "@/data/siteContent";
+import type { SiteMetadataContent } from "@/content/contracts";
 import {
-  contentLanguageByLocale,
   getLocalizedPath,
   htmlLangByLocale,
   openGraphLocaleByLocale,
@@ -25,10 +23,11 @@ function buildMetadata(
   title: string,
   description: string,
   locale: Locale,
-  pathname: string
+  pathname: string,
+  siteContent: SiteMetadataContent,
 ): Metadata {
   const canonicalPath = getLocalizedPath(pathname, locale);
-  const socialCardAlt = getSocialCardAlt(locale);
+  const socialCardAlt = getSocialCardAlt(siteContent);
   const openGraphImage = {
     url: getAbsoluteSiteUrl(`/${locale}/opengraph-image/brand-share`),
     ...socialCardSize,
@@ -74,10 +73,7 @@ function buildMetadata(
   };
 }
 
-export function createSiteMetadata(locale: Locale): Metadata {
-  const language = contentLanguageByLocale[locale];
-  const content = siteContent[language];
-
+export function createSiteMetadata(content: SiteMetadataContent): Metadata {
   return {
     metadataBase: siteUrl,
     title: `${brandName} | ${content.heroSubtitle}`,
@@ -111,41 +107,43 @@ export function createSiteMetadata(locale: Locale): Metadata {
   };
 }
 
-export function createHomeMetadata(locale: Locale): Metadata {
-  const language = contentLanguageByLocale[locale];
-  const content = siteContent[language];
-
+export function createHomeMetadata(
+  locale: Locale,
+  content: SiteMetadataContent,
+): Metadata {
   return buildMetadata(
     `${brandName} | ${content.heroSubtitle}`,
     content.heroDescription,
     locale,
-    "/"
+    "/",
+    content,
   );
 }
 
 export function createPageMetadata(
-  pageKey: PageKey,
-  locale: Locale
+  page: StaticPageContent,
+  locale: Locale,
+  siteContent: SiteMetadataContent,
 ): Metadata {
-  const language = contentLanguageByLocale[locale];
-  const page = pageContent[language][pageKey];
-
   return buildMetadata(
     `${page.hero.title} | ${brandName}`,
     page.hero.description,
     locale,
-    `/${pageKey}`
+    `/${page.slug}`,
+    siteContent,
   );
 }
 
 export function createProductionMetadata(
   production: PageContentItem,
-  locale: Locale
+  locale: Locale,
+  siteContent: SiteMetadataContent,
 ): Metadata {
   return buildMetadata(
     `${production.title} | ${brandName}`,
     production.description,
     locale,
-    `/productions/${production.slug}`
+    `/productions/${production.slug}`,
+    siteContent,
   );
 }

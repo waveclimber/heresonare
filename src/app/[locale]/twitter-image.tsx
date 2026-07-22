@@ -4,13 +4,13 @@ import {
   createSocialCardMetadata,
 } from "@/lib/socialCard";
 
-export function generateImageMetadata({
+export async function generateImageMetadata({
   params,
 }: {
   params: { locale: string };
 }) {
   return isLocale(params.locale)
-    ? [createSocialCardMetadata(params.locale)]
+    ? [await createSocialCardMetadata(params.locale)]
     : [];
 }
 

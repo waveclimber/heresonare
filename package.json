@@ -12,10 +12,11 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "check:config": "node scripts/check-site-config.mjs",
+    "check:content-boundary": "node scripts/check-content-boundary.mjs",
     "check:content": "node scripts/check-content-media.mjs",
     "check:performance": "node scripts/check-performance-budget.mjs",
     "check:site": "node scripts/check-site-integrity.mjs",
-    "check": "npm run lint && npm run typecheck && npm run check:config && npm run check:content && npm run build && npm run check:site && npm run check:performance"
+    "check": "npm run lint && npm run typecheck && npm run check:config && npm run check:content-boundary && npm run check:content && npm run build && npm run check:site && npm run check:performance"
   },
   "dependencies": {
     "motion": "12.42.2",

@@ -1,11 +1,9 @@
-import {
-  pageContent,
-  type PageContentItem,
-  type PageKey,
+import type {
+  PageContentItem,
+  StaticPageContent,
 } from "@/data/pageContent";
-import { siteContent } from "@/data/siteContent";
+import type { SiteMetadataContent } from "@/content/contracts";
 import {
-  contentLanguageByLocale,
   getLocalizedPath,
   htmlLangByLocale,
   supportedLocales,
@@ -65,9 +63,10 @@ function createBreadcrumbList(locale: Locale, breadcrumbs: Breadcrumb[]) {
   };
 }
 
-export function createHomeStructuredData(locale: Locale) {
-  const language = contentLanguageByLocale[locale];
-  const content = siteContent[language];
+export function createHomeStructuredData(
+  locale: Locale,
+  content: SiteMetadataContent,
+) {
   const title = `${brandName} | ${content.heroSubtitle}`;
   const description = content.heroDescription;
 
@@ -96,18 +95,19 @@ export function createHomeStructuredData(locale: Locale) {
   };
 }
 
-export function createPageStructuredData(pageKey: PageKey, locale: Locale) {
-  const language = contentLanguageByLocale[locale];
-  const page = pageContent[language][pageKey];
+export function createPageStructuredData(
+  page: StaticPageContent,
+  locale: Locale,
+) {
   const title = `${page.hero.title} | ${brandName}`;
 
   return {
     "@context": "https://schema.org",
     "@graph": [
-      createWebPage(title, page.hero.description, locale, `/${pageKey}`),
+      createWebPage(title, page.hero.description, locale, `/${page.slug}`),
       createBreadcrumbList(locale, [
         { name: brandName, pathname: "/" },
-        { name: page.hero.title, pathname: `/${pageKey}` },
+        { name: page.hero.title, pathname: `/${page.slug}` },
       ]),
     ],
   };
@@ -116,9 +116,8 @@ export function createPageStructuredData(pageKey: PageKey, locale: Locale) {
 export function createProductionStructuredData(
   production: PageContentItem,
   locale: Locale,
+  productionsPageTitle: string,
 ) {
-  const language = contentLanguageByLocale[locale];
-  const productionsPage = pageContent[language].productions;
   const pathname = `/productions/${production.slug}`;
   const title = `${production.title} | ${brandName}`;
 
@@ -129,7 +128,7 @@ export function createProductionStructuredData(
       createBreadcrumbList(locale, [
         { name: brandName, pathname: "/" },
         {
-          name: productionsPage.hero.title,
+          name: productionsPageTitle,
           pathname: "/productions",
         },
         { name: production.title, pathname },
