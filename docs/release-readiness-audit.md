@@ -7,8 +7,10 @@ approved motion identity, adding dependencies, configuring Vercel, or touching
 the company mirror. It covers the public EN, JA, and ZH-CN routes in the
 `waveclimber` repository.
 
-The production origin defaults to `https://heresonare.com` and can be replaced
-with `NEXT_PUBLIC_SITE_URL` when the final canonical domain is confirmed.
+No production domain is bound yet. The production origin defaults to the
+candidate `https://heresonare.com` and can be replaced with the server-side
+`SITE_URL` when testing or when the final canonical domain is confirmed.
+`NEXT_PUBLIC_SITE_URL` remains supported only as a temporary legacy input.
 
 ## Implemented
 
@@ -88,8 +90,8 @@ final hosting environment.
 
 ## Open release inputs
 
-1. Confirm the canonical production origin. If it is not
-   `https://heresonare.com`, set `NEXT_PUBLIC_SITE_URL` before building.
+1. Bind and confirm the canonical production origin in a separate operational
+   task. If it is not `https://heresonare.com`, set `SITE_URL` before building.
 2. Approve a dedicated multilingual social sharing image when brand artwork is
    ready.
 3. Resolve the dependency advisory through an approved Next.js upgrade path.

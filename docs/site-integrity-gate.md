@@ -10,6 +10,8 @@ company mirror state.
 `npm run check:site` runs after `next build`. It inspects generated HTML and
 metadata outputs, starts the production server on an available local port,
 checks runtime responses, and always stops the temporary server afterward.
+The gate imports the shared site configuration contract, so its expected
+canonical origin is the same validated origin used by the application build.
 
 ## Protected contracts
 
@@ -80,6 +82,9 @@ The check uses only Node.js and the installed Next.js package. It adds no test
 framework or runtime dependency. Browser interaction and subjective visual or
 motion acceptance remain separate when a task changes the interface or a
 generated social asset.
+
+Run `npm run check:config` before a standalone build, or use `npm run check` to
+validate configuration, build output, and runtime integrity in sequence.
 
 ## Validation results
 

@@ -23,6 +23,18 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+## Site configuration
+
+No production domain is bound yet. `https://heresonare.com` is the current
+canonical candidate for production-like validation, not a live-domain status.
+Use the server-only `SITE_URL` variable when testing another HTTPS origin. The
+tracked `.env.example` is safe to copy for local setup; real environment files
+remain ignored and must never contain committed credentials.
+
+Node.js 22 is the project baseline selected by `.nvmrc`; Node.js 22 through 24
+are supported. See [docs/site-configuration-contract.md](./docs/site-configuration-contract.md)
+for validation rules and the later domain-binding checklist.
+
 ## Quality checks
 
 ```bash
@@ -41,6 +53,7 @@ npm run check
 
 - `src/app` — locale-prefixed routes, layouts, route handlers, and global styles
 - `src/components` — shared page and layout components
+- `src/config` — validated server-side application configuration
 - `src/context` — URL-derived client language context
 - `src/data` — localized navigation, interface, site, and page content
 - `src/i18n` — central locale configuration and path helpers
