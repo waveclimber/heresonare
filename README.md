@@ -54,6 +54,11 @@ repository boundary. See
 [docs/content-repository-boundary.md](./docs/content-repository-boundary.md)
 for the current static adapter and the future database/CMS requirements.
 
+Production-like checks also protect security headers, cache ownership, the
+minimal `/api/health` response, and hardened locale-preference handling. See
+[docs/production-http-contract.md](./docs/production-http-contract.md) before
+placing a CDN, proxy, or bound domain in front of the application.
+
 ## Project structure
 
 - `src/app` — locale-prefixed routes, layouts, route handlers, and global styles

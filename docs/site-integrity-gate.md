@@ -71,6 +71,18 @@ canonical origin is the same validated origin used by the application build.
   React Server Component payload used by the localized not-found experience.
 - An unsupported locale returns HTTP 404.
 
+### HTTP security and operations
+
+- Public pages, errors, discovery files, social images, public assets, and API
+  responses expose the approved security-header baseline.
+- Production CSP excludes `unsafe-eval`; strict nonce and experimental SRI
+  strategies remain separate architecture decisions.
+- Static pages preserve framework-managed shared-cache behavior, while
+  localized 404 responses remain private and uncached.
+- `/api/health` returns the minimal uncached liveness payload.
+- `/api/locale` rejects missing content type, malformed JSON, and unsupported
+  locales; its successful response issues the hardened production Cookie.
+
 ## Maintenance rule
 
 The route fixture is intentionally explicit. Adding, removing, or renaming a
@@ -102,6 +114,8 @@ The full local quality gate passed against the production build:
 - Generated and runtime sitemap and robots checks passed.
 - Three representative locale redirects and three localized 404 responses
   passed.
+- Security headers, cache policies, one health response, and four locale API
+  cases passed.
 - Existing performance budgets passed without threshold changes.
 
 No browser-based visual acceptance was required because this task changes no

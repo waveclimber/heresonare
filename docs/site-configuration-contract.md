@@ -53,11 +53,14 @@ Complete these steps in a separate reviewed operational task:
 4. Set `SITE_URL` to the exact canonical HTTPS origin and rebuild from a
    reviewed commit.
 5. Run the full quality gate and verify canonical links, language alternates,
-   sitemap, robots, JSON-LD, and social-image URLs against the bound host.
+   sitemap, robots, JSON-LD, social-image URLs, security headers, and cache
+   behavior against the bound host.
 6. Verify all EN, JA, and ZH-CN routes over HTTPS on desktop and mobile.
 7. Redirect the alternate host to the canonical host without changing locale
    paths or query strings.
 8. Record monitoring, rollback, and company-mirror synchronization ownership.
+9. Enable HSTS only after HTTPS and required subdomains are verified; evaluate
+   `includeSubDomains` and preload as separate irreversible-risk decisions.
 
 Domain binding is complete only after the production host serves the reviewed
 build over HTTPS and the metadata checks resolve to that same host.

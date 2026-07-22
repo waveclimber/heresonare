@@ -4,6 +4,10 @@ import { createServer } from "node:net";
 import { join } from "node:path";
 
 import { resolveSiteUrlFromEnvironment } from "../src/config/site.mjs";
+import {
+  getSecurityHeaders,
+  noStoreCacheControl,
+} from "../src/config/http.mjs";
 
 const projectRoot = process.cwd();
 const buildDirectory = join(projectRoot, ".next");
@@ -57,6 +61,7 @@ const expectedRoutes = routeShapes.flatMap((shape) =>
 );
 const expectedRouteSet = new Set(expectedRoutes);
 const failures = [];
+const expectedSecurityHeaders = getSecurityHeaders("production");
 const socialImageUrls = {
   openGraph: new Set(),
   twitter: new Set(),
@@ -362,6 +367,29 @@ function checkStructuredData({
 
 function record(condition, message) {
   if (!condition) failures.push(message);
+}
+
+function checkSecurityHeaders(response, label) {
+  for (const expectedHeader of expectedSecurityHeaders) {
+    record(
+      response.headers.get(expectedHeader.key) === expectedHeader.value,
+      `${label} has an invalid ${expectedHeader.key} header.`,
+    );
+  }
+
+  const contentSecurityPolicy =
+    response.headers.get("content-security-policy") ?? "";
+  record(
+    !contentSecurityPolicy.includes("'unsafe-eval'"),
+    `${label} allows unsafe-eval in production.`,
+  );
+}
+
+function checkCacheControl(response, label, expectedValue) {
+  record(
+    response.headers.get("cache-control") === expectedValue,
+    `${label} has an invalid Cache-Control header.`,
+  );
 }
 
 function getPublicImagePath(source) {
@@ -708,10 +736,13 @@ async function checkRuntimeRoutes() {
     await waitForServer(runtimeOrigin, child, serverOutput);
 
     const publicResults = await Promise.all(
-      expectedRoutes.map(async (route) => ({
-        route,
-        status: (await fetch(`${runtimeOrigin}${route}`)).status,
-      })),
+      expectedRoutes.map(async (route) => {
+        const response = await fetch(`${runtimeOrigin}${route}`);
+        checkSecurityHeaders(response, route);
+        checkCacheControl(response, route, "s-maxage=31536000");
+
+        return { route, status: response.status };
+      }),
     );
     for (const { route, status } of publicResults) {
       record(status === 200, `${route} returned HTTP ${status}.`);
@@ -726,6 +757,7 @@ async function checkRuntimeRoutes() {
       const response = await fetch(
         `${runtimeOrigin}${productionUrl.pathname}${productionUrl.search}`,
       );
+      checkSecurityHeaders(response, productionUrl.pathname);
       const buffer = Buffer.from(await response.arrayBuffer());
       const contentType = response.headers.get("content-type") ?? "";
       const isPng =
@@ -767,6 +799,7 @@ async function checkRuntimeRoutes() {
         headers,
         redirect: "manual",
       });
+      checkSecurityHeaders(response, redirectCase.path);
       const location = response.headers.get("location");
       const pathname = location
         ? new URL(location, runtimeOrigin).pathname
@@ -794,6 +827,12 @@ async function checkRuntimeRoutes() {
     ];
     for (const notFoundCase of notFoundCases) {
       const response = await fetch(`${runtimeOrigin}${notFoundCase.route}`);
+      checkSecurityHeaders(response, notFoundCase.route);
+      checkCacheControl(
+        response,
+        notFoundCase.route,
+        "private, no-cache, no-store, max-age=0, must-revalidate",
+      );
       const html = await response.text();
       record(
         response.status === 404,
@@ -814,13 +853,121 @@ async function checkRuntimeRoutes() {
     }
 
     const unsupportedResponse = await fetch(`${runtimeOrigin}/fr`);
+    checkSecurityHeaders(unsupportedResponse, "/fr");
     record(
       unsupportedResponse.status === 404,
       `/fr returned HTTP ${unsupportedResponse.status}.`,
     );
 
+    const healthResponse = await fetch(`${runtimeOrigin}/api/health`);
+    checkSecurityHeaders(healthResponse, "/api/health");
+    checkCacheControl(
+      healthResponse,
+      "/api/health",
+      noStoreCacheControl,
+    );
+    const healthPayload = await healthResponse.json();
+    record(
+      healthResponse.status === 200 &&
+        healthResponse.headers
+          .get("content-type")
+          ?.startsWith("application/json") &&
+        JSON.stringify(healthPayload) === JSON.stringify({ status: "ok" }) &&
+        !healthResponse.headers.has("set-cookie"),
+      "/api/health does not satisfy the minimal liveness contract.",
+    );
+
+    const localeErrorCases = [
+      {
+        label: "missing content type",
+        options: { method: "POST" },
+        expectedStatus: 415,
+      },
+      {
+        label: "malformed JSON",
+        options: {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: "{",
+        },
+        expectedStatus: 400,
+      },
+      {
+        label: "unsupported locale",
+        options: {
+          method: "POST",
+          headers: { "content-type": "application/json; charset=utf-8" },
+          body: JSON.stringify({ locale: "fr" }),
+        },
+        expectedStatus: 400,
+      },
+    ];
+    for (const localeErrorCase of localeErrorCases) {
+      const response = await fetch(
+        `${runtimeOrigin}/api/locale`,
+        localeErrorCase.options,
+      );
+      checkSecurityHeaders(response, `/api/locale (${localeErrorCase.label})`);
+      checkCacheControl(
+        response,
+        `/api/locale (${localeErrorCase.label})`,
+        noStoreCacheControl,
+      );
+      const payload = await response.json();
+      record(
+        response.status === localeErrorCase.expectedStatus &&
+          typeof payload?.error === "string" &&
+          payload.error.length > 0,
+        `/api/locale accepted ${localeErrorCase.label}.`,
+      );
+    }
+
+    const localeResponse = await fetch(`${runtimeOrigin}/api/locale`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ locale: "en" }),
+    });
+    checkSecurityHeaders(localeResponse, "/api/locale");
+    checkCacheControl(localeResponse, "/api/locale", noStoreCacheControl);
+    const localeCookie =
+      localeResponse.headers.get("set-cookie")?.toLowerCase() ?? "";
+    record(
+      localeResponse.status === 204 &&
+        localeCookie.includes("heresonare-locale=en") &&
+        localeCookie.includes("httponly") &&
+        localeCookie.includes("max-age=31536000") &&
+        localeCookie.includes("path=/") &&
+        localeCookie.includes("samesite=lax") &&
+        localeCookie.includes("secure"),
+      "/api/locale did not issue the hardened production cookie.",
+    );
+
+    const publicAssetResponse = await fetch(`${runtimeOrigin}/icon.png`);
+    checkSecurityHeaders(publicAssetResponse, "/icon.png");
+    checkCacheControl(
+      publicAssetResponse,
+      "/icon.png",
+      "public, max-age=0",
+    );
+    record(
+      publicAssetResponse.status === 200,
+      `/icon.png returned HTTP ${publicAssetResponse.status}.`,
+    );
+
     const robotsResponse = await fetch(`${runtimeOrigin}/robots.txt`);
     const sitemapResponse = await fetch(`${runtimeOrigin}/sitemap.xml`);
+    checkSecurityHeaders(robotsResponse, "/robots.txt");
+    checkSecurityHeaders(sitemapResponse, "/sitemap.xml");
+    checkCacheControl(
+      robotsResponse,
+      "/robots.txt",
+      "public, max-age=0, must-revalidate",
+    );
+    checkCacheControl(
+      sitemapResponse,
+      "/sitemap.xml",
+      "public, max-age=0, must-revalidate",
+    );
     record(robotsResponse.status === 200, "Runtime robots.txt is unavailable.");
     record(sitemapResponse.status === 200, "Runtime sitemap.xml is unavailable.");
   } finally {
@@ -846,6 +993,8 @@ console.table([
     "Structured-data pages": expectedRoutes.length,
     "Localized 404 cases": 3,
     "Legacy redirects": 3,
+    "Health contract": 1,
+    "Locale API cases": 4,
   },
 ]);
 
