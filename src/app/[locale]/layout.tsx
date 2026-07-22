@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { notFound } from "next/navigation";
 import "../globals.css";
 
@@ -12,14 +12,18 @@ import {
 } from "@/i18n/config";
 import { createSiteMetadata } from "@/lib/pageMetadata";
 
-const geistSans = Geist({
+const geistSans = localFont({
+  src: "../../assets/fonts/geist/Geist-Variable.woff2",
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  display: "swap",
+  weight: "100 900",
 });
 
-const geistMono = Geist_Mono({
+const geistMono = localFont({
+  src: "../../assets/fonts/geist/GeistMono-Variable.woff2",
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
+  weight: "100 900",
 });
 
 export const dynamicParams = false;
