@@ -4,8 +4,13 @@ import { notFound } from "next/navigation";
 import "../globals.css";
 
 import SiteShell from "@/components/SiteShell";
+import {
+  getSiteContent,
+  getSiteShellContent,
+} from "@/content/repository";
 import { LanguageProvider } from "@/context/LanguageContext";
 import {
+  contentLanguageByLocale,
   htmlLangByLocale,
   isLocale,
   supportedLocales,
@@ -43,7 +48,9 @@ export async function generateMetadata({
     notFound();
   }
 
-  return createSiteMetadata(locale);
+  const content = await getSiteContent(contentLanguageByLocale[locale]);
+
+  return createSiteMetadata(content);
 }
 
 export default async function LocaleLayout({
@@ -59,6 +66,8 @@ export default async function LocaleLayout({
     notFound();
   }
 
+  const content = await getSiteShellContent(contentLanguageByLocale[locale]);
+
   return (
     <html
       lang={htmlLangByLocale[locale]}
@@ -66,7 +75,7 @@ export default async function LocaleLayout({
     >
       <body className="min-h-full flex flex-col">
         <LanguageProvider locale={locale}>
-          <SiteShell>{children}</SiteShell>
+          <SiteShell content={content}>{children}</SiteShell>
         </LanguageProvider>
       </body>
     </html>

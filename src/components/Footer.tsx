@@ -7,13 +7,13 @@ import {
   StaggerGroup,
   StaggerItem,
 } from "@/components/motion/MotionPrimitives";
+import type { SiteShellContent } from "@/content/contracts";
 import { getNavigationItems } from "@/data/navigation";
-import type { Language, SiteContent } from "@/data/siteContent";
-import type { Locale } from "@/i18n/config";
+import type { ContentLanguage, Locale } from "@/i18n/config";
 
 type ContentProps = {
-  content: SiteContent;
-  language: Language;
+  content: SiteShellContent;
+  language: ContentLanguage;
   locale: Locale;
 };
 
@@ -38,7 +38,7 @@ export default function Footer({ content, language, locale }: ContentProps) {
             </ConvergeTarget>
 
             <p className="mt-4 text-sm tracking-[0.3em] text-gray-500">
-              {content[language].footerSlogan}
+              {content.footerSlogan}
             </p>
           </StaggerItem>
 
@@ -73,7 +73,7 @@ export default function Footer({ content, language, locale }: ContentProps) {
 
           <StaggerItem distance="subtle" duration="fast">
             <p className="mt-10 text-sm text-gray-600">
-              {content[language].footerCopyright}
+              {content.footerCopyright}
             </p>
           </StaggerItem>
         </StaggerGroup>

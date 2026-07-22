@@ -49,11 +49,17 @@ Run the complete quality gate with:
 npm run check
 ```
 
+The gate also verifies that public content is read through the server-only
+repository boundary. See
+[docs/content-repository-boundary.md](./docs/content-repository-boundary.md)
+for the current static adapter and the future database/CMS requirements.
+
 ## Project structure
 
 - `src/app` — locale-prefixed routes, layouts, route handlers, and global styles
 - `src/components` — shared page and layout components
 - `src/config` — validated server-side application configuration
+- `src/content` — server-only public-content contract and data-source adapters
 - `src/context` — URL-derived client language context
 - `src/data` — localized navigation, interface, site, and page content
 - `src/i18n` — central locale configuration and path helpers

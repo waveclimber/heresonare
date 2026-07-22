@@ -5,12 +5,15 @@ import Contact from "@/components/Contact";
 import Hero from "@/components/Hero";
 import Products from "@/components/Products";
 import { ResonanceTicker } from "@/components/motion/ResonanceTicker";
+import type { HomePageContent } from "@/content/contracts";
 import { useLanguage } from "@/context/LanguageContext";
-import { siteContent } from "@/data/siteContent";
 
-export default function HomeContent() {
+export default function HomeContent({
+  content,
+}: {
+  content: HomePageContent;
+}) {
   const { language, locale } = useLanguage();
-  const localizedContent = siteContent[language];
 
   return (
     <main
@@ -18,18 +21,18 @@ export default function HomeContent() {
       tabIndex={-1}
       className="min-h-screen bg-black text-white focus:outline-none"
     >
-      <Hero content={siteContent} language={language} />
+      <Hero content={content} />
 
       <ResonanceTicker
-        primary={localizedContent.heroEyebrow}
-        secondary={localizedContent.heroBusinessAreas}
+        primary={content.heroEyebrow}
+        secondary={content.heroBusinessAreas}
       />
 
-      <Products content={siteContent} language={language} locale={locale} />
+      <Products content={content} locale={locale} />
 
-      <About content={siteContent} language={language} />
+      <About content={content} />
 
-      <Contact content={siteContent} language={language} />
+      <Contact content={content} language={language} />
     </main>
   );
 }

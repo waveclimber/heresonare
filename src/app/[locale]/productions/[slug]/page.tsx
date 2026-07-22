@@ -3,10 +3,12 @@ import { notFound } from "next/navigation";
 
 import ProductionDetail from "@/components/ProductionDetail";
 import StructuredData from "@/components/StructuredData";
-import { interfaceContent } from "@/data/interfaceContent";
 import {
-  getLocalizedProduction,
-} from "@/data/productionContent";
+  getPageContent,
+  getProductionContent,
+  getSiteContent,
+} from "@/content/repository";
+import { interfaceContent } from "@/data/interfaceContent";
 import {
   isProductionSlug,
   productionSlugs,
@@ -28,30 +30,41 @@ type ProductionPageProps = {
   params: Promise<{ locale: string; slug: string }>;
 };
 
-function getProduction(localeValue: string, slugValue: string) {
+async function getProduction(localeValue: string, slugValue: string) {
   if (!isLocale(localeValue) || !isProductionSlug(slugValue)) {
     notFound();
   }
 
-  const production = getLocalizedProduction(localeValue, slugValue);
+  const language = contentLanguageByLocale[localeValue];
+  const production = await getProductionContent(language, slugValue);
   if (!production) notFound();
 
-  return { locale: localeValue, production };
+  return { language, locale: localeValue, production };
 }
 
 export async function generateMetadata({
   params,
 }: ProductionPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
-  const result = getProduction(locale, slug);
+  const result = await getProduction(locale, slug);
+  const siteContent = await getSiteContent(result.language);
 
-  return createProductionMetadata(result.production, result.locale);
+  return createProductionMetadata(
+    result.production,
+    result.locale,
+    siteContent,
+  );
 }
 
 export default async function ProductionPage({ params }: ProductionPageProps) {
   const { locale, slug } = await params;
-  const result = getProduction(locale, slug);
-  const language = contentLanguageByLocale[result.locale];
+  const result = await getProduction(locale, slug);
+  const productionsPage = await getPageContent(
+    result.language,
+    "productions",
+  );
+
+  if (!productionsPage) notFound();
 
   return (
     <>
@@ -59,13 +72,14 @@ export default async function ProductionPage({ params }: ProductionPageProps) {
         data={createProductionStructuredData(
           result.production,
           result.locale,
+          productionsPage.hero.title,
         )}
       />
       <ProductionDetail
         production={result.production}
         locale={result.locale}
-        labels={interfaceContent[language].staticPage}
-        detailLabels={interfaceContent[language].productionDetail}
+        labels={interfaceContent[result.language].staticPage}
+        detailLabels={interfaceContent[result.language].productionDetail}
       />
     </>
   );

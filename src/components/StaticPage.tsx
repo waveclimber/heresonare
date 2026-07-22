@@ -5,21 +5,16 @@ import ContentCard from "@/components/ContentCard";
 import PageHero from "@/components/PageHero";
 import SectionHeader from "@/components/SectionHeader";
 import { useLanguage } from "@/context/LanguageContext";
-import {
-  pageContent,
-  type PageKey,
-  type StaticPageContent,
-} from "@/data/pageContent";
+import type { StaticPageContent } from "@/data/pageContent";
 import { interfaceContent } from "@/data/interfaceContent";
 import { getLocalizedHref } from "@/i18n/config";
 
 type StaticPageProps = {
-  pageKey: PageKey;
+  content: StaticPageContent;
 };
 
-export default function StaticPage({ pageKey }: StaticPageProps) {
+export default function StaticPage({ content }: StaticPageProps) {
   const { language, locale } = useLanguage();
-  const page: StaticPageContent = pageContent[language][pageKey];
   const labels = interfaceContent[language].staticPage;
 
   return (
@@ -29,14 +24,14 @@ export default function StaticPage({ pageKey }: StaticPageProps) {
       className="min-h-screen bg-black text-white focus:outline-none"
     >
       <PageHero
-        tag={page.hero.tag}
-        title={page.hero.title}
-        description={page.hero.description}
+        tag={content.hero.tag}
+        title={content.hero.title}
+        description={content.hero.description}
       />
 
       <div className="mx-auto max-w-7xl px-6 pb-32">
         <div className="grid gap-24">
-          {page.sections.map((section) => (
+          {content.sections.map((section) => (
             <section key={section.id}>
               <SectionHeader
                 label={section.label}

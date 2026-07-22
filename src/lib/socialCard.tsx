@@ -2,7 +2,8 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
-import { siteContent } from "@/data/siteContent";
+import type { SiteMetadataContent } from "@/content/contracts";
+import { getSiteContent } from "@/content/repository";
 import {
   contentLanguageByLocale,
   htmlLangByLocale,
@@ -102,23 +103,26 @@ async function getSocialCardFonts(locale: Locale) {
   ];
 }
 
-export function getSocialCardAlt(locale: Locale) {
-  const content = siteContent[contentLanguageByLocale[locale]];
+export function getSocialCardAlt(content: SiteMetadataContent) {
   return `${brandName} — ${content.heroSubtitle}`;
 }
 
-export function createSocialCardMetadata(locale: Locale) {
+export async function createSocialCardMetadata(locale: Locale) {
+  const content = await getSiteContent(contentLanguageByLocale[locale]);
+
   return {
     id: "brand-share",
-    alt: getSocialCardAlt(locale),
+    alt: getSocialCardAlt(content),
     size: socialCardSize,
     contentType: socialCardContentType,
   };
 }
 
 export async function createSocialCard(locale: Locale) {
-  const content = siteContent[contentLanguageByLocale[locale]];
-  const fonts = await getSocialCardFonts(locale);
+  const [content, fonts] = await Promise.all([
+    getSiteContent(contentLanguageByLocale[locale]),
+    getSocialCardFonts(locale),
+  ]);
 
   const response = new ImageResponse(
     (

@@ -88,6 +88,10 @@ must not be inferred from concept records.
 
 ## 6. Introduce CMS or database-backed content
 
+**Status:** Preparation in progress. The public content Data Access Layer and
+static adapter are in place; provider selection and remote data access remain
+open.
+
 **Objective:** Allow authorized editors to manage approved content without routine code deployments.
 
 **Major deliverables:** Content-platform selection, schema mapping from existing TypeScript models, preview and publishing workflow, asset handling, locale validation, migration tooling, and access controls.
@@ -95,6 +99,13 @@ must not be inferred from concept records.
 **Acceptance conditions:** Editors can preview and publish validated EN, JP, and CN content; schema validation prevents incomplete structures; the application handles unavailable content and platform failures safely; migration and rollback procedures are documented.
 
 **Dependencies or risks:** Depends on stable content and route models. Platform cost, vendor lock-in, credentials, permissions, cache invalidation, migration fidelity, and editorial workflow require product and operational decisions.
+
+**Current preparation:** Pages, metadata, structured data, and social cards now
+consume one asynchronous server-only repository contract. The existing
+TypeScript content remains the selected adapter, so this preparation adds no
+database dependency, credential, network read, publishing workflow, or visual
+change. A future provider must map into the public DTOs and preserve the
+localized 404, route-allowlist, and full quality-gate contracts.
 
 ## 7. Harden deployment and company-repository synchronization
 

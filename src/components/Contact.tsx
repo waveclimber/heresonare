@@ -1,4 +1,4 @@
-import type { Language, SiteContent } from "@/data/siteContent";
+import type { HomePageContent } from "@/content/contracts";
 import {
   Reveal,
   StaggerGroup,
@@ -12,35 +12,35 @@ import { ResonanceLink } from "@/components/motion/ResonanceLink";
 import { ResonanceSurface } from "@/components/motion/ResonanceSurface";
 import { interfaceContent } from "@/data/interfaceContent";
 import { officialSocialLinks } from "@/data/socialLinks";
+import type { ContentLanguage } from "@/i18n/config";
 
 type ContentProps = {
-  content: SiteContent;
-  language: Language;
+  content: HomePageContent;
+  language: ContentLanguage;
 };
 
 export default function Contact({ content, language }: ContentProps) {
-  const localizedContent = content[language];
   const contactItems = [
     {
       number: "01",
-      title: localizedContent.contactArtistsTitle,
-      text: localizedContent.contactArtistsText,
+      title: content.contactArtistsTitle,
+      text: content.contactArtistsText,
       color: "bg-[var(--brand-blue)]",
       border: "hover:border-[var(--brand-blue)]/50",
       glow: "blue" as const,
     },
     {
       number: "02",
-      title: localizedContent.contactPartnersTitle,
-      text: localizedContent.contactPartnersText,
+      title: content.contactPartnersTitle,
+      text: content.contactPartnersText,
       color: "bg-[var(--brand-pink)]",
       border: "hover:border-[var(--brand-pink)]/50",
       glow: "pink" as const,
     },
     {
       number: "03",
-      title: localizedContent.contactVenuesTitle,
-      text: localizedContent.contactVenuesText,
+      title: content.contactVenuesTitle,
+      text: content.contactVenuesText,
       color: "bg-[var(--brand-teal)]",
       border: "hover:border-[var(--brand-teal)]/50",
       glow: "teal" as const,
@@ -51,7 +51,7 @@ export default function Contact({ content, language }: ContentProps) {
     {
       key: "instagram",
       href: officialSocialLinks.instagram,
-      label: localizedContent.instagramLabel,
+      label: content.instagramLabel,
       glow: "blue" as const,
       hover:
         "hover:border-[var(--brand-blue)] hover:text-[var(--brand-blue)]",
@@ -59,7 +59,7 @@ export default function Contact({ content, language }: ContentProps) {
     {
       key: "xiaohongshu",
       href: officialSocialLinks.xiaohongshu,
-      label: localizedContent.xiaohongshuLabel,
+      label: content.xiaohongshuLabel,
       glow: "pink" as const,
       hover:
         "hover:border-[var(--brand-pink)] hover:text-[var(--brand-pink)]",
@@ -67,7 +67,7 @@ export default function Contact({ content, language }: ContentProps) {
     {
       key: "douyin",
       href: officialSocialLinks.douyin,
-      label: localizedContent.douyinLabel,
+      label: content.douyinLabel,
       glow: "teal" as const,
       hover:
         "hover:border-[var(--brand-teal)] hover:text-[var(--brand-teal)]",
@@ -84,17 +84,17 @@ export default function Contact({ content, language }: ContentProps) {
         <div className="relative z-10 grid gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <Reveal distance="subtle">
             <p className="text-xs uppercase tracking-[0.35em] text-[var(--brand-blue)]">
-              {localizedContent.contactTag}
+              {content.contactTag}
             </p>
 
             <h2 className="mt-6 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
-              {localizedContent.contactTitle}
+              {content.contactTitle}
             </h2>
 
             <div className="mt-8 h-px w-32 bg-white/10" />
 
             <p className="mt-8 max-w-xl text-lg leading-8 text-gray-400">
-              {localizedContent.contactText}
+              {content.contactText}
             </p>
 
             <ConvergeTarget className="mt-10">
@@ -102,7 +102,7 @@ export default function Contact({ content, language }: ContentProps) {
                 href="mailto:contact@heresonare.com"
                 className="inline-flex rounded-full bg-[var(--brand-blue)] px-8 py-3 text-white shadow-[0_0_25px_rgba(14,108,178,0.35)] transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_0_34px_rgba(14,108,178,0.62)]"
               >
-                {localizedContent.contactEmailLabel}
+                {content.contactEmailLabel}
               </ResonanceLink>
             </ConvergeTarget>
           </Reveal>
@@ -125,7 +125,7 @@ export default function Contact({ content, language }: ContentProps) {
                   <div className={`mb-8 h-1 w-16 rounded-full ${item.color}`} />
 
                   <p className="text-xs tracking-[0.3em] text-gray-500">
-                    {localizedContent.contactCardLabel}
+                    {content.contactCardLabel}
                   </p>
 
                   <h3 className="mt-5 text-2xl font-semibold text-white">
@@ -140,9 +140,9 @@ export default function Contact({ content, language }: ContentProps) {
             ))}
 
             <StaggerItem className="pt-3" distance="subtle">
-              <nav aria-label={localizedContent.socialChannelsLabel}>
+              <nav aria-label={content.socialChannelsLabel}>
                 <p className="mb-4 text-xs uppercase tracking-[0.3em] text-gray-500">
-                  {localizedContent.socialChannelsLabel}
+                  {content.socialChannelsLabel}
                 </p>
                 <ul className="flex flex-wrap gap-3">
                   {socialLinks.map((socialLink) => (

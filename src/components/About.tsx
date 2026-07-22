@@ -1,4 +1,4 @@
-import type { Language, SiteContent } from "@/data/siteContent";
+import type { HomePageContent } from "@/content/contracts";
 import {
   Reveal,
   StaggerGroup,
@@ -8,31 +8,29 @@ import { StoryConvergePath } from "@/components/motion/ConvergePaths";
 import { ResonanceSurface } from "@/components/motion/ResonanceSurface";
 
 type ContentProps = {
-  content: SiteContent;
-  language: Language;
+  content: HomePageContent;
 };
 
-export default function About({ content, language }: ContentProps) {
-  const localizedContent = content[language];
+export default function About({ content }: ContentProps) {
   const aboutCards = [
     {
       number: "01",
-      title: localizedContent.aboutStoryTitle,
-      text: localizedContent.aboutStoryText,
+      title: content.aboutStoryTitle,
+      text: content.aboutStoryText,
       color: "bg-[var(--brand-blue)]",
       glow: "blue" as const,
     },
     {
       number: "02",
-      title: localizedContent.aboutMissionTitle,
-      text: localizedContent.aboutMissionText,
+      title: content.aboutMissionTitle,
+      text: content.aboutMissionText,
       color: "bg-[var(--brand-pink)]",
       glow: "pink" as const,
     },
     {
       number: "03",
-      title: localizedContent.aboutVisionTitle,
-      text: localizedContent.aboutVisionText,
+      title: content.aboutVisionTitle,
+      text: content.aboutVisionText,
       color: "bg-[var(--brand-teal)]",
       glow: "teal" as const,
     },
@@ -47,21 +45,21 @@ export default function About({ content, language }: ContentProps) {
         <div className="grid gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <Reveal className="sticky top-32" distance="subtle">
             <p className="text-xs uppercase tracking-[0.35em] text-[var(--brand-blue)]">
-              {localizedContent.aboutTag}
+              {content.aboutTag}
             </p>
 
             <h2 className="mt-6 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
-              {localizedContent.aboutTitle}
+              {content.aboutTitle}
             </h2>
 
             <div className="mt-8 h-px w-32 bg-white/10" />
 
             <p className="mt-8 max-w-xl text-lg leading-8 text-gray-400">
-              {localizedContent.aboutText1}
+              {content.aboutText1}
             </p>
 
             <p className="mt-6 max-w-xl text-lg leading-8 text-gray-400">
-              {localizedContent.aboutText2}
+              {content.aboutText2}
             </p>
           </Reveal>
 
@@ -85,7 +83,7 @@ export default function About({ content, language }: ContentProps) {
                     <div className={`mb-8 h-1 w-16 rounded-full ${card.color}`} />
 
                     <p className="text-xs tracking-[0.3em] text-gray-500">
-                      {localizedContent.aboutCardLabel}
+                      {content.aboutCardLabel}
                     </p>
 
                     <h3 className="mt-5 text-2xl font-semibold text-white">
