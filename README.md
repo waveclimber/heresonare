@@ -57,6 +57,11 @@ for the current static adapter and future database/CMS requirements, and
 [docs/content-runtime-contract.md](./docs/content-runtime-contract.md) for the
 validation and failure rules.
 
+Unexpected page and application-shell failures now resolve to localized,
+brand-consistent recovery screens without exposing internal diagnostics. See
+[docs/runtime-error-recovery.md](./docs/runtime-error-recovery.md) for the
+retry, 404 separation, information-safety, and future provider rules.
+
 Production-like checks also protect security headers, cache ownership, the
 minimal `/api/health` response, and hardened locale-preference handling. See
 [docs/production-http-contract.md](./docs/production-http-contract.md) before
