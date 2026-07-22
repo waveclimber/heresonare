@@ -117,6 +117,12 @@ localized 404, route-allowlist, and full quality-gate contracts.
 
 **Dependencies or risks:** Requires repository-owner decisions about hosting, branch protection, company remote authority, secrets management, and incident ownership. Divergent histories or automated bidirectional synchronization could overwrite reviewed work if not carefully controlled.
 
+**Current HTTP baseline:** Hosting-independent security headers, framework-owned
+cache expectations, a minimal uncached liveness endpoint, and hardened locale
+preference responses are protected by the production-server integrity gate.
+HSTS, CDN configuration, external monitoring, and incident ownership remain
+deferred until the domain and hosting platform are approved.
+
 **Current cross-site QA baseline:** The supported route shapes now pass focused
 desktop, tablet, and mobile overflow checks. Escape-key menu dismissal restores
 focus to its trigger, the skip link and visible focus treatment are verified,
