@@ -115,6 +115,13 @@ part of the local and CI quality gate. Provider selection, remote access,
 preview and publication workflows, credentials, and cache invalidation remain
 open decisions.
 
+Unexpected page and application-shell failures now resolve through localized
+runtime boundaries with explicit user retry and homepage recovery. The public
+screen does not expose raw errors or diagnostic identifiers. A future provider
+must preserve the distinction between expected missing records, which use the
+localized 404, and unexpected failures, which reach these boundaries. External
+monitoring, alert routing, timeout budgets, and incident ownership remain open.
+
 ## 7. Harden deployment and company-repository synchronization
 
 **Objective:** Make preview, production, rollback, monitoring, and synchronization with the company repository reliable and auditable.

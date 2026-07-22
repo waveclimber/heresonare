@@ -13,6 +13,13 @@ type InterfaceContent = {
     description: string;
     backHome: string;
   };
+  runtimeError: {
+    label: string;
+    title: string;
+    description: string;
+    retry: string;
+    backHome: string;
+  };
   staticPage: {
     features: string;
     useCases: string;
@@ -29,6 +36,7 @@ type InterfaceContent = {
 };
 
 export type ProductionDetailLabels = InterfaceContent["productionDetail"];
+export type RuntimeErrorContent = InterfaceContent["runtimeError"];
 
 export const interfaceContent = {
   EN: {
@@ -47,6 +55,14 @@ export const interfaceContent = {
       title: "This page is out of range.",
       description:
         "The address may have changed, or the page may not exist yet.",
+      backHome: "Return home",
+    },
+    runtimeError: {
+      label: "Signal Interrupted",
+      title: "The connection lost resonance.",
+      description:
+        "A temporary problem interrupted this page. Try again, or return home.",
+      retry: "Try again",
       backHome: "Return home",
     },
     staticPage: {
@@ -81,6 +97,14 @@ export const interfaceContent = {
         "アドレスが変更されたか、ページがまだ存在しない可能性があります。",
       backHome: "ホームへ戻る",
     },
+    runtimeError: {
+      label: "シグナルが中断されました",
+      title: "接続の共鳴が途切れました。",
+      description:
+        "一時的な問題により、このページを表示できません。もう一度お試しいただくか、ホームへ戻ってください。",
+      retry: "もう一度試す",
+      backHome: "ホームへ戻る",
+    },
     staticPage: {
       features: "特徴",
       useCases: "活用例",
@@ -110,6 +134,13 @@ export const interfaceContent = {
       label: "404 / 信号丢失",
       title: "这个页面不在接收范围内。",
       description: "地址可能已更改，或者这个页面尚未存在。",
+      backHome: "返回首页",
+    },
+    runtimeError: {
+      label: "信号暂时中断",
+      title: "连接暂时失去共鸣。",
+      description: "临时问题中断了此页面。请重试，或返回首页。",
+      retry: "重试",
       backHome: "返回首页",
     },
     staticPage: {
