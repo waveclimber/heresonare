@@ -25,15 +25,28 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Site configuration
 
-No production domain is bound yet. `https://heresonare.com` is the current
-canonical candidate for production-like validation, not a live-domain status.
-Use the server-only `SITE_URL` variable when testing another HTTPS origin. The
-tracked `.env.example` is safe to copy for local setup; real environment files
-remain ignored and must never contain committed credentials.
+`https://heresonare.com` is the confirmed production origin, but no production
+web record is bound yet. Use the server-only `SITE_URL` variable when testing
+another HTTPS origin. The tracked `.env.example` is safe to copy for local
+setup; real environment files remain ignored and must never contain committed
+credentials.
 
 Node.js 22 is the project baseline selected by `.nvmrc`; Node.js 22 through 24
 are supported. See [docs/site-configuration-contract.md](./docs/site-configuration-contract.md)
 for validation rules and the later domain-binding checklist.
+
+The hosting-independent live readiness gate validates the complete public
+route, metadata, discovery, social-image, security-header, cache, redirect,
+404, and health contracts against a preview or bound origin:
+
+```bash
+npm run check:live -- --target https://heresonare.com --alternate https://www.heresonare.com
+```
+
+See [docs/domain-binding-runbook.md](./docs/domain-binding-runbook.md) before
+changing Alibaba Cloud DNS. Existing enterprise-mail MX and SPF records must be
+preserved. The reviewed personal `main` remains the release authority; the
+company GitHub `main` is its one-way mirror and Vercel's sole deployment source.
 
 ## Quality checks
 

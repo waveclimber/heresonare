@@ -71,7 +71,7 @@ last-push approval are not required. No repository setting is changed by this
 task. The owner must decide the production approval count and reviewer model
 before binding a live domain.
 
-## Hosting-independent release procedure
+## Reviewed release procedure
 
 1. Start from an updated, clean `main` and create one focused branch.
 2. Run `npm ci`, `npm run check`, and `git diff --check` locally.
@@ -80,24 +80,28 @@ before binding a live domain.
    visual acceptance that applies to the change.
 5. Let a repository owner mark the pull request ready and squash-merge it.
 6. Treat the resulting immutable `main` commit SHA as the release candidate.
-7. Build from a clean checkout with the approved `SITE_URL`; never build a
-   release from an uncommitted working tree.
-8. Record the commit SHA, build/check result, configuration key names (never
-   secret values), deployment identifier, timestamp, and operator.
-9. After hosting exists, verify the canonical HTTPS origin, localized routes,
-   metadata, security headers, cache behavior, social images, and `/api/health`
-   before promoting the release.
+7. Confirm that company `main` has no independent commit, then synchronize the
+   exact personal `main` SHA without force-pushing.
+8. Wait for the company quality check and the Vercel deployment triggered from
+   company `main`.
+9. Build with `SITE_URL=https://heresonare.com`; never release from an
+   uncommitted working tree or a direct company-repository change.
+10. Record the personal and company SHA, build/check result, configuration key
+    names (never secret values), Vercel deployment identifier, timestamp, and
+    operator.
+11. Run the live readiness gate against the Vercel hostname or bound canonical
+    origin before declaring the release complete.
 
 ## Rollback procedure
 
-Until a hosting provider is selected, rollback is a reviewed contract rather
-than an executable deployment command.
+Vercel is the selected deployment platform. The first domain-binding task must
+perform and record one rollback drill before DNS changes.
 
 1. Identify the last known-good merged commit and the failing release commit.
 2. Preserve logs and deployment evidence without copying secrets into an issue
    or pull request.
-3. Use the hosting platform's immutable redeploy or rollback mechanism to serve
-   the last known-good commit; never force-push or rewrite `main`.
+3. Use Vercel's deployment rollback to serve the last known-good commit; never
+   force-push or rewrite either repository's `main`.
 4. If repository history also needs correction, create a focused revert pull
    request and pass the normal required check before merging it.
 5. Verify `/api/health`, one route per locale, canonical metadata, security
@@ -107,15 +111,21 @@ than an executable deployment command.
 7. Document the incident, decision, affected commit, recovery commit, and
    follow-up action.
 
-The first hosting task must replace the generic deployment step with exact
-platform commands, identify who can execute them, define monitoring and alert
-thresholds, and perform a non-production rollback drill before launch.
+The confirmed deployment path uses the company GitHub mirror as Vercel's only
+Git source. A reviewed personal `main` commit is synchronized one-way to the
+company `main` at the exact same SHA; that company update triggers Vercel.
+Direct company-repository development and bidirectional synchronization are
+outside the release contract. The domain runbook defines the remaining Vercel,
+Alibaba Cloud DNS, monitoring, live-audit, and rollback evidence.
 
 ## Remaining owner decisions
 
-- hosting provider, environments, deployment permissions, and artifact history;
+- Vercel project ownership, environments, deployment permissions, promotion
+  policy, and artifact history;
 - production approval count and reviewer ownership;
 - monitoring, incident escalation, and rollback authority;
 - dependency-remediation timing for the known upstream advisories;
-- company-mirror direction, credentials, conflict handling, and audit log;
-- final domain, alternate-host redirect, HTTPS, and HSTS policy.
+- company-mirror credential owner, conflict escalation, and audit-log
+  retention; the synchronization direction is now personal to company only;
+- alternate-host redirect, HTTPS, and HSTS policy for the confirmed
+  `heresonare.com` domain.

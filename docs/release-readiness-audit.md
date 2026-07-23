@@ -12,6 +12,11 @@ candidate `https://heresonare.com` and can be replaced with the server-side
 `SITE_URL` when testing or when the final canonical domain is confirmed.
 `NEXT_PUBLIC_SITE_URL` remains supported only as a temporary legacy input.
 
+**Later status:** `https://heresonare.com` has since been confirmed as the
+production origin. It is not bound to a production web host yet. The current
+DNS preservation, live validation, and rollback procedure is maintained in
+[`domain-binding-runbook.md`](./domain-binding-runbook.md).
+
 ## Implemented
 
 ### Search and sharing metadata
@@ -90,8 +95,9 @@ final hosting environment.
 
 ## Open release inputs
 
-1. Bind and confirm the canonical production origin in a separate operational
-   task. If it is not `https://heresonare.com`, set `SITE_URL` before building.
+1. Bind the confirmed `https://heresonare.com` origin in a separate operational
+   task, set `SITE_URL` before building, and pass the live-domain readiness
+   gate.
 2. Approve a dedicated multilingual social sharing image when brand artwork is
    ready.
 3. Resolve the dependency advisory through an approved Next.js upgrade path.

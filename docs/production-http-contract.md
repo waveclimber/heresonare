@@ -91,3 +91,7 @@ After a domain and hosting platform are approved:
    escalation, rollback, and incident ownership.
 7. Run the complete local gate and a production-origin header audit before
    declaring the domain-binding task complete.
+
+The hosting-independent live audit is available through `npm run check:live`.
+See [`domain-binding-runbook.md`](./domain-binding-runbook.md) for preview,
+canonical-host, alternate-host, HSTS, DNS preservation, and rollback usage.

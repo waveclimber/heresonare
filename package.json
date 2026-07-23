@@ -17,10 +17,12 @@
     "check:content-contract": "node scripts/check-content-contract.mjs",
     "check:error-recovery": "node scripts/check-error-recovery.mjs",
     "check:observability": "node scripts/check-observability.mjs",
+    "check:live-contract": "node scripts/check-live-site-contract.mjs",
+    "check:live": "node scripts/check-live-site.mjs",
     "check:content": "node scripts/check-content-media.mjs",
     "check:performance": "node scripts/check-performance-budget.mjs",
     "check:site": "node scripts/check-site-integrity.mjs",
-    "check": "npm run lint && npm run typecheck && npm run check:ci-security && npm run check:config && npm run check:content-boundary && npm run check:content-contract && npm run check:error-recovery && npm run check:observability && npm run check:content && npm run build && npm run check:site && npm run check:performance"
+    "check": "npm run lint && npm run typecheck && npm run check:ci-security && npm run check:config && npm run check:content-boundary && npm run check:content-contract && npm run check:error-recovery && npm run check:observability && npm run check:live-contract && npm run check:content && npm run build && npm run check:site && npm run check:performance"
   },
   "dependencies": {
     "motion": "12.42.2",
