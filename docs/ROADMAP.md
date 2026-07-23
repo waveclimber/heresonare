@@ -71,8 +71,9 @@ with `noindex`, while unsupported locales continue to use the framework-global
 
 **Status:** In progress. Canonical URLs, language alternates, page metadata,
 sitemap, robots policy, the minimal structured-data foundation, and localized
-social imagery are now in place. Final production-domain confirmation remains
-open.
+social imagery are now in place. `https://heresonare.com` is confirmed as the
+production origin; hosting, DNS binding, HTTPS, redirects, and live acceptance
+remain open.
 
 **Objective:** Provide technically complete, locale-aware discovery and sharing metadata.
 
@@ -80,9 +81,9 @@ open.
 
 **Acceptance conditions:** Every indexable route has accurate unique metadata; canonical, sitemap, robots, and social preview behavior validate in production-like builds; locale alternates are implemented only after the URL locale strategy is approved.
 
-**Dependencies or risks:** No production domain is bound. The canonical origin
-defaults to the candidate `https://heresonare.com` and remains configurable
-through the server-side `SITE_URL` until the production domain is confirmed.
+**Dependencies or risks:** No production web record is bound. The confirmed
+canonical origin is `https://heresonare.com` and remains configurable through
+the server-side `SITE_URL` for preview validation.
 More specific rich-result entity types depend on approved public content and
 must not be inferred from concept records.
 
@@ -135,17 +136,18 @@ monitoring, alert routing, timeout budgets, and incident ownership remain open.
 **Current HTTP baseline:** Hosting-independent security headers, framework-owned
 cache expectations, a minimal uncached liveness endpoint, and hardened locale
 preference responses are protected by the production-server integrity gate.
-HSTS, CDN configuration, external monitoring, and incident ownership remain
-deferred until the domain and hosting platform are approved.
+HSTS, Vercel/CDN verification, external monitoring, and incident ownership
+remain deferred until the domain is bound and the deployment is exercised.
 
 **Current CI and release-security baseline:** The quality workflow now pins
 every external Action to the immutable commit behind a reviewed upstream
 release, keeps the token read-only, removes persisted checkout credentials,
 uses the shared `.nvmrc` Node baseline, and rejects new critical production
 dependency advisories. A local contract protects those settings. The active
-`main` ruleset and a hosting-independent release and rollback procedure are
-documented; production approval count, hosting commands, monitoring ownership,
-rollback drill, and company-mirror policy remain owner decisions.
+`main` ruleset and the personal-to-company-to-Vercel release and rollback
+procedure are documented; production approval count, Vercel permissions and
+promotion policy, monitoring ownership, mirror credential owner, and rollback
+drill remain owner decisions.
 
 **Current server-observability baseline:** Unexpected server request failures
 now emit one fixed JSON event through the stable framework instrumentation
@@ -184,6 +186,23 @@ behavior, and rendered local image existence against a production build.
 origin, safe environment template, Node.js baseline, and automated negative
 configuration cases prepare the application for later domain binding. They do
 not configure DNS, HTTPS, hosting, a database, or the company mirror.
+
+**Current live-domain readiness baseline:** A hosting-independent command now
+checks all 39 public routes, canonical and multilingual discovery metadata,
+structured data, social images, production headers and caches, redirects,
+localized 404s, and liveness against a public preview or bound origin. The
+Alibaba Cloud runbook records the existing enterprise-mail DNS preservation,
+apex/`www` policy, evidence, rollback, and delayed-HSTS sequence without
+changing live DNS or configuring the confirmed Vercel project.
+
+**Confirmed deployment topology:** Reviewed work merges into the personal
+`waveclimber` repository first. Its protected `main` is synchronized one-way,
+at the same commit SHA, to the protected company `main`, which is Vercel's only
+Git deployment source. Alibaba Cloud remains authoritative for DNS. Direct
+company-repository development, force synchronization, and bidirectional
+mirroring are prohibited. Personal pull requests do not receive automatic
+Vercel previews under this topology; local production validation remains the
+default until an explicit staging path is approved.
 
 **Current structured-data baseline:** All 39 public pages now expose one
 sanitized, locale-aware JSON-LD graph. Homepages identify the organization and

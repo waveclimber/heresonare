@@ -2,9 +2,10 @@
 
 ## Current status
 
-No production domain is bound yet. `https://heresonare.com` is the current
-canonical candidate used by production-like builds; it is not evidence that
-DNS, HTTPS, hosting, or redirects have been configured.
+`https://heresonare.com` is the confirmed production origin and is used by
+production-like builds. The domain is registered and its DNS is managed in
+Alibaba Cloud, but no production web record is bound yet. This status is not
+evidence that HTTPS, hosting, or redirects have been configured.
 
 This contract prepares the application for a later domain-binding task. It
 does not configure Vercel, change DNS, connect a database, or synchronize the
@@ -44,7 +45,10 @@ until the provider, schema, access model, and secret owner are approved.
 
 ## Domain-binding checklist
 
-Complete these steps in a separate reviewed operational task:
+Complete these steps in a separate reviewed operational task. Preserve the
+existing Alibaba enterprise-mail MX and SPF records, and follow
+[`domain-binding-runbook.md`](./domain-binding-runbook.md) for the current DNS
+inventory, live audit command, evidence, and rollback rules.
 
 1. Confirm the public canonical host, including whether the apex or `www` host
    is primary.
