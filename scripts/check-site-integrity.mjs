@@ -4,6 +4,7 @@ import { createServer } from "node:net";
 import { join } from "node:path";
 
 import { resolveSiteUrlFromEnvironment } from "../src/config/site.mjs";
+import { parseSearchIndex, searchEntries } from "../src/lib/siteSearch.mjs";
 import {
   getSecurityHeaders,
   noStoreCacheControl,
@@ -25,6 +26,7 @@ const localeDefinitions = [
     inquirySubject: "Concept inquiry",
     tourAnnouncement: "Tour details to be announced",
     storeAnnouncement: "Store in preparation",
+    searchLabel: "Search site",
   },
   {
     locale: "ja",
@@ -37,6 +39,7 @@ const localeDefinitions = [
     inquirySubject: "コンセプトに関するお問い合わせ",
     tourAnnouncement: "ツアー情報は決定次第お知らせします",
     storeAnnouncement: "ストア準備中",
+    searchLabel: "サイト内検索",
   },
   {
     locale: "zh-cn",
@@ -49,6 +52,7 @@ const localeDefinitions = [
     inquirySubject: "概念方案咨询",
     tourAnnouncement: "巡演信息待公布",
     storeAnnouncement: "商店筹备中",
+    searchLabel: "站内搜索",
   },
 ];
 const officialSocialLinks = [
@@ -445,6 +449,7 @@ function checkStaticPages() {
       inquirySubject,
       tourAnnouncement,
       storeAnnouncement,
+      searchLabel,
     } of localeDefinitions) {
       const route = localizeRoute(routeShape, locale);
       const htmlPath = getHtmlPath(route);
@@ -538,6 +543,10 @@ function checkStaticPages() {
       checkSocialMetadata({ html, route, locale });
 
       const anchorTags = getTags(html, /<a\b[^>]*\bhref="[^"]+"[^>]*>/gu);
+      record(
+        getTags(html, /<button\b[^>]*>/gu).filter((tag) => getAttribute(tag, "aria-label") === searchLabel && getAttribute(tag, "aria-haspopup") === "dialog").length === 1,
+        `${route} must offer one localized search trigger.`,
+      );
       record(
         getTags(html, /<nav\b[^>]*>/gu).some(
           (tag) => getAttribute(tag, "aria-label") === primaryNavigation,
@@ -985,6 +994,32 @@ async function checkRuntimeRoutes() {
         !healthResponse.headers.has("set-cookie"),
       "/api/health does not satisfy the minimal liveness contract.",
     );
+
+    for (const { locale } of localeDefinitions) {
+      const response = await fetch(`${runtimeOrigin}/api/search?locale=${locale}`);
+      checkSecurityHeaders(response, `/api/search (${locale})`);
+      checkCacheControl(response, `/api/search (${locale})`, "public, max-age=300, s-maxage=300");
+      record(response.status === 200 && response.headers.get("x-robots-tag") === "noindex" && !response.headers.has("set-cookie"), `Search index failed for ${locale}.`);
+      const entries = parseSearchIndex(await response.json(), locale);
+      const expected = expectedRoutes.filter((route) => route === `/${locale}` || route.startsWith(`/${locale}/`));
+      record(JSON.stringify(entries.map(({ href }) => href).sort()) === JSON.stringify([...expected].sort()), `${locale} search must cover every public destination exactly once.`);
+      for (const entry of entries) {
+        const pageHtml = readFileSync(getHtmlPath(entry.href), "utf8");
+        const heading = getElementText(pageHtml.match(/<h1\b[^>]*>[\s\S]*?<\/h1>/u)?.[0] ?? "");
+        record(entry.title.replace(/\s+/gu, " ").trim() === heading, `${entry.href} search title differs from the page.`);
+        record(searchEntries(entries, entry.title).some((result) => result.href === entry.href), `${entry.href} is not searchable by its own title.`);
+        if (entry.kind === "production") record(Boolean(entry.status), `${entry.href} search result lost its concept status.`);
+      }
+      if (locale === "en") {
+        record(searchEntries(entries, "Resonance 01").some(({ href }) => href === "/en/music"), "Search must find music concepts inside their parent page.");
+        record(searchEntries(entries, "Audio Innovation")[0]?.href === "/en/productions/audio-innovation", "A concept's own page must rank before its catalog.");
+      }
+    }
+    for (const query of ["", "?locale=fr", "?locale=EN", "?locale=en&locale=ja"]) {
+      const response = await fetch(`${runtimeOrigin}/api/search${query}`);
+      record(response.status === 400, `Search accepted invalid locale query: ${query}`);
+      checkCacheControl(response, `/api/search${query}`, noStoreCacheControl);
+    }
 
     const localeErrorCases = [
       {

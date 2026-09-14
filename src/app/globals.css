@@ -61,6 +61,52 @@ html {
   @apply inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--brand-blue)] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#08568e];
 }
 
+.navbar-header {
+  @apply fixed top-0 z-50 w-full border-b border-white/10 bg-black/80 backdrop-blur-md;
+}
+
+.navbar-frame {
+  @apply mx-auto flex h-20 w-full max-w-[1440px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-12;
+}
+
+.navbar-brand {
+  @apply relative flex shrink-0 items-center gap-2 rounded-full sm:gap-3;
+}
+
+.navbar-wordmark {
+  @apply relative z-10 bg-gradient-to-r from-[var(--brand-pink)] via-white to-[var(--brand-blue)] bg-clip-text text-lg font-semibold tracking-[0.05em] text-transparent sm:text-2xl;
+}
+
+.navbar-links {
+  @apply hidden items-center gap-3 whitespace-nowrap text-sm text-gray-300 xl:flex 2xl:gap-5;
+}
+
+.navbar-links > a {
+  @apply inline-flex min-h-11 items-center transition-colors hover:text-[var(--brand-teal)];
+}
+
+.site-search-trigger {
+  @apply inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full border border-white/15 text-gray-200 transition-colors hover:border-[var(--brand-teal)] hover:text-[var(--brand-teal)];
+}
+
+.site-search-dialog {
+  @apply fixed rounded-3xl border border-white/15 bg-[#0b1111] p-0 text-white shadow-2xl;
+  inset: 1.5rem 0 auto;
+  width: calc(100% - 2rem);
+  max-width: 48rem;
+  max-height: calc(100dvh - 3rem);
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.site-search-dialog::backdrop {
+  background: rgb(0 0 0 / 80%);
+}
+
+.site-search-result {
+  @apply block rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition-colors hover:border-[var(--brand-teal)]/50 hover:bg-white/[0.06] focus-visible:outline-offset-[-2px];
+}
+
 a:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--brand-yellow);

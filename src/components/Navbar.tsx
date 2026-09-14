@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import SiteSearch from "@/components/SiteSearch";
 import { interfaceContent } from "@/data/interfaceContent";
 import { getNavigationItems } from "@/data/navigation";
 import {
@@ -44,8 +45,6 @@ function Navigation({
   const languageButtonRef = useRef<HTMLButtonElement>(null);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
 
-  const navLinkBaseClassName =
-    "transition-all duration-300 hover:text-[var(--brand-teal)]";
   const languageOptions: ContentLanguage[] = ["EN", "JP", "CN"];
   const languageMenuId = "navbar-language-menu";
   const mobileMenuId = "navbar-mobile-menu";
@@ -130,23 +129,16 @@ function Navigation({
   const isActiveRoute = (href: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
 
-  const getNavLinkClassName = (href: string) =>
-    `resonance-link ${navLinkBaseClassName} ${
-      isActiveRoute(href)
-        ? "text-[var(--brand-teal)]"
-        : "text-gray-300"
-    }`;
-
   return (
     <nav
       ref={navigationRef}
       aria-label={labels.primaryNavigation}
-      className="fixed top-0 z-50 w-full border-b border-white/10 bg-black/80 backdrop-blur-md"
+      className="navbar-header"
     >
-      <div className="mx-auto flex h-20 w-full max-w-[1440px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-12">
+      <div className="navbar-frame">
         <Link
           href={`/${locale}`}
-          className="resonance-logo group relative flex shrink-0 items-center gap-3 rounded-full"
+          className="resonance-logo navbar-brand group"
         >
           <Image
             src="/images/logo/logo-color.svg"
@@ -156,17 +148,17 @@ function Navigation({
             className="relative z-10 h-10 w-auto transition-transform duration-500 group-hover:scale-105 sm:h-12"
           />
 
-          <span className="relative z-10 bg-gradient-to-r from-[var(--brand-pink)] via-white to-[var(--brand-blue)] bg-clip-text text-xl font-semibold tracking-[0.05em] text-transparent sm:text-2xl">
+          <span className="navbar-wordmark">
             héReSonare
           </span>
         </Link>
 
-        <div className="hidden items-center gap-3 whitespace-nowrap text-sm text-gray-300 xl:flex 2xl:gap-5">
+        <div className="navbar-links">
           {navigationItems.map((item) => (
             <Link
               key={item.key}
               href={item.href}
-              className={`${getNavLinkClassName(item.href)} inline-flex min-h-11 items-center`}
+              className={`resonance-link ${isActiveRoute(item.href) ? "text-[var(--brand-teal)]" : "text-gray-300"}`}
               aria-current={isActiveRoute(item.href) ? "page" : undefined}
             >
               {item.label}
@@ -177,7 +169,7 @@ function Navigation({
             <button
               ref={languageButtonRef}
               type="button"
-              className="resonance-control flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 transition-all duration-300 hover:border-[var(--brand-blue)] hover:text-white"
+              className="resonance-control site-search-trigger gap-2 px-4"
               onClick={() => {
                 setIsLanguageOpen(!isLanguageOpen);
                 setIsMenuOpen(false);
@@ -220,24 +212,30 @@ function Navigation({
           </div>
         </div>
 
-        <button
-          ref={mobileMenuButtonRef}
-          type="button"
-          className="resonance-control flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full p-2 text-2xl xl:hidden"
-          onClick={() => {
-            setIsMenuOpen(!isMenuOpen);
+        <div className="flex shrink-0 items-center gap-2">
+          <SiteSearch language={language} locale={locale} onOpen={() => {
+            setIsMenuOpen(false);
             setIsLanguageOpen(false);
-          }}
-          aria-label={
-            isMenuOpen
-              ? labels.closeNavigationMenu
-              : labels.openNavigationMenu
-          }
-          aria-expanded={isMenuOpen}
-          aria-controls={mobileMenuId}
-        >
-          <span aria-hidden="true">{isMenuOpen ? "✕" : "☰"}</span>
-        </button>
+          }} />
+          <button
+            ref={mobileMenuButtonRef}
+            type="button"
+            className="resonance-control site-search-trigger text-2xl xl:hidden"
+            onClick={() => {
+              setIsMenuOpen(!isMenuOpen);
+              setIsLanguageOpen(false);
+            }}
+            aria-label={
+              isMenuOpen
+                ? labels.closeNavigationMenu
+                : labels.openNavigationMenu
+            }
+            aria-expanded={isMenuOpen}
+            aria-controls={mobileMenuId}
+          >
+            <span aria-hidden="true">{isMenuOpen ? "✕" : "☰"}</span>
+          </button>
+        </div>
 
         {isMenuOpen && (
           <div
