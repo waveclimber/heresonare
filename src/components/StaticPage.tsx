@@ -39,21 +39,8 @@ export default function StaticPage({ content }: StaticPageProps) {
                 description={section.description}
               />
 
-              {section.items && section.items.length > 0 && (
-                <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-                  {section.items.map((item) => (
-                    <ContentCard
-                      key={item.id}
-                      item={item}
-                      labels={labels}
-                      locale={locale}
-                    />
-                  ))}
-                </div>
-              )}
-
               {section.comingSoon && (
-                <div className={section.items?.length ? "mt-10" : ""}>
+                <div className={section.items?.length ? "mb-10" : ""}>
                   <ComingSoonBlock
                     label={section.comingSoon.label}
                     title={section.comingSoon.title}
@@ -70,6 +57,18 @@ export default function StaticPage({ content }: StaticPageProps) {
                         : undefined
                     }
                   />
+                </div>
+              )}
+              {section.items && section.items.length > 0 && (
+                <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+                  {section.items.map((item) => (
+                    <ContentCard
+                      key={item.id}
+                      item={item}
+                      labels={labels}
+                      locale={locale}
+                    />
+                  ))}
                 </div>
               )}
             </section>

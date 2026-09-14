@@ -39,6 +39,11 @@ type InterfaceContent = {
   productionDetail: {
     detailLabel: string;
     backToList: string;
+    onThisPage: string;
+    inquiryTitle: string;
+    inquiryDescription: string;
+    inquiryAction: string;
+    inquirySubject: string;
   };
 };
 
@@ -91,6 +96,11 @@ export const interfaceContent = {
     productionDetail: {
       detailLabel: "Product Details",
       backToList: "Back to list",
+      onThisPage: "On this page",
+      inquiryTitle: "Discuss this concept",
+      inquiryDescription: "Tell us about your project and how you would like to collaborate.",
+      inquiryAction: "Email about this concept",
+      inquirySubject: "Concept inquiry",
     },
   },
   JP: {
@@ -138,6 +148,11 @@ export const interfaceContent = {
     productionDetail: {
       detailLabel: "プロダクト詳細",
       backToList: "一覧へ戻る",
+      onThisPage: "ページ内の項目",
+      inquiryTitle: "このコンセプトについて相談する",
+      inquiryDescription: "プロジェクトの内容や、ご希望のコラボレーションについてお聞かせください。",
+      inquiryAction: "メールで相談する",
+      inquirySubject: "コンセプトに関するお問い合わせ",
     },
   },
   CN: {
@@ -183,6 +198,11 @@ export const interfaceContent = {
     productionDetail: {
       detailLabel: "产品详情",
       backToList: "返回列表",
+      onThisPage: "本页内容",
+      inquiryTitle: "探讨这个概念方案",
+      inquiryDescription: "欢迎介绍你的项目，以及希望开展的合作。",
+      inquiryAction: "邮件咨询此方案",
+      inquirySubject: "概念方案咨询",
     },
   },
 } as const satisfies Record<ContentLanguage, InterfaceContent>;
