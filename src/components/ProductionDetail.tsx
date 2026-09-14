@@ -305,8 +305,14 @@ export default function ProductionDetail({
           </div>
           <div className="flex min-w-0 flex-wrap items-start gap-3 lg:max-w-sm">
             <ResonanceLink
+              href={`${getLocalizedPath("/contact", locale)}?topic=production&concept=${encodeURIComponent(production.slug)}#inquiry`}
+              className="inquiry-primary"
+            >
+              {detailLabels.prepareInquiry}
+            </ResonanceLink>
+            <ResonanceLink
               href={inquiryHref}
-              className="inline-flex min-h-11 items-center rounded-full bg-[var(--brand-blue)] px-6 py-3 text-sm font-medium text-white"
+              className="email-copy-button"
             >
               {detailLabels.inquiryAction}
             </ResonanceLink>

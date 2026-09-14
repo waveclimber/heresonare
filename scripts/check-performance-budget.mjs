@@ -6,6 +6,7 @@ const buildDirectory = join(process.cwd(), ".next");
 const routeSamples = [
   { route: "/en", output: "server/app/en.html" },
   { route: "/en/productions", output: "server/app/en/productions.html" },
+  { route: "/en/contact", output: "server/app/en/contact.html" },
   {
     route: "/en/productions/audio-innovation",
     output: "server/app/en/productions/audio-innovation.html",

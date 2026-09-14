@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import StaticPage from "@/components/StaticPage";
+import ContactInquiry from "@/components/ContactInquiry";
 import StructuredData from "@/components/StructuredData";
 import { getPageContent, getSiteContent } from "@/content/repository";
 import {
@@ -60,7 +61,9 @@ export default async function PublicPage({
       <StructuredData
         data={createPageStructuredData(result.content, result.locale)}
       />
-      <StaticPage content={result.content} />
+      <StaticPage content={result.content}>
+        {page === "contact" && <ContactInquiry language={result.language} />}
+      </StaticPage>
     </>
   );
 }

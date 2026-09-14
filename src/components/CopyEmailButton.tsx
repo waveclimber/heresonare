@@ -45,7 +45,7 @@ export default function CopyEmailButton({
         type="button"
         onClick={copyEmail}
         disabled={status === "copying"}
-        aria-label={`${labels.copy}: ${email}`}
+        aria-label={`${status === "copied" ? labels.copied : labels.copy}: ${email}`}
         className="resonance-control email-copy-button"
       >
         {status === "copied" ? labels.copied : labels.copy}
