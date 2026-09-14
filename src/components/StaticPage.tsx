@@ -11,9 +11,10 @@ import { getLocalizedHref } from "@/i18n/config";
 
 type StaticPageProps = {
   content: StaticPageContent;
+  children?: React.ReactNode;
 };
 
-export default function StaticPage({ content }: StaticPageProps) {
+export default function StaticPage({ content, children }: StaticPageProps) {
   const { language, locale } = useLanguage();
   const labels = interfaceContent[language].staticPage;
 
@@ -30,6 +31,7 @@ export default function StaticPage({ content }: StaticPageProps) {
       />
 
       <div className="mx-auto max-w-7xl px-6 pb-32">
+        {children}
         <div className="grid gap-24">
           {content.sections.map((section) => (
             <section key={section.id}>

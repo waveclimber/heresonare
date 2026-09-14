@@ -566,6 +566,11 @@ function checkStaticPages() {
         }
       }
       if (routeShape.startsWith("/productions/")) {
+        const conceptSlug = routeShape.split("/").at(-1);
+        record(
+          anchorTags.some((tag) => decodeHtmlAttribute(getAttribute(tag, "href") ?? "") === `/${locale}/contact?topic=production&concept=${conceptSlug}#inquiry`),
+          `${route} must link to its localized inquiry form with the current concept.`,
+        );
         const heading = getElementText(html.match(/<h1\b[^>]*>[\s\S]*?<\/h1>/u)?.[0] ?? "");
         const inquiries = anchorTags
           .map((tag) => decodeHtmlAttribute(getAttribute(tag, "href") ?? ""))
@@ -596,6 +601,19 @@ function checkStaticPages() {
             (tag) => getAttribute(tag, "href") === `/${locale}/contact`,
           ),
           `${route} must provide a locale-preserving contact action.`,
+        );
+      }
+
+      if (routeShape === "/contact") {
+        const inquirySection = getTags(html, /<section\b[^>]*>/gu).filter((tag) => getAttribute(tag, "id") === "inquiry");
+        record(
+          inquirySection.length === 1 && getAttribute(inquirySection[0], "tabindex") === "-1",
+          `${route} must expose one focusable inquiry destination.`,
+        );
+        const inquiryBlock = html.match(/<section\b[^>]*id="inquiry"[\s\S]*?<\/section>/u)?.[0] ?? "";
+        record(
+          inquiryBlock.includes('href="mailto:contact@heresonare.com"'),
+          `${route} must keep direct email available before the form loads.`,
         );
       }
       const identifiedTags = getTags(html, /<[a-z][^>]*\bid="[^"]+"[^>]*>/gu);

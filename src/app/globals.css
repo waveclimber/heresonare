@@ -40,6 +40,27 @@ html {
   @apply inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-5 py-2 text-sm text-gray-200 transition-colors hover:border-[var(--brand-teal)] hover:text-[var(--brand-teal)] disabled:opacity-60;
 }
 
+.inquiry-field {
+  @apply block min-h-12 w-full min-w-0 rounded-xl border border-white/20 bg-[#121918] px-4 py-3 text-base text-white;
+}
+
+.inquiry-field:focus-visible {
+  outline: 2px solid var(--brand-yellow);
+  outline-offset: 4px;
+}
+
+.inquiry-field[aria-invalid="true"] {
+  @apply border-rose-400;
+}
+
+.inquiry-label {
+  @apply mb-2 block text-sm font-medium leading-6 text-gray-200;
+}
+
+.inquiry-primary {
+  @apply inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--brand-blue)] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#08568e];
+}
+
 a:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--brand-yellow);

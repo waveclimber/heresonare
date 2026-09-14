@@ -44,6 +44,7 @@ type InterfaceContent = {
     inquiryDescription: string;
     inquiryAction: string;
     inquirySubject: string;
+    prepareInquiry: string;
   };
 };
 
@@ -101,6 +102,7 @@ export const interfaceContent = {
       inquiryDescription: "Tell us about your project and how you would like to collaborate.",
       inquiryAction: "Email about this concept",
       inquirySubject: "Concept inquiry",
+      prepareInquiry: "Prepare an inquiry",
     },
   },
   JP: {
@@ -153,6 +155,7 @@ export const interfaceContent = {
       inquiryDescription: "プロジェクトの内容や、ご希望のコラボレーションについてお聞かせください。",
       inquiryAction: "メールで相談する",
       inquirySubject: "コンセプトに関するお問い合わせ",
+      prepareInquiry: "お問い合わせを作成",
     },
   },
   CN: {
@@ -203,6 +206,7 @@ export const interfaceContent = {
       inquiryDescription: "欢迎介绍你的项目，以及希望开展的合作。",
       inquiryAction: "邮件咨询此方案",
       inquirySubject: "概念方案咨询",
+      prepareInquiry: "填写咨询需求",
     },
   },
 } as const satisfies Record<ContentLanguage, InterfaceContent>;
