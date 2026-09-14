@@ -92,15 +92,15 @@ const englishPages = {
       tag: "héReSonare Artists",
       title: "Voices That Resonate",
       description:
-        "A foundation for future artist profiles, collaborations, and creative rosters.",
+        "Explore our creative direction in vocals, production, and collaboration. Artist announcements are still to come.",
     },
     sections: [
       {
         id: "featured-artists",
         label: "Roster",
-        title: "Featured Artists",
+        title: "Artist Directions",
         description:
-          "Static artist records that can later map to database-backed profiles.",
+          "These profiles illustrate our creative direction. Our artist roster has not yet been announced.",
         items: [
           {
             id: "artist-01",
@@ -134,7 +134,7 @@ const englishPages = {
       tag: "héReSonare Music",
       title: "Sound for the Future",
       description:
-        "A structured catalog foundation for releases, playlists, and sound concepts.",
+        "Discover sound concepts in development. Release dates and listening links will appear here when confirmed.",
     },
     sections: [
       {
@@ -174,7 +174,7 @@ const englishPages = {
       tag: "héReSonare Productions",
       title: "Product Lines",
       description:
-        "A product-oriented foundation for audio technology products, creative platform modules, and live experience systems.",
+        "Explore concepts in audio technology, creative platforms, and live experiences.",
     },
     sections: [
       {
@@ -182,7 +182,7 @@ const englishPages = {
         label: "Products",
         title: "Product Line Catalog",
         description:
-          "Static product-line records designed for future product detail pages, media, and structured product data.",
+          "Explore each concept's direction, potential uses, and current stage of development.",
         items: [
           {
             id: "audio-innovation",
@@ -290,18 +290,18 @@ const englishPages = {
       tag: "héReSonare Tour",
       title: "Live Beyond Boundaries",
       description:
-        "Static tour and event records for future schedules, locations, and ticket links.",
+        "Future live experiences from héReSonare. Dates, venues, and ticket information have not yet been announced.",
     },
     sections: [
       {
         id: "tour-dates",
         label: "Live",
-        title: "Tour Framework",
+        title: "Live Updates",
         comingSoon: {
           label: "Coming Soon",
-          title: "Tour announcements are coming soon",
+          title: "Tour details to be announced",
           description:
-            "Dates, locations, and event details can be dropped into this structure when confirmed.",
+            "No dates are confirmed yet. Check back for announcements, or contact us about live collaborations.",
           cta: { label: "Contact", href: "/contact" },
         },
         items: [
@@ -312,7 +312,7 @@ const englishPages = {
             subtitle: "To be announced",
             status: "Planning",
             description:
-              "A placeholder event record for future route, date, and venue data.",
+              "A live experience concept in planning. Dates and venues are not yet confirmed.",
             date: "TBA",
             location: "TBA",
           },
@@ -326,7 +326,7 @@ const englishPages = {
       tag: "héReSonare Venues",
       title: "Spaces for Resonance",
       description:
-        "Venue content prepared for future spaces, partners, and live environment data.",
+        "Explore our ideas for live spaces and immersive listening. Locations are still to be confirmed.",
     },
     sections: [
       {
@@ -355,7 +355,7 @@ const englishPages = {
       tag: "héReSonare Video",
       title: "Visual Soundscapes",
       description:
-        "A content model for music videos, live sessions, and visual works.",
+        "Music, movement, and stories in development. Films and viewing links will appear here when ready.",
     },
     sections: [
       {
@@ -384,29 +384,30 @@ const englishPages = {
       tag: "héReSonare Store",
       title: "Official Store",
       description:
-        "A simple structure for future goods, releases, and collectible products.",
+        "A future home for héReSonare merchandise and releases. The store is not open for orders yet.",
     },
     sections: [
       {
         id: "products",
         label: "Store",
-        title: "Product Placeholders",
+        title: "Store Updates",
         comingSoon: {
           label: "Coming Soon",
-          title: "Store opening soon",
+          title: "Store in preparation",
           description:
-            "Merchandise, digital releases, and limited items can use this static schema before commerce is added.",
+            "Products, prices, and availability have not yet been announced. Please check back for updates.",
+          cta: { label: "Ask about the store", href: "/contact" },
         },
         items: [
           {
             id: "store-foundation-item",
             slug: "foundation-item",
-            title: "Foundation Item",
+            title: "Future Merchandise",
             type: "Goods",
             subtitle: "Goods",
             status: "Coming soon",
             description:
-              "A placeholder item for future product content and storefront data.",
+              "An early merchandise concept. Design, pricing, and availability are not yet confirmed.",
           },
         ],
       },
@@ -418,7 +419,7 @@ const englishPages = {
       tag: "About héReSonare",
       title: "Where Sound Becomes Resonance",
       description:
-        "Brand story, mission, and vision content organized for future expansion.",
+        "Discover how sound, emotion, and technology shape héReSonare's creative direction.",
     },
     sections: [
       {
@@ -586,14 +587,14 @@ const localizedPages = {
         tag: "h\u00e9ReSonare Artists",
         title: "共鳴する声",
         description:
-          "未来のアーティストプロフィール、コラボレーション、クリエイティブなアーティストラインナップのための基盤です。",
+          "歌声、音楽制作、コラボレーションを通じた創作の方向性をご紹介します。アーティスト情報は今後発表予定です。",
       },
       sections: [
         {
           label: "所属アーティスト",
-          title: "注目のアーティスト",
+          title: "アーティストの方向性",
           description:
-            "将来、データベース連携のプロフィールへ展開できる静的なアーティスト情報です。",
+            "以下は創作の方向性を示すプロフィール例です。所属アーティストはまだ発表していません。",
           items: [
             {
               title: "アーティスト 01",
@@ -619,7 +620,7 @@ const localizedPages = {
         tag: "h\u00e9ReSonare Music",
         title: "未来のためのサウンド",
         description:
-          "リリース、プレイリスト、サウンドコンセプトを整理するカタログ基盤です。",
+          "制作中のサウンドコンセプトをご紹介します。リリース日や試聴リンクは、確定次第こちらでお知らせします。",
       },
       sections: [
         {
@@ -651,14 +652,14 @@ const localizedPages = {
         tag: "h\u00e9ReSonare Productions",
         title: "プロダクトライン",
         description:
-          "オーディオ技術製品、クリエイティブプラットフォームのモジュール、ライブ体験システムの製品展開を見据えた基盤です。",
+          "オーディオ技術、クリエイティブプラットフォーム、ライブ体験のコンセプトをご紹介します。",
       },
       sections: [
         {
           label: "プロダクト",
           title: "プロダクトラインカタログ",
           description:
-            "将来の製品詳細ページ、メディア、構造化された製品データに対応する静的なプロダクトライン情報です。",
+            "各コンセプトの方向性、想定する活用例、現在の開発段階をご覧ください。",
           items: [
             {
               title: "Audio Innovation",
@@ -738,16 +739,16 @@ const localizedPages = {
         tag: "h\u00e9ReSonare Tour",
         title: "境界を越えるライブ",
         description:
-          "将来のスケジュール、開催地、チケットリンクに対応する静的なツアー・イベント情報です。",
+          "héReSonareが構想するライブ体験。日程、会場、チケット情報はまだ発表していません。",
       },
       sections: [
         {
           label: "ライブ",
-          title: "ツアー情報の基盤",
+          title: "ライブのお知らせ",
           comingSoon: {
             label: "\u8fd1\u65e5\u516c\u958b",
-            title: "ツアー情報は近日公開予定です",
-            description: "日程、開催地、イベント詳細が確定次第、この構成に追加できます。",
+            title: "ツアー情報は決定次第お知らせします",
+            description: "日程はまだ確定していません。続報をお待ちいただくか、ライブでの協業についてお問い合わせください。",
             cta: { label: "お問い合わせ" },
           },
           items: [
@@ -755,7 +756,7 @@ const localizedPages = {
               title: "未来のライブ体験",
               subtitle: "近日発表",
               status: "企画中",
-              description: "将来のルート、日程、会場情報のための仮イベント情報です。",
+              description: "企画段階のライブ体験コンセプトです。日程と会場はまだ確定していません。",
               date: "未定",
               location: "未定",
             },
@@ -767,7 +768,7 @@ const localizedPages = {
       hero: {
         tag: "h\u00e9ReSonare Venues",
         title: "共鳴のための空間",
-        description: "将来の会場、パートナー、ライブ環境データに対応する会場コンテンツです。",
+        description: "ライブ空間や没入型リスニングのアイデアをご紹介します。開催場所は今後決定予定です。",
       },
       sections: [
         {
@@ -790,7 +791,7 @@ const localizedPages = {
       hero: {
         tag: "h\u00e9ReSonare Video",
         title: "映像で描くサウンドスケープ",
-        description: "ミュージックビデオ、ライブセッション、映像作品のためのコンテンツモデルです。",
+        description: "音楽、動き、物語をめぐる制作中の映像コンセプト。作品や視聴リンクは準備が整い次第公開します。",
       },
       sections: [
         {
@@ -813,25 +814,26 @@ const localizedPages = {
       hero: {
         tag: "h\u00e9ReSonare Store",
         title: "公式ストア",
-        description: "将来のグッズ、リリース、コレクター向け製品のためのシンプルな構成です。",
+        description: "héReSonareのグッズやリリースをお届けするストアを準備中です。現在、ご注文は受け付けていません。",
       },
       sections: [
         {
           label: "ストア",
-          title: "商品プレースホルダー",
+          title: "ストアのお知らせ",
           comingSoon: {
             label: "\u8fd1\u65e5\u516c\u958b",
-            title: "ストアは近日オープン予定です",
+            title: "ストア準備中",
             description:
-              "コマース機能の追加前でも、グッズ、デジタルリリース、限定アイテムにこの静的スキーマを利用できます。",
+              "商品、価格、販売時期はまだ発表していません。今後のお知らせをお待ちください。",
+            cta: { label: "ストアについて問い合わせる" },
           },
           items: [
             {
-              title: "基盤アイテム",
+              title: "今後のグッズ展開",
               type: "グッズ",
               subtitle: "グッズ",
               status: "近日公開",
-              description: "将来の商品コンテンツとストアデータのための仮アイテムです。",
+              description: "初期段階のグッズコンセプトです。デザイン、価格、販売時期はまだ確定していません。",
             },
           ],
         },
@@ -842,7 +844,7 @@ const localizedPages = {
         tag: "About h\u00e9ReSonare",
         title: "音が共鳴へと変わる場所",
         description:
-          "将来の展開に向けて整理された、ブランドストーリー、ミッション、ビジョンのコンテンツです。",
+          "音、感情、テクノロジーが、héReSonareの創作をどのように形づくるのかをご紹介します。",
       },
       sections: [
         {
@@ -916,13 +918,13 @@ const localizedPages = {
       hero: {
         tag: "h\u00e9ReSonare Artists",
         title: "引发共鸣的声音",
-        description: "为未来的艺人档案、合作项目和创意阵容打造的基础。",
+        description: "探索我们在演唱、音乐制作与合作方面的创作方向。正式艺人阵容尚待公布。",
       },
       sections: [
         {
           label: "艺人阵容",
-          title: "精选艺人",
-          description: "可在未来映射至数据库驱动档案的静态艺人记录。",
+          title: "艺人方向",
+          description: "以下档案用于展示创作方向，尚不代表已公布的正式艺人阵容。",
           items: [
             {
               title: "艺人 01",
@@ -946,7 +948,7 @@ const localizedPages = {
       hero: {
         tag: "h\u00e9ReSonare Music",
         title: "面向未来的声音",
-        description: "为发行作品、播放列表和声音概念构建的结构化目录基础。",
+        description: "了解正在酝酿的声音概念。发行日期与试听链接将在确认后公布。",
       },
       sections: [
         {
@@ -977,13 +979,13 @@ const localizedPages = {
       hero: {
         tag: "h\u00e9ReSonare Productions",
         title: "产品线",
-        description: "面向音频技术产品、创意平台模块与现场体验系统产品化的基础。",
+        description: "探索音频技术、创意平台与现场体验的概念方案。",
       },
       sections: [
         {
           label: "产品",
           title: "产品线目录",
-          description: "为未来产品详情页、媒体内容和结构化产品数据设计的静态产品线记录。",
+          description: "了解各个概念方案的方向、潜在应用与当前研发阶段。",
           items: [
             {
               title: "Audio Innovation",
@@ -1059,16 +1061,16 @@ const localizedPages = {
       hero: {
         tag: "h\u00e9ReSonare Tour",
         title: "跨越边界的现场体验",
-        description: "为未来日程、地点与票务链接准备的静态巡演和活动记录。",
+        description: "héReSonare 正在构想未来的现场体验，演出日期、场地与票务信息尚未公布。",
       },
       sections: [
         {
           label: "现场",
-          title: "巡演信息框架",
+          title: "现场动态",
           comingSoon: {
             label: "即将公开",
-            title: "巡演信息即将公布",
-            description: "日期、地点与活动详情确认后即可加入此结构。",
+            title: "巡演信息待公布",
+            description: "目前暂无已确认的演出日期。欢迎关注后续消息，或联系我们探讨现场合作。",
             cta: { label: "联系我们" },
           },
           items: [
@@ -1076,7 +1078,7 @@ const localizedPages = {
               title: "未来现场体验",
               subtitle: "待公布",
               status: "规划中",
-              description: "用于未来巡演路线、日期和场地数据的占位活动记录。",
+              description: "规划中的现场体验概念，演出日期与场地尚未确认。",
               date: "待定",
               location: "待定",
             },
@@ -1088,7 +1090,7 @@ const localizedPages = {
       hero: {
         tag: "h\u00e9ReSonare Venues",
         title: "共鸣空间",
-        description: "为未来空间、合作伙伴与现场环境数据准备的场地内容。",
+        description: "探索现场空间与沉浸式聆听的构想，具体地点尚待确认。",
       },
       sections: [
         {
@@ -1111,7 +1113,7 @@ const localizedPages = {
       hero: {
         tag: "h\u00e9ReSonare Video",
         title: "视觉声音景观",
-        description: "面向音乐视频、现场录制与视觉作品的内容模型。",
+        description: "探索音乐、影像与故事的创作构想。作品及观看链接将在准备就绪后公开。",
       },
       sections: [
         {
@@ -1134,24 +1136,25 @@ const localizedPages = {
       hero: {
         tag: "h\u00e9ReSonare Store",
         title: "官方商店",
-        description: "为未来商品、发行作品与收藏产品准备的简洁结构。",
+        description: "héReSonare 周边与发行作品的未来商店，目前尚未开放下单。",
       },
       sections: [
         {
           label: "商店",
-          title: "商品占位内容",
+          title: "商店动态",
           comingSoon: {
             label: "即将公开",
-            title: "商店即将开放",
-            description: "在加入电商功能前，周边商品、数字发行作品和限量商品可使用此静态架构。",
+            title: "商店筹备中",
+            description: "商品、价格与发售时间尚未公布，请关注后续消息。",
+            cta: { label: "咨询商店" },
           },
           items: [
             {
-              title: "基础商品",
+              title: "未来周边",
               type: "周边商品",
               subtitle: "周边商品",
               status: "即将公开",
-              description: "用于未来商品内容和店铺数据的占位商品。",
+              description: "处于早期构想阶段的周边商品，设计、价格与发售时间尚未确认。",
             },
           ],
         },
@@ -1161,7 +1164,7 @@ const localizedPages = {
       hero: {
         tag: "About h\u00e9ReSonare",
         title: "让声音化为共鸣",
-        description: "为未来扩展而组织的品牌故事、使命与愿景内容。",
+        description: "了解声音、情感与科技如何塑造 héReSonare 的创作方向。",
       },
       sections: [
         {

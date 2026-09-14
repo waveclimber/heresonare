@@ -1,4 +1,5 @@
 import Image from "next/image";
+import CopyEmailButton from "@/components/CopyEmailButton";
 import { MediaSignalFrame } from "@/components/motion/MediaSignalFrame";
 import { ResonanceLink } from "@/components/motion/ResonanceLink";
 import { ResonanceSurface } from "@/components/motion/ResonanceSurface";
@@ -14,7 +15,11 @@ import {
 } from "@/data/contentMedia";
 import type { ProductionDetailLabels } from "@/data/interfaceContent";
 import type { PageContentItem } from "@/data/pageContent";
-import { getLocalizedPath, type Locale } from "@/i18n/config";
+import {
+  contentLanguageByLocale,
+  getLocalizedPath,
+  type Locale,
+} from "@/i18n/config";
 import { getMediaSignalVariant } from "@/lib/mediaSignal";
 
 type ProductionDetailProps = {
@@ -41,7 +46,11 @@ function DetailList({
 
   return (
     <section aria-labelledby={id}>
-      <h2 id={id} className="text-xl font-semibold text-white">
+      <h2
+        id={id}
+        tabIndex={-1}
+        className="text-xl font-semibold text-white focus:outline-none"
+      >
         {label}
       </h2>
       <ul
@@ -95,6 +104,13 @@ export default function ProductionDetail({
   const features = normalizeTextList(production.features);
   const useCases = normalizeTextList(production.useCases);
   const specs = normalizeSpecs(production.specs);
+  const detailSections = [
+    { id: "production-features", label: labels.features, available: features.length > 0 },
+    { id: "production-use-cases", label: labels.useCases, available: useCases.length > 0 },
+    { id: "production-specifications", label: labels.specifications, available: specs.length > 0 },
+  ].filter((section) => section.available);
+  const inquirySubject = `${detailLabels.inquirySubject}: ${production.title}`;
+  const inquiryHref = `mailto:contact@heresonare.com?subject=${encodeURIComponent(inquirySubject)}`;
   const icon = isApprovedIconContentMedia(production.media?.icon)
     ? production.media.icon
     : undefined;
@@ -182,6 +198,20 @@ export default function ProductionDetail({
                 ))}
               </ul>
             )}
+            {detailSections.length > 0 && (
+              <nav aria-label={detailLabels.onThisPage} className="mt-8 border-t border-white/10 pt-5">
+                <p className="mb-3 text-sm text-gray-400">{detailLabels.onThisPage}</p>
+                <ul className="flex flex-wrap gap-2">
+                  {detailSections.map((section) => (
+                    <li key={section.id}>
+                      <a href={`#${section.id}`} className="inline-flex min-h-11 items-center rounded-full border border-white/15 px-4 py-2 text-sm text-gray-200 transition-colors hover:border-[var(--brand-teal)] hover:text-[var(--brand-teal)]">
+                        {section.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            )}
           </div>
 
           <ProductionHeroMedia
@@ -190,30 +220,36 @@ export default function ProductionDetail({
           />
         </header>
 
-        <div className="mt-20 grid min-w-0 gap-8 md:grid-cols-2">
-          <ResonanceSurface
-            className="min-w-0 rounded-[32px] border border-white/10 bg-white/[0.04] p-7 sm:p-9"
-            glow="blue"
-          >
-            <DetailList
-              id="production-features"
-              label={labels.features}
-              values={features}
-              markerClassName="marker:text-[var(--brand-blue)]"
-            />
-          </ResonanceSurface>
-          <ResonanceSurface
-            className="min-w-0 rounded-[32px] border border-white/10 bg-white/[0.04] p-7 sm:p-9"
-            glow="teal"
-          >
-            <DetailList
-              id="production-use-cases"
-              label={labels.useCases}
-              values={useCases}
-              markerClassName="marker:text-[var(--brand-teal)]"
-            />
-          </ResonanceSurface>
-        </div>
+        {(features.length > 0 || useCases.length > 0) && (
+          <div className={`mt-20 grid min-w-0 gap-8 ${features.length > 0 && useCases.length > 0 ? "md:grid-cols-2" : ""}`}>
+            {features.length > 0 && (
+              <ResonanceSurface
+                className="min-w-0 rounded-[32px] border border-white/10 bg-white/[0.04] p-7 sm:p-9"
+                glow="blue"
+              >
+                <DetailList
+                  id="production-features"
+                  label={labels.features}
+                  values={features}
+                  markerClassName="marker:text-[var(--brand-blue)]"
+                />
+              </ResonanceSurface>
+            )}
+            {useCases.length > 0 && (
+              <ResonanceSurface
+                className="min-w-0 rounded-[32px] border border-white/10 bg-white/[0.04] p-7 sm:p-9"
+                glow="teal"
+              >
+                <DetailList
+                  id="production-use-cases"
+                  label={labels.useCases}
+                  values={useCases}
+                  markerClassName="marker:text-[var(--brand-teal)]"
+                />
+              </ResonanceSurface>
+            )}
+          </div>
+        )}
 
         {specs.length > 0 && (
           <ResonanceSurface
@@ -224,7 +260,8 @@ export default function ProductionDetail({
           >
             <h2
               id="production-specifications"
-              className="text-xl font-semibold text-white"
+              tabIndex={-1}
+              className="text-xl font-semibold text-white focus:outline-none"
             >
               {labels.specifications}
             </h2>
@@ -254,6 +291,31 @@ export default function ProductionDetail({
             />
           </div>
         )}
+        <section
+          aria-labelledby="production-inquiry-title"
+          className="mt-12 grid min-w-0 gap-8 rounded-[32px] border border-[var(--brand-teal)]/25 bg-[var(--brand-teal)]/[0.06] p-7 sm:p-9 lg:grid-cols-[1fr_auto] lg:items-center"
+        >
+          <div className="min-w-0">
+            <h2 id="production-inquiry-title" className="text-2xl font-semibold text-white">
+              {detailLabels.inquiryTitle}
+            </h2>
+            <p className="mt-4 max-w-2xl leading-7 text-gray-300">
+              {detailLabels.inquiryDescription}
+            </p>
+          </div>
+          <div className="flex min-w-0 flex-wrap items-start gap-3 lg:max-w-sm">
+            <ResonanceLink
+              href={inquiryHref}
+              className="inline-flex min-h-11 items-center rounded-full bg-[var(--brand-blue)] px-6 py-3 text-sm font-medium text-white"
+            >
+              {detailLabels.inquiryAction}
+            </ResonanceLink>
+            <CopyEmailButton
+              email="contact@heresonare.com"
+              language={contentLanguageByLocale[locale]}
+            />
+          </div>
+        </section>
       </article>
     </main>
   );

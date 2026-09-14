@@ -22,6 +22,9 @@ const localeDefinitions = [
     opensInNewTab: "opens in a new tab",
     primaryNavigation: "Main navigation",
     copyEmail: "Copy email",
+    inquirySubject: "Concept inquiry",
+    tourAnnouncement: "Tour details to be announced",
+    storeAnnouncement: "Store in preparation",
   },
   {
     locale: "ja",
@@ -31,6 +34,9 @@ const localeDefinitions = [
     opensInNewTab: "新しいタブで開きます",
     primaryNavigation: "メインナビゲーション",
     copyEmail: "メールアドレスをコピー",
+    inquirySubject: "コンセプトに関するお問い合わせ",
+    tourAnnouncement: "ツアー情報は決定次第お知らせします",
+    storeAnnouncement: "ストア準備中",
   },
   {
     locale: "zh-cn",
@@ -40,6 +46,9 @@ const localeDefinitions = [
     opensInNewTab: "在新标签页中打开",
     primaryNavigation: "主要导航",
     copyEmail: "复制邮箱",
+    inquirySubject: "概念方案咨询",
+    tourAnnouncement: "巡演信息待公布",
+    storeAnnouncement: "商店筹备中",
   },
 ];
 const officialSocialLinks = [
@@ -433,6 +442,9 @@ function checkStaticPages() {
       opensInNewTab,
       primaryNavigation,
       copyEmail,
+      inquirySubject,
+      tourAnnouncement,
+      storeAnnouncement,
     } of localeDefinitions) {
       const route = localizeRoute(routeShape, locale);
       const htmlPath = getHtmlPath(route);
@@ -553,8 +565,52 @@ function checkStaticPages() {
           );
         }
       }
+      if (routeShape.startsWith("/productions/")) {
+        const heading = getElementText(html.match(/<h1\b[^>]*>[\s\S]*?<\/h1>/u)?.[0] ?? "");
+        const inquiries = anchorTags
+          .map((tag) => decodeHtmlAttribute(getAttribute(tag, "href") ?? ""))
+          .filter((href) => href.startsWith("mailto:contact@heresonare.com?"));
+        record(
+          inquiries.length === 1 &&
+            new URL(inquiries[0]).searchParams.get("subject") === `${inquirySubject}: ${heading}`,
+          `${route} must offer an inquiry with the localized subject and current concept name.`,
+        );
+        for (const id of ["production-features", "production-use-cases", "production-specifications"]) {
+          record(
+            anchorTags.some((tag) => getAttribute(tag, "href") === `#${id}`),
+            `${route} must link to its ${id} section.`,
+          );
+        }
+      }
+      if (routeShape === "/tour" || routeShape === "/store") {
+        const main = html.match(/<main\b[\s\S]*?<\/main>/u)?.[0] ?? "";
+        const announcement = routeShape === "/tour" ? tourAnnouncement : storeAnnouncement;
+        const announcementIndex = main.indexOf(announcement);
+        const cardIndex = main.indexOf("<article");
+        record(
+          announcementIndex >= 0 && cardIndex > announcementIndex,
+          `${route} must explain its availability before displaying concept cards.`,
+        );
+        record(
+          getTags(main, /<a\b[^>]*>/gu).some(
+            (tag) => getAttribute(tag, "href") === `/${locale}/contact`,
+          ),
+          `${route} must provide a locale-preserving contact action.`,
+        );
+      }
+      const identifiedTags = getTags(html, /<[a-z][^>]*\bid="[^"]+"[^>]*>/gu);
       for (const tag of anchorTags) {
         const href = decodeHtmlAttribute(getAttribute(tag, "href") ?? "");
+        if (href.startsWith("#")) {
+          const targets = identifiedTags.filter(
+            (target) => getAttribute(target, "id") === href.slice(1),
+          );
+          record(
+            targets.length === 1 && getAttribute(targets[0], "tabindex") === "-1",
+            `${route} fragment ${href} must resolve to one focusable destination.`,
+          );
+          continue;
+        }
         if (!href.startsWith("/") || href.startsWith("//")) continue;
 
         const pathname = href.split(/[?#]/u)[0];
