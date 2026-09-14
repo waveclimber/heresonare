@@ -5,8 +5,15 @@ type InterfaceContent = {
   languageSelector: string;
   openNavigationMenu: string;
   closeNavigationMenu: string;
+  primaryNavigation: string;
   skipToContent: string;
   languageNames: Record<ContentLanguage, string>;
+  email: {
+    copy: string;
+    copied: string;
+    failed: string;
+    address: string;
+  };
   notFound: {
     label: string;
     title: string;
@@ -40,10 +47,17 @@ export type RuntimeErrorContent = InterfaceContent["runtimeError"];
 
 export const interfaceContent = {
   EN: {
+    email: {
+      copy: "Copy email",
+      copied: "Email copied",
+      failed: "Automatic copying is unavailable. Select the address below to copy it manually.",
+      address: "Email address",
+    },
     language: "Language",
     languageSelector: "Choose language",
     openNavigationMenu: "Open navigation menu",
     closeNavigationMenu: "Close navigation menu",
+    primaryNavigation: "Main navigation",
     skipToContent: "Skip to main content",
     languageNames: {
       EN: "English",
@@ -80,10 +94,17 @@ export const interfaceContent = {
     },
   },
   JP: {
+    email: {
+      copy: "メールアドレスをコピー",
+      copied: "コピーしました",
+      failed: "自動コピーを利用できません。下のアドレスを選択してコピーしてください。",
+      address: "メールアドレス",
+    },
     language: "言語",
     languageSelector: "言語を選択",
     openNavigationMenu: "ナビゲーションメニューを開く",
     closeNavigationMenu: "ナビゲーションメニューを閉じる",
+    primaryNavigation: "メインナビゲーション",
     skipToContent: "メインコンテンツへ移動",
     languageNames: {
       EN: "英語",
@@ -120,10 +141,17 @@ export const interfaceContent = {
     },
   },
   CN: {
+    email: {
+      copy: "复制邮箱",
+      copied: "邮箱已复制",
+      failed: "无法自动复制，请选中下方邮箱地址手动复制。",
+      address: "邮箱地址",
+    },
     language: "语言",
     languageSelector: "选择语言",
     openNavigationMenu: "打开导航菜单",
     closeNavigationMenu: "关闭导航菜单",
+    primaryNavigation: "主要导航",
     skipToContent: "跳到主要内容",
     languageNames: {
       EN: "英语",

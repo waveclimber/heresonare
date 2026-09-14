@@ -1,4 +1,5 @@
 import type { HomePageContent } from "@/content/contracts";
+import CopyEmailButton from "@/components/CopyEmailButton";
 import {
   Reveal,
   StaggerGroup,
@@ -75,7 +76,7 @@ export default function Contact({ content, language }: ContentProps) {
   ];
 
   return (
-    <section id="contact" className="relative overflow-hidden px-6 py-32">
+    <section id="contact" tabIndex={-1} aria-labelledby="contact-title" className="relative overflow-hidden px-6 py-32 focus:outline-none">
       <div className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--brand-blue)] opacity-10 blur-3xl" />
       <div className="absolute left-[-160px] bottom-0 h-[420px] w-[420px] rounded-full bg-[var(--brand-pink)] opacity-10 blur-3xl" />
 
@@ -87,7 +88,7 @@ export default function Contact({ content, language }: ContentProps) {
               {content.contactTag}
             </p>
 
-            <h2 className="mt-6 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
+            <h2 id="contact-title" className="mt-6 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
               {content.contactTitle}
             </h2>
 
@@ -105,6 +106,9 @@ export default function Contact({ content, language }: ContentProps) {
                 {content.contactEmailLabel}
               </ResonanceLink>
             </ConvergeTarget>
+            <div className="mt-4">
+              <CopyEmailButton email="contact@heresonare.com" language={language} />
+            </div>
           </Reveal>
 
           <StaggerGroup className="grid gap-6">

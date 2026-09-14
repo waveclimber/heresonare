@@ -452,7 +452,7 @@ const englishPages = {
       tag: "Contact",
       title: "Create Resonance Together",
       description:
-        "A typed foundation for partnership, artist, venue, and production inquiries.",
+        "Get in touch about artist collaborations, partnerships, venues, or production projects.",
     },
     sections: [
       {
@@ -869,7 +869,7 @@ const localizedPages = {
         tag: "お問い合わせ",
         title: "共に共鳴を創る",
         description:
-          "パートナーシップ、アーティスト、会場、制作に関するお問い合わせを体系的に受け付けるための基盤です。",
+          "アーティストとのコラボレーション、パートナーシップ、会場、制作プロジェクトについて、お気軽にお問い合わせください。",
       },
       sections: [
         {
@@ -1186,7 +1186,7 @@ const localizedPages = {
       hero: {
         tag: "联系我们",
         title: "共同创造共鸣",
-        description: "为合作伙伴、艺人、场地与制作相关咨询构建的结构化基础。",
+        description: "欢迎与我们联系，探讨艺人合作、品牌合作、场地或制作项目。",
       },
       sections: [
         {

@@ -9,7 +9,7 @@ import {
   StaggerGroup,
   StaggerItem,
 } from "@/components/motion/MotionPrimitives";
-import { ResonanceButton } from "@/components/motion/ResonanceButton";
+import { ResonanceLink } from "@/components/motion/ResonanceLink";
 
 type ContentProps = {
   content: HomePageContent;
@@ -87,22 +87,20 @@ export default function Hero({ content }: ContentProps) {
               distance="subtle"
               duration="slow"
             >
-              <ResonanceButton
-                type="button"
-                onClick={() => scrollToSection("featured")}
-                className="rounded-full bg-[var(--brand-blue)] px-10 py-4 text-white shadow-[0_0_25px_rgba(14,108,178,0.4)] transition-[box-shadow] duration-300 hover:shadow-[0_0_34px_rgba(14,108,178,0.68)]"
+              <ResonanceLink
+                href="#featured"
+                className="inline-flex min-h-11 items-center justify-center rounded-full bg-[var(--brand-blue)] px-10 py-4 text-center text-white shadow-[0_0_25px_rgba(14,108,178,0.4)] transition-[box-shadow] duration-300 hover:shadow-[0_0_34px_rgba(14,108,178,0.68)]"
               >
                 {content.discover}
-              </ResonanceButton>
+              </ResonanceLink>
 
-              <ResonanceButton
-                type="button"
+              <ResonanceLink
+                href="#contact"
                 glow="teal"
-                onClick={() => scrollToSection("contact")}
-                className="rounded-full border border-white/20 px-10 py-4 text-gray-300 transition-[border-color,color,box-shadow] duration-300 hover:border-[var(--brand-teal)] hover:text-white hover:shadow-[0_0_28px_rgba(76,186,175,0.2)]"
+                className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/20 px-10 py-4 text-center text-gray-300 transition-[border-color,color,box-shadow] duration-300 hover:border-[var(--brand-teal)] hover:text-white hover:shadow-[0_0_28px_rgba(76,186,175,0.2)]"
               >
                 {content.contactButton}
-              </ResonanceButton>
+              </ResonanceLink>
             </StaggerItem>
           </StaggerGroup>
 
@@ -152,14 +150,4 @@ export default function Hero({ content }: ContentProps) {
       </div>
     </section>
   );
-}
-
-function scrollToSection(sectionId: string) {
-  const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
-
-  document.getElementById(sectionId)?.scrollIntoView({
-    behavior: prefersReducedMotion ? "auto" : "smooth",
-  });
 }

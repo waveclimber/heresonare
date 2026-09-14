@@ -20,6 +20,8 @@ const localeDefinitions = [
     hrefLang: "en",
     socialLabels: ["Instagram", "Xiaohongshu", "Douyin"],
     opensInNewTab: "opens in a new tab",
+    primaryNavigation: "Main navigation",
+    copyEmail: "Copy email",
   },
   {
     locale: "ja",
@@ -27,6 +29,8 @@ const localeDefinitions = [
     hrefLang: "ja",
     socialLabels: ["Instagram", "小紅書", "Douyin（抖音）"],
     opensInNewTab: "新しいタブで開きます",
+    primaryNavigation: "メインナビゲーション",
+    copyEmail: "メールアドレスをコピー",
   },
   {
     locale: "zh-cn",
@@ -34,6 +38,8 @@ const localeDefinitions = [
     hrefLang: "zh-CN",
     socialLabels: ["Instagram", "小红书", "抖音"],
     opensInNewTab: "在新标签页中打开",
+    primaryNavigation: "主要导航",
+    copyEmail: "复制邮箱",
   },
 ];
 const officialSocialLinks = [
@@ -425,6 +431,8 @@ function checkStaticPages() {
       htmlLang,
       socialLabels,
       opensInNewTab,
+      primaryNavigation,
+      copyEmail,
     } of localeDefinitions) {
       const route = localizeRoute(routeShape, locale);
       const htmlPath = getHtmlPath(route);
@@ -518,6 +526,33 @@ function checkStaticPages() {
       checkSocialMetadata({ html, route, locale });
 
       const anchorTags = getTags(html, /<a\b[^>]*\bhref="[^"]+"[^>]*>/gu);
+      record(
+        getTags(html, /<nav\b[^>]*>/gu).some(
+          (tag) => getAttribute(tag, "aria-label") === primaryNavigation,
+        ),
+        `${route} is missing a localized main-navigation landmark.`,
+      );
+      record(
+        getTags(html, /<button\b[^>]*>/gu).some(
+          (tag) => getAttribute(tag, "aria-label") === `${copyEmail}: contact@heresonare.com`,
+        ),
+        `${route} is missing the localized email-copy fallback.`,
+      );
+      if (routeShape === "/") {
+        for (const section of ["featured", "contact"]) {
+          record(
+            anchorTags.some((tag) => getAttribute(tag, "href") === `#${section}`),
+            `${route} is missing its native #${section} navigation link.`,
+          );
+          const target = getTags(html, /<section\b[^>]*>/gu).find(
+            (tag) => getAttribute(tag, "id") === section,
+          );
+          record(
+            Boolean(target) && getAttribute(target, "tabindex") === "-1",
+            `${route} #${section} must be a focusable navigation destination.`,
+          );
+        }
+      }
       for (const tag of anchorTags) {
         const href = decodeHtmlAttribute(getAttribute(tag, "href") ?? "");
         if (!href.startsWith("/") || href.startsWith("//")) continue;

@@ -1,7 +1,12 @@
 import type { ContentCardLabels } from "@/components/content-card/contentCardUtils";
+import CopyEmailButton from "@/components/CopyEmailButton";
 import { ResonanceLink } from "@/components/motion/ResonanceLink";
 import type { PageContentItem, PageLink } from "@/data/pageContent";
-import { getLocalizedHref, type Locale } from "@/i18n/config";
+import {
+  contentLanguageByLocale,
+  getLocalizedHref,
+  type Locale,
+} from "@/i18n/config";
 
 type ContentCardLinksProps = {
   item: PageContentItem;
@@ -76,6 +81,11 @@ export default function ContentCardLinks({
   locale,
 }: ContentCardLinksProps) {
   const links = getCardLinks(item, locale, labels.view);
+  const emailAddresses = Array.from(new Set(
+    links
+      .filter((link) => link.href.startsWith("mailto:"))
+      .map((link) => new URL(link.href).pathname),
+  ));
   if (links.length === 0) return null;
 
   return (
@@ -91,6 +101,14 @@ export default function ContentCardLinks({
               link={link}
               locale={locale}
               opensInNewTabLabel={labels.opensInNewTab}
+            />
+          </li>
+        ))}
+        {emailAddresses.map((email) => (
+          <li key={`copy-${email}`}>
+            <CopyEmailButton
+              email={email}
+              language={contentLanguageByLocale[locale]}
             />
           </li>
         ))}
