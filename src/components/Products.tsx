@@ -41,14 +41,16 @@ export default function Products({ content, locale }: ContentProps) {
   return (
     <section
       id="featured"
-      className="relative mx-auto max-w-7xl px-6 py-32"
+      tabIndex={-1}
+      aria-labelledby="featured-title"
+      className="relative mx-auto max-w-7xl px-6 py-32 focus:outline-none"
     >
       <Reveal className="mb-16" distance="subtle">
         <p className="text-xs tracking-[0.35em] text-[var(--brand-blue)]">
           {content.featuredLabel}
         </p>
 
-        <h2 className="mt-5 text-5xl font-bold">
+        <h2 id="featured-title" className="mt-5 text-5xl font-bold">
           {content.featuredTitle}
         </h2>
 

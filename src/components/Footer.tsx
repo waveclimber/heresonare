@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CopyEmailButton from "@/components/CopyEmailButton";
 import {
   ConvergeTarget,
   FooterConvergePath,
@@ -69,6 +70,9 @@ export default function Footer({ content, language, locale }: ContentProps) {
             >
               contact@heresonare.com
             </a>
+            <div className="mt-4">
+              <CopyEmailButton email="contact@heresonare.com" language={language} />
+            </div>
           </StaggerItem>
 
           <StaggerItem distance="subtle" duration="fast">
