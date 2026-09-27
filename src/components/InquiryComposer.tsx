@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { InquiryLabels } from "@/data/inquiryContent";
 import {
   buildInquiryDraft,
+  buildInquiryTextDownload,
   inquiryLimits,
   inquiryTopics,
   isInquiryTopic,
@@ -28,14 +29,18 @@ export default function InquiryComposer(props: InquiryComposerProps) {
 function InquiryForm({ labels, concepts, initial }: InquiryComposerProps & {
   initial: ReturnType<typeof resolveInquiryContext>;
 }) {
-  const [topic, setTopic] = useState(initial.topic);
+  const [fields, setFields] = useState<InquiryFields>({ ...initial, name: "", email: "", message: "" });
   const [errors, setErrors] = useState<ReturnType<typeof validateInquiry>>({});
   const [draft, setDraft] = useState<ReturnType<typeof buildInquiryDraft> | null>(null);
   const [copyStatus, setCopyStatus] = useState<"idle" | "copying" | "copied" | "failed">("idle");
-  const [messageLength, setMessageLength] = useState(0);
+  const formRef = useRef<HTMLFormElement>(null);
+  const messageRef = useRef<HTMLTextAreaElement>(null);
   const revision = useRef(0);
   const previewHeading = useRef<HTMLHeadingElement>(null);
   const previewText = useRef<HTMLTextAreaElement>(null);
+  const download = draft ? buildInquiryTextDownload(draft) : null;
+  const hasChanges = fields.topic !== initial.topic || fields.concept !== initial.concept || Boolean(fields.name || fields.email || fields.message);
+  const canReset = hasChanges || Boolean(draft) || Object.keys(errors).length > 0;
 
   useEffect(() => () => { revision.current += 1; }, []);
   useEffect(() => {
@@ -52,14 +57,6 @@ function InquiryForm({ labels, concepts, initial }: InquiryComposerProps & {
   function prepare(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
-    const data = new FormData(form);
-    const fields: InquiryFields = {
-      topic,
-      concept: String(data.get("concept") ?? ""),
-      name: String(data.get("name") ?? ""),
-      email: String(data.get("email") ?? ""),
-      message: String(data.get("message") ?? ""),
-    };
     const nextErrors = validateInquiry(fields, concepts);
     setErrors(nextErrors);
     const firstError = Object.keys(nextErrors)[0];
@@ -71,6 +68,19 @@ function InquiryForm({ labels, concepts, initial }: InquiryComposerProps & {
     revision.current += 1;
     setCopyStatus("idle");
     setDraft(buildInquiryDraft(fields, labels, concepts));
+  }
+
+  function updateField(field: keyof InquiryFields, value: string) {
+    setFields((current) => ({ ...current, [field]: value }));
+    invalidateDraft();
+  }
+
+  function resetForm() {
+    if (hasChanges && !window.confirm(labels.resetConfirm)) return;
+    setFields({ ...initial, name: "", email: "", message: "" });
+    invalidateDraft();
+    const firstField = formRef.current?.elements.namedItem("topic");
+    if (firstField instanceof HTMLElement) firstField.focus();
   }
 
   async function copyDraft() {
@@ -95,19 +105,19 @@ function InquiryForm({ labels, concepts, initial }: InquiryComposerProps & {
 
   return (
     <div className="mt-8 grid min-w-0 gap-8 lg:grid-cols-2 lg:gap-12">
-      <form noValidate onSubmit={prepare} onChange={invalidateDraft} aria-label={labels.title} className="min-w-0 space-y-6">
+      <form ref={formRef} noValidate onSubmit={prepare} aria-label={labels.title} className="min-w-0 space-y-6">
         <div>
           <label className="inquiry-label" htmlFor="inquiry-topic">{labels.topic}</label>
-          <select id="inquiry-topic" name="topic" value={topic} onChange={(event) => {
-            if (isInquiryTopic(event.target.value)) setTopic(event.target.value);
+          <select id="inquiry-topic" name="topic" value={fields.topic} onChange={(event) => {
+            if (isInquiryTopic(event.target.value)) updateField("topic", event.target.value);
           }} className="inquiry-field">
             {inquiryTopics.map((value) => <option key={value} value={value}>{labels.topics[value]}</option>)}
           </select>
         </div>
-        {topic === "production" && (
+        {fields.topic === "production" && (
           <div>
             <label className="inquiry-label" htmlFor="inquiry-concept">{labels.concept} <span className="text-gray-400">({labels.optional})</span></label>
-            <select id="inquiry-concept" name="concept" defaultValue={initial.concept} className="inquiry-field" aria-invalid={Boolean(errors.concept)} aria-describedby={errors.concept ? "inquiry-concept-error" : undefined}>
+            <select id="inquiry-concept" name="concept" value={fields.concept} onChange={(event) => updateField("concept", event.target.value)} className="inquiry-field" aria-invalid={Boolean(errors.concept)} aria-describedby={errors.concept ? "inquiry-concept-error" : undefined}>
               <option value="">{labels.anyConcept}</option>
               {concepts.map((concept) => <option key={concept.slug} value={concept.slug}>{concept.title}</option>)}
             </select>
@@ -118,19 +128,22 @@ function InquiryForm({ labels, concepts, initial }: InquiryComposerProps & {
           <div key={field}>
             <label className="inquiry-label" htmlFor={`inquiry-${field}`}>{labels[field]} <span className="text-gray-400">({labels.optional})</span></label>
             <p id={`inquiry-${field}-hint`} className="mb-3 text-xs text-gray-400">{labels.limitHint.replace("{limit}", String(inquiryLimits[field]))}</p>
-            <input id={`inquiry-${field}`} name={field} type={field === "email" ? "email" : "text"} autoComplete={field === "email" ? "email" : "name"} maxLength={inquiryLimits[field]} className="inquiry-field" aria-invalid={Boolean(errors[field])} aria-describedby={`inquiry-${field}-hint${errors[field] ? ` inquiry-${field}-error` : ""}`} />
+            <input id={`inquiry-${field}`} name={field} value={fields[field]} onChange={(event) => updateField(field, event.target.value)} type={field === "email" ? "email" : "text"} autoComplete={field === "email" ? "email" : "name"} maxLength={inquiryLimits[field]} className="inquiry-field" aria-invalid={Boolean(errors[field])} aria-describedby={`inquiry-${field}-hint${errors[field] ? ` inquiry-${field}-error` : ""}`} />
             {errorText(field)}
           </div>
         ))}
         <div>
           <label className="inquiry-label" htmlFor="inquiry-message">{labels.message} <span className="text-[var(--brand-teal)]">({labels.required})</span></label>
           <p id="inquiry-message-hint" className="mb-3 text-sm leading-6 text-gray-400">{labels.messageHint}</p>
-          <textarea id="inquiry-message" name="message" required maxLength={inquiryLimits.message} rows={7} className="inquiry-field resize-y" onChange={(event) => setMessageLength(event.target.value.length)} aria-invalid={Boolean(errors.message)} aria-describedby={`inquiry-message-hint${errors.message ? " inquiry-message-error" : ""}`} />
-          <p aria-hidden="true" className="mt-2 text-right text-xs tabular-nums text-gray-400">{messageLength} / {inquiryLimits.message}</p>
+          <textarea ref={messageRef} id="inquiry-message" name="message" value={fields.message} required maxLength={inquiryLimits.message} rows={7} className="inquiry-field resize-y" onChange={(event) => updateField("message", event.target.value)} aria-invalid={Boolean(errors.message)} aria-describedby={`inquiry-message-hint${errors.message ? " inquiry-message-error" : ""}`} />
+          <p aria-hidden="true" className="mt-2 text-right text-xs tabular-nums text-gray-400">{fields.message.length} / {inquiryLimits.message}</p>
           {errorText("message")}
         </div>
         <p className="text-sm leading-6 text-gray-400">{labels.privacy}</p>
-        <button type="submit" className="inquiry-primary">{labels.prepare}</button>
+        <div className="flex flex-wrap gap-3">
+          <button type="submit" className="inquiry-primary">{labels.prepare}</button>
+          <button type="button" disabled={!canReset} onClick={resetForm} className="email-copy-button">{labels.reset}</button>
+        </div>
       </form>
 
       <aside aria-labelledby="inquiry-preview-title" className="min-w-0 self-start rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8 lg:sticky lg:top-28">
@@ -143,6 +156,8 @@ function InquiryForm({ labels, concepts, initial }: InquiryComposerProps & {
               <button type="button" disabled={copyStatus === "copying"} onClick={copyDraft} className="email-copy-button">
                 {copyStatus === "copying" ? labels.copying : copyStatus === "copied" ? labels.copied : labels.copy}
               </button>
+              {download && <a href={download.href} download={download.filename} className="email-copy-button">{labels.download}</a>}
+              <button type="button" onClick={() => messageRef.current?.focus()} className="email-copy-button">{labels.edit}</button>
             </div>
             {!draft.href && <p className="mt-4 text-sm leading-6 text-[var(--brand-teal)]">{labels.longMessage}</p>}
             <p role="status" aria-atomic="true" className={copyStatus === "failed" ? "mt-4 text-sm leading-6 text-rose-300" : "sr-only"}>

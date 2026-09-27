@@ -67,3 +67,13 @@ export function buildInquiryDraft(fields, labels, concepts) {
     href: href.length <= inquiryLimits.mailto ? href : null,
   };
 }
+
+/** @param {ReturnType<typeof buildInquiryDraft>} draft */
+export function buildInquiryTextDownload(draft) {
+  const text = draft.text.toWellFormed().replace(/\r\n|\r|\n/gu, "\r\n");
+  return {
+    filename: "heresonare-inquiry.txt",
+    // A UTF-8 BOM keeps Chinese/Japanese readable in older desktop text editors.
+    href: `data:text/plain;charset=utf-8,${encodeURIComponent(`\uFEFF${text}\r\n`)}`,
+  };
+}
