@@ -3,7 +3,7 @@ import type { StaticPageContent } from "@/data/pageContent";
 import type { PageJourneyLabels } from "@/data/visitorContent";
 import { getLocalizedPath, type Locale } from "@/i18n/config";
 
-export function PageContents({ content, labels }: { content: StaticPageContent; labels: PageJourneyLabels }) {
+export function PageContents({ content, labels, locale }: { content: StaticPageContent; labels: PageJourneyLabels; locale: Locale }) {
   const entries = [
     ...(content.slug === "contact" ? [{ id: "inquiry", title: labels.inquiry }] : []),
     ...content.sections.map(({ id, title }) => ({ id: `section-${id}`, title })),
@@ -14,6 +14,9 @@ export function PageContents({ content, labels }: { content: StaticPageContent; 
       <p className="mb-3 text-sm text-gray-400">{labels.onThisPage}</p>
       <ul className="flex flex-wrap gap-3">
         {entries.map(({ id, title }) => <li key={id}><a className="email-copy-button" href={`#${id}`}>{title}</a></li>)}
+        <li><a className="email-copy-button" href={`/${locale}/catalog/${content.slug}`}>{labels.catalog}</a></li>
+        {labels.connect && <li><a className="email-copy-button" href={`/${locale}/connect`}>{labels.connect}</a></li>}
+        {labels.bag && <li><a className="email-copy-button" href={`/${locale}/bag`}>{labels.bag}</a></li>}
       </ul>
     </nav>
   );

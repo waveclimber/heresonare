@@ -20,6 +20,9 @@ type VisitorLabels = {
 export type PageJourneyLabels = Pick<VisitorLabels, "onThisPage" | "inquiry" | "help" | "nextStep" | "contactAction"> & {
   description: string;
   topic: InquiryTopic;
+  catalog: string;
+  connect?: string;
+  bag?: string;
 };
 
 export const visitorContent = {

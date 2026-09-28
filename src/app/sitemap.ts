@@ -9,6 +9,10 @@ import {
   type Locale,
 } from "@/i18n/config";
 import { getAbsoluteSiteUrl } from "@/lib/siteUrl";
+import { getPublishedEntries } from "@/platform/server";
+import { recordPath } from "@/platform/domain";
+
+export const revalidate = 60;
 
 const publicPaths = [
   "/",
@@ -25,12 +29,13 @@ function getLanguageAlternates(pathname: string) {
   );
 }
 
-function getChangeFrequency(pathname: string) {
+function getChangeFrequency(pathname: string): "weekly" | "monthly" {
   return pathname === "/" ? "weekly" : "monthly";
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return publicPaths.flatMap((pathname) =>
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const published = await getPublishedEntries();
+  return [...publicPaths.flatMap((pathname) =>
     supportedLocales.map((locale: Locale) => ({
       url: getAbsoluteSiteUrl(getLocalizedPath(pathname, locale)),
       changeFrequency: getChangeFrequency(pathname),
@@ -39,5 +44,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
         languages: getLanguageAlternates(pathname),
       },
     }))
-  );
+  ), ...published.flatMap((entry) => supportedLocales.map((locale) => ({
+    url: getAbsoluteSiteUrl(recordPath(entry, locale)), lastModified: entry.updatedAt,
+    alternates: { languages: Object.fromEntries(supportedLocales.map((language) => [htmlLangByLocale[language], getAbsoluteSiteUrl(recordPath(entry, language))])) },
+  })))];
 }

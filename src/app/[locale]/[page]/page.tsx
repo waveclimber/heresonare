@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import StaticPage from "@/components/StaticPage";
+import { platformContent } from "@/data/platformContent";
 import ContactInquiry from "@/components/ContactInquiry";
 import VisitorQuestions from "@/components/VisitorQuestions";
 import { pageInquiryTopics, visitorContent } from "@/data/visitorContent";
@@ -39,10 +40,11 @@ async function getPage(localeValue: string, pageValue: string) {
     ...content,
     sections: content.sections.map((section) => ({
       ...section,
-      items: section.items?.map((item) => ({
+      items: section.items?.map(({ image, media, category, ...item }) => ({
         ...item,
-        image: isApprovedContentMediaPath(item.image) ? item.image : undefined,
-        media: item.media ? Object.fromEntries(Object.entries(item.media).filter(([, path]) => isApprovedContentMediaPath(path))) : undefined,
+        ...(category && ![item.subtitle, item.role, item.type].includes(category) ? { category } : {}),
+        ...(isApprovedContentMediaPath(image) ? { image } : {}),
+        ...(media ? { media: Object.fromEntries(Object.entries(media).filter(([, path]) => isApprovedContentMediaPath(path))) } : {}),
       })),
     })),
   };
@@ -79,6 +81,9 @@ export default async function PublicPage({
       <StaticPage
         content={result.content}
         journey={{
+          catalog: platformContent[result.locale].latest,
+          ...(page === "contact" ? { connect: platformContent[result.locale].connect } : {}),
+          ...(page === "store" ? { bag: platformContent[result.locale].bag } : {}),
           onThisPage: visitorContent[result.language].onThisPage,
           inquiry: visitorContent[result.language].inquiry,
           help: visitorContent[result.language].help,

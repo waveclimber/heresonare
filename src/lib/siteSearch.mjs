@@ -28,7 +28,7 @@ export function searchEntries(entries, query) {
 
 /** @param {unknown} payload @param {string} locale @returns {SearchEntry[]} */
 export function parseSearchIndex(payload, locale) {
-  if (!payload || typeof payload !== "object" || !("locale" in payload) || payload.locale !== locale || !("entries" in payload) || !Array.isArray(payload.entries) || payload.entries.length > 50) {
+  if (!payload || typeof payload !== "object" || !("locale" in payload) || payload.locale !== locale || !("entries" in payload) || !Array.isArray(payload.entries) || payload.entries.length > 513) {
     throw new Error("Invalid search index");
   }
   const destinations = new Set();

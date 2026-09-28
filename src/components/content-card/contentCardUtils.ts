@@ -51,11 +51,13 @@ export function normalizeSpecs(
 }
 
 function encodeIdPart(value: string) {
+  // Keep ordinary content slugs compact; namespace the Unicode fallback to avoid collisions.
+  if (/^[a-zA-Z0-9_-]+$/u.test(value)) return `a-${value}`;
   const encoded = Array.from(value)
     .map((character) => character.codePointAt(0)?.toString(16))
     .join("-");
 
-  return encoded || "empty";
+  return `u-${encoded || "empty"}`;
 }
 
 export function createContentCardHeadingId(itemId: string, instanceId: string) {

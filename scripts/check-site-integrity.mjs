@@ -79,6 +79,10 @@ const expectedRoutes = routeShapes.flatMap((shape) =>
   localeDefinitions.map(({ locale }) => localizeRoute(shape, locale)),
 );
 const expectedRouteSet = new Set(expectedRoutes);
+const platformRoutes = localeDefinitions.flatMap(({ locale }) => [
+  ...["artists", "music", "video", "productions", "tour", "venues", "store", "about", "contact"].map((section) => `/${locale}/catalog/${section}`),
+  `/${locale}/connect`, `/${locale}/bag`, `/${locale}/manage`,
+]);
 const failures = [];
 const expectedSecurityHeaders = getSecurityHeaders("production");
 const socialImageUrls = {
@@ -663,7 +667,7 @@ function checkStaticPages() {
 
         discoveredInternalRoutes.add(pathname);
         record(
-          expectedRouteSet.has(pathname),
+          expectedRouteSet.has(pathname) || platformRoutes.includes(pathname),
           `${route} links to an unsupported internal route: ${pathname}`,
         );
         record(
@@ -858,7 +862,7 @@ async function checkRuntimeRoutes() {
     [nextCli, "start", "--hostname", "127.0.0.1", "--port", String(port)],
     {
       cwd: projectRoot,
-      env: { ...process.env, NODE_ENV: "production" },
+      env: { ...process.env, NODE_ENV: "production", PLATFORM_STORAGE: "disabled" },
       stdio: ["ignore", "pipe", "pipe"],
     },
   );
@@ -880,6 +884,11 @@ async function checkRuntimeRoutes() {
     );
     for (const { route, status } of publicResults) {
       record(status === 200, `${route} returned HTTP ${status}.`);
+    }
+    for (const route of platformRoutes) {
+      const response = await fetch(`${runtimeOrigin}${route}`);
+      record(response.status === 200, `${route} must remain usable with no provider configured.`);
+      checkSecurityHeaders(response, route);
     }
 
     const runtimeSocialImages = [
