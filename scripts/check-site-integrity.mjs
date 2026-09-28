@@ -624,7 +624,23 @@ function checkStaticPages() {
           inquiryBlock.includes('href="mailto:contact@heresonare.com"'),
           `${route} must keep direct email available before the form loads.`,
         );
+        const questions = html.match(/<section\b[^>]*id="questions"[\s\S]*?<\/section>/u)?.[0] ?? "";
+        record(getTags(questions, /<details\b[^>]*>/gu).length === 5 && getTags(questions, /<summary\b[^>]*>/gu).length === 5,
+          `${route} must render the visitor questions as native disclosures before hydration.`);
       }
+      const expectedTopic = { "/artists": "artists", "/music": "artists", "/video": "production", "/productions": "production", "/tour": "venues", "/venues": "venues", "/store": "general", "/about": "partners" }[routeShape];
+      if (expectedTopic) {
+        const nextStep = html.match(/<section\b[^>]*id="next-step"[\s\S]*?<\/section>/u)?.[0] ?? "";
+        record(nextStep.includes(`href="/${locale}/contact?topic=${expectedTopic}#inquiry"`),
+          `${route} must provide a contact destination with its expected inquiry topic.`);
+      }
+      if (routeShape.split("/").length === 2 && routeShape !== "/") {
+        const sections = getTags(html, /<section\b[^>]*id="section-[^"]+"[^>]*>/gu);
+        record(sections.length > 0 && sections.every((section) => anchorTags.some((tag) => getAttribute(tag, "href") === `#${getAttribute(section, "id")}`)),
+          `${route} must expose navigable destinations for all catalog sections.`);
+      }
+      record(anchorTags.some((tag) => getAttribute(tag, "href") === `/${locale}/contact#questions`),
+        `${route} must provide a localized visitor-help entry.`);
       const identifiedTags = getTags(html, /<[a-z][^>]*\bid="[^"]+"[^>]*>/gu);
       for (const tag of anchorTags) {
         const href = decodeHtmlAttribute(getAttribute(tag, "href") ?? "");
@@ -1014,6 +1030,9 @@ async function checkRuntimeRoutes() {
         record(searchEntries(entries, "Resonance 01").some(({ href }) => href === "/en/music"), "Search must find music concepts inside their parent page.");
         record(searchEntries(entries, "Audio Innovation")[0]?.href === "/en/productions/audio-innovation", "A concept's own page must rank before its catalog.");
       }
+      const helpQuery = { en: "webmail", ja: "ウェブメール", "zh-cn": "网页邮箱" }[locale];
+      record(searchEntries(entries, helpQuery).some(({ href }) => href === `/${locale}/contact`),
+        `${locale} search must include the visible visitor-question answers.`);
     }
     for (const query of ["", "?locale=fr", "?locale=EN", "?locale=en&locale=ja"]) {
       const response = await fetch(`${runtimeOrigin}/api/search${query}`);

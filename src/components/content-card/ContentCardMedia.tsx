@@ -34,7 +34,7 @@ export default function ContentCardMedia({ item }: ContentCardMediaProps) {
   const cardMedia = getApprovedCardMedia(item);
 
   return (
-    <div className="relative aspect-[16/10] overflow-hidden border-b border-white/10 bg-[radial-gradient(circle_at_25%_20%,rgba(76,186,175,0.24),transparent_34%),radial-gradient(circle_at_80%_75%,rgba(14,108,178,0.34),transparent_38%),#111]">
+    <div className="content-card-media">
       {cardMedia || item.media ? (
         <MediaSignalFrame
           src={cardMedia}

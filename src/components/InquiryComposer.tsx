@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent } from "react";
 import type { InquiryLabels } from "@/data/inquiryContent";
 import {
   buildInquiryDraft,
@@ -20,9 +20,16 @@ type InquiryComposerProps = {
   concepts: InquiryConcept[];
 };
 
+const subscribeToHydration = () => () => undefined;
+const clientReady = () => true;
+const serverReady = () => false;
+
 export default function InquiryComposer(props: InquiryComposerProps) {
+  const ready = useSyncExternalStore(subscribeToHydration, clientReady, serverReady);
   const params = useSearchParams();
   const initial = resolveInquiryContext(params.get("topic"), params.get("concept"), props.concepts);
+  // Never expose a native GET form before its local-only submit handler is ready.
+  if (!ready) return null;
   return <InquiryForm key={`${props.labels.subjectPrefix}:${initial.topic}:${initial.concept}`} {...props} initial={initial} />;
 }
 
@@ -33,6 +40,9 @@ function InquiryForm({ labels, concepts, initial }: InquiryComposerProps & {
   const [errors, setErrors] = useState<ReturnType<typeof validateInquiry>>({});
   const [draft, setDraft] = useState<ReturnType<typeof buildInquiryDraft> | null>(null);
   const [copyStatus, setCopyStatus] = useState<"idle" | "copying" | "copied" | "failed">("idle");
+  const [resetPending, setResetPending] = useState(false);
+  const resetButton = useRef<HTMLButtonElement>(null);
+  const cancelResetButton = useRef<HTMLButtonElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
   const revision = useRef(0);
@@ -46,12 +56,16 @@ function InquiryForm({ labels, concepts, initial }: InquiryComposerProps & {
   useEffect(() => {
     if (draft) previewHeading.current?.focus();
   }, [draft]);
+  useEffect(() => {
+    if (resetPending) cancelResetButton.current?.focus();
+  }, [resetPending]);
 
   function invalidateDraft() {
     revision.current += 1;
     setDraft(null);
     setCopyStatus("idle");
     setErrors({});
+    setResetPending(false);
   }
 
   function prepare(event: FormEvent<HTMLFormElement>) {
@@ -76,11 +90,15 @@ function InquiryForm({ labels, concepts, initial }: InquiryComposerProps & {
   }
 
   function resetForm() {
-    if (hasChanges && !window.confirm(labels.resetConfirm)) return;
     setFields({ ...initial, name: "", email: "", message: "" });
     invalidateDraft();
     const firstField = formRef.current?.elements.namedItem("topic");
     if (firstField instanceof HTMLElement) firstField.focus();
+  }
+
+  function cancelReset() {
+    setResetPending(false);
+    resetButton.current?.focus();
   }
 
   async function copyDraft() {
@@ -135,15 +153,27 @@ function InquiryForm({ labels, concepts, initial }: InquiryComposerProps & {
         <div>
           <label className="inquiry-label" htmlFor="inquiry-message">{labels.message} <span className="text-[var(--brand-teal)]">({labels.required})</span></label>
           <p id="inquiry-message-hint" className="mb-3 text-sm leading-6 text-gray-400">{labels.messageHint}</p>
-          <textarea ref={messageRef} id="inquiry-message" name="message" value={fields.message} required maxLength={inquiryLimits.message} rows={7} className="inquiry-field resize-y" onChange={(event) => updateField("message", event.target.value)} aria-invalid={Boolean(errors.message)} aria-describedby={`inquiry-message-hint${errors.message ? " inquiry-message-error" : ""}`} />
+          <p id="inquiry-topic-hint" className="mb-3 text-sm leading-6 text-gray-300">{isInquiryTopic(fields.topic) ? labels.topicHints[fields.topic] : ""}</p>
+          <textarea ref={messageRef} id="inquiry-message" name="message" value={fields.message} required maxLength={inquiryLimits.message} rows={7} className="inquiry-field resize-y" onChange={(event) => updateField("message", event.target.value)} aria-invalid={Boolean(errors.message)} aria-describedby={`inquiry-message-hint inquiry-topic-hint${errors.message ? " inquiry-message-error" : ""}`} />
           <p aria-hidden="true" className="mt-2 text-right text-xs tabular-nums text-gray-400">{fields.message.length} / {inquiryLimits.message}</p>
           {errorText("message")}
         </div>
         <p className="text-sm leading-6 text-gray-400">{labels.privacy}</p>
         <div className="flex flex-wrap gap-3">
           <button type="submit" className="inquiry-primary">{labels.prepare}</button>
-          <button type="button" disabled={!canReset} onClick={resetForm} className="email-copy-button">{labels.reset}</button>
+          <button ref={resetButton} type="button" disabled={!canReset} aria-expanded={resetPending} onClick={() => hasChanges ? setResetPending(true) : resetForm()} className="email-copy-button">{labels.reset}</button>
         </div>
+        {resetPending && (
+          <div role="group" aria-labelledby="inquiry-reset-confirm" className="rounded-2xl border border-white/20 p-5" onKeyDown={(event) => {
+            if (event.key === "Escape") { event.preventDefault(); cancelReset(); }
+          }}>
+            <p id="inquiry-reset-confirm" className="text-sm leading-6 text-gray-300">{labels.resetConfirm}</p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <button ref={cancelResetButton} type="button" onClick={cancelReset} className="email-copy-button">{labels.cancelReset}</button>
+              <button type="button" onClick={resetForm} className="email-copy-button">{labels.confirmReset}</button>
+            </div>
+          </div>
+        )}
       </form>
 
       <aside aria-labelledby="inquiry-preview-title" className="min-w-0 self-start rounded-3xl border border-white/10 bg-black/30 p-6 sm:p-8 lg:sticky lg:top-28">

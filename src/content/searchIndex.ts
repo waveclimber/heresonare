@@ -5,6 +5,7 @@ import { getNavigationItems } from "@/data/navigation";
 import type { PageContentItem } from "@/data/pageContent";
 import { getProductionDetailPath, productionSlugs } from "@/data/productionRoutes";
 import { searchContent } from "@/data/searchContent";
+import { visitorContent } from "@/data/visitorContent";
 import { contentLanguageByLocale, getLocalizedPath, type Locale } from "@/i18n/config";
 import type { SearchEntry } from "@/lib/siteSearch.mjs";
 
@@ -38,7 +39,7 @@ export async function getSearchIndex(locale: Locale): Promise<SearchEntry[]> {
       label: item.label,
       title: page.hero.title,
       description: page.hero.description,
-      keywords: [page.hero.tag, ...page.sections.flatMap((section) => [section.title, section.label, section.description, section.comingSoon?.title, section.comingSoon?.description, ...(section.items ?? []).map(itemKeywords)])].filter(Boolean).join(" "),
+      keywords: [page.hero.tag, ...(item.key === "contact" ? [visitorContent[language].help, ...visitorContent[language].questions.flatMap(({ question, answer }) => [question, answer])] : []), ...page.sections.flatMap((section) => [section.title, section.label, section.description, section.comingSoon?.title, section.comingSoon?.description, ...(section.items ?? []).map(itemKeywords)])].filter(Boolean).join(" "),
       kind: "page",
       status: "",
     });

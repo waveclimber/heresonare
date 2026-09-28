@@ -21,6 +21,12 @@
 
 ## Implementation and accessibility
 
+The 2026-09-29 visitor-readiness pass adds per-topic writing guidance, gates the
+interactive form on hydration, and replaces the browser-native reset prompt
+with an inline confirmation and explicit focus restoration. Browser evidence,
+including a verified text-file download and cancel/confirm reset checks, is in
+[`website-feature-readiness.md`](./website-feature-readiness.md).
+
 - Existing routes, page metadata, and content-repository boundaries remain intact. Production options come from `getPageContent`; the browser receives only their slugs and localized titles.
 - The form is inside a local Suspense boundary because URL query context is read on the client. Its section heading and direct email link are rendered on the server and remain available without JavaScript.
 - Native labeled inputs, select controls, textareas, and buttons preserve keyboard behavior. Validation errors describe the relevant field, the first invalid field receives focus, and clipboard results use a live status region.

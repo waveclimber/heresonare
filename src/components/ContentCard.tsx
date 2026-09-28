@@ -54,7 +54,7 @@ export default function ContentCard({
     <ResonanceSurface
       as="article"
       ariaLabelledby={headingId}
-      className="flex min-w-0 flex-col rounded-[32px] border border-white/10 bg-white/[0.04] backdrop-blur-md transition-[border-color,background-color,box-shadow] duration-500 hover:border-[var(--brand-blue)]/60 hover:bg-white/[0.07] hover:shadow-[0_0_45px_rgba(14,108,178,0.14)]"
+      className="content-card"
       interactive={Boolean(item.href || item.links?.length)}
     >
       <div className="flex h-full flex-col">

@@ -7,6 +7,7 @@ type InterfaceContent = {
   closeNavigationMenu: string;
   primaryNavigation: string;
   skipToContent: string;
+  visitorQuestions: string;
   languageNames: Record<ContentLanguage, string>;
   email: {
     copy: string;
@@ -65,6 +66,7 @@ export const interfaceContent = {
     closeNavigationMenu: "Close navigation menu",
     primaryNavigation: "Main navigation",
     skipToContent: "Skip to main content",
+    visitorQuestions: "Visitor questions",
     languageNames: {
       EN: "English",
       JP: "日本語",
@@ -118,6 +120,7 @@ export const interfaceContent = {
     closeNavigationMenu: "ナビゲーションメニューを閉じる",
     primaryNavigation: "メインナビゲーション",
     skipToContent: "メインコンテンツへ移動",
+    visitorQuestions: "よくあるご質問",
     languageNames: {
       EN: "英語",
       JP: "日本語",
@@ -171,6 +174,7 @@ export const interfaceContent = {
     closeNavigationMenu: "关闭导航菜单",
     primaryNavigation: "主要导航",
     skipToContent: "跳到主要内容",
+    visitorQuestions: "常见问题",
     languageNames: {
       EN: "英语",
       JP: "日语",

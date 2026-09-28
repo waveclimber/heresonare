@@ -2,6 +2,14 @@
 
 This ordered roadmap records direction, not fixed delivery dates. Each stage should become one or more scoped issues with owners, acceptance criteria, constraints, and validation steps before implementation.
 
+**Current visitor readiness (2026-09-29):** Localized search, contextual inquiry
+entry points, guided email drafts with copy/download/reset, section navigation,
+and visitor FAQs are implemented. See
+[website-feature-readiness.md](./website-feature-readiness.md) for the feature
+matrix, browser evidence, and the distinct remaining content, commerce, CMS,
+submission-service, and production-operations inputs. The owner has explicitly
+authorized direct submission and merge for this improvement workflow.
+
 ## 1. Workflow foundation
 
 **Objective:** Establish a safe, repeatable path from product goal to reviewed change.

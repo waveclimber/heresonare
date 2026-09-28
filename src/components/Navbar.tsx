@@ -220,7 +220,7 @@ function Navigation({
           <button
             ref={mobileMenuButtonRef}
             type="button"
-            className="resonance-control site-search-trigger text-2xl xl:hidden"
+            className="resonance-control site-search-trigger navbar-mobile-toggle text-2xl"
             onClick={() => {
               setIsMenuOpen(!isMenuOpen);
               setIsLanguageOpen(false);
