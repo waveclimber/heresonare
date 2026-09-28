@@ -12,7 +12,7 @@ export default async function ContactInquiry({ language }: { language: ContentLa
     .map(({ slug, title }) => ({ slug, title })) ?? [];
 
   return (
-    <section id="inquiry" tabIndex={-1} aria-labelledby="inquiry-title" className="mb-24 rounded-[32px] border border-[var(--brand-teal)]/25 bg-[var(--brand-teal)]/[0.04] p-6 focus:outline-none sm:p-10">
+    <section id="inquiry" tabIndex={-1} aria-labelledby="inquiry-title" className="inquiry-panel">
       <h2 id="inquiry-title" className="text-3xl font-semibold sm:text-4xl">{labels.title}</h2>
       <p className="mt-4 max-w-2xl leading-7 text-gray-300">{labels.description}</p>
       <p className="mt-3 text-sm leading-6 text-gray-400">{labels.fallback}{" "}

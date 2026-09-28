@@ -10,6 +10,7 @@ import {
 } from "@/components/motion/MotionPrimitives";
 import type { SiteShellContent } from "@/content/contracts";
 import { getNavigationItems } from "@/data/navigation";
+import { interfaceContent } from "@/data/interfaceContent";
 import type { ContentLanguage, Locale } from "@/i18n/config";
 
 type ContentProps = {
@@ -61,6 +62,9 @@ export default function Footer({ content, language, locale }: ContentProps) {
                 {link.label}
               </Link>
             ))}
+            <Link href={`/${locale}/contact#questions`} className="resonance-link text-sm tracking-[0.15em] text-gray-400 transition-all duration-300 hover:text-[var(--brand-blue)]">
+              {interfaceContent[language].visitorQuestions}
+            </Link>
           </StaggerItem>
 
           <StaggerItem distance="subtle">

@@ -1,5 +1,5 @@
 import type { ContentLanguage } from "@/i18n/config";
-import type { InquiryDraftLabels, InquiryError } from "@/lib/inquiry.mjs";
+import type { InquiryDraftLabels, InquiryError, InquiryTopic } from "@/lib/inquiry.mjs";
 
 export type InquiryLabels = InquiryDraftLabels & {
   title: string;
@@ -11,6 +11,7 @@ export type InquiryLabels = InquiryDraftLabels & {
   required: string;
   anyConcept: string;
   messageHint: string;
+  topicHints: Record<InquiryTopic, string>;
   limitHint: string;
   prepare: string;
   previewTitle: string;
@@ -26,6 +27,8 @@ export type InquiryLabels = InquiryDraftLabels & {
   edit: string;
   reset: string;
   resetConfirm: string;
+  confirmReset: string;
+  cancelReset: string;
   errors: Record<InquiryError, string>;
 };
 
@@ -45,6 +48,13 @@ export const inquiryContent = {
     required: "required",
     anyConcept: "A new idea / no specific concept",
     messageHint: "Share your idea, timing, and any relevant links. Up to 3,000 characters.",
+    topicHints: {
+      general: "Let us know what you would like to discuss and how we can help.",
+      artists: "Useful details: your creative role, links to your work, and the collaboration you are proposing.",
+      partners: "Useful details: your brand or organization, collaboration goals, and planned timing.",
+      venues: "Useful details: city, venue, possible dates, audience size, and technical needs.",
+      production: "Useful details: the concept or idea, intended use, project stage, and planned timing.",
+    },
     limitHint: "Up to {limit} characters.",
     prepare: "Preview email",
     previewTitle: "Your email draft",
@@ -63,6 +73,8 @@ export const inquiryContent = {
     edit: "Continue editing",
     reset: "Reset form",
     resetConfirm: "Reset this form and clear everything you entered?",
+    confirmReset: "Clear draft",
+    cancelReset: "Keep editing",
     errors: { required: "Please enter a message.", tooLong: "Please shorten this field to the indicated limit.", invalidEmail: "Enter a valid email address, or leave this optional field empty.", invalidChoice: "Please choose an available option." },
   },
   JP: {
@@ -80,6 +92,13 @@ export const inquiryContent = {
     required: "必須",
     anyConcept: "新しいアイデア・指定なし",
     messageHint: "アイデア、ご希望の時期、関連リンクなどをご記入ください。3,000文字以内。",
+    topicHints: {
+      general: "ご相談の内容と、ご希望のサポートについてお聞かせください。",
+      artists: "創作分野、作品へのリンク、ご提案のコラボレーションなどをご記入ください。",
+      partners: "ブランド・団体名、協業の目的、ご希望の時期などをご記入ください。",
+      venues: "都市、会場、候補日、観客規模、技術的なご要望などをご記入ください。",
+      production: "コンセプトやアイデア、用途、企画の段階、ご希望の時期などをご記入ください。",
+    },
     limitHint: "{limit}文字以内。",
     prepare: "メールをプレビュー",
     previewTitle: "メールの下書き",
@@ -98,6 +117,8 @@ export const inquiryContent = {
     edit: "編集を続ける",
     reset: "フォームをリセット",
     resetConfirm: "フォームをリセットして、入力した内容を消去しますか？",
+    confirmReset: "下書きを消去",
+    cancelReset: "編集を続ける",
     errors: { required: "お問い合わせ内容を入力してください。", tooLong: "表示されている文字数以内に短くしてください。", invalidEmail: "有効なメールアドレスを入力するか、空欄にしてください。", invalidChoice: "選択肢からお選びください。" },
   },
   CN: {
@@ -115,6 +136,13 @@ export const inquiryContent = {
     required: "必填",
     anyConcept: "新想法 / 暂不指定方案",
     messageHint: "可以介绍你的想法、计划时间和相关链接，最多 3,000 字。",
+    topicHints: {
+      general: "请介绍你希望讨论的事项，以及需要我们协助的内容。",
+      artists: "建议提供：创作方向、作品链接，以及希望开展的合作。",
+      partners: "建议提供：品牌或机构、合作目标，以及计划时间。",
+      venues: "建议提供：城市、场地、候选日期、观众规模和技术需求。",
+      production: "建议提供：相关方案或想法、用途、项目阶段和计划时间。",
+    },
     limitHint: "最多 {limit} 字。",
     prepare: "预览邮件",
     previewTitle: "你的邮件草稿",
@@ -133,6 +161,8 @@ export const inquiryContent = {
     edit: "继续编辑",
     reset: "重置表单",
     resetConfirm: "重置表单并清空已填写的内容？",
+    confirmReset: "确认清空",
+    cancelReset: "保留内容",
     errors: { required: "请填写需求内容。", tooLong: "请将内容缩短至标注的字数上限。", invalidEmail: "请填写有效的邮箱地址，或留空此选填项。", invalidChoice: "请选择列表中的选项。" },
   },
 } satisfies Record<ContentLanguage, InquiryLabels>;

@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 
 import StaticPage from "@/components/StaticPage";
 import ContactInquiry from "@/components/ContactInquiry";
+import VisitorQuestions from "@/components/VisitorQuestions";
+import { pageInquiryTopics, visitorContent } from "@/data/visitorContent";
+import { isApprovedContentMediaPath } from "@/data/contentMedia";
 import StructuredData from "@/components/StructuredData";
 import { getPageContent, getSiteContent } from "@/content/repository";
 import {
@@ -31,7 +34,19 @@ async function getPage(localeValue: string, pageValue: string) {
     notFound();
   }
 
-  return { content, language, locale: localeValue };
+  // Keep the fallback signal while omitting unpublished media paths from client props.
+  const displayContent = {
+    ...content,
+    sections: content.sections.map((section) => ({
+      ...section,
+      items: section.items?.map((item) => ({
+        ...item,
+        image: isApprovedContentMediaPath(item.image) ? item.image : undefined,
+        media: item.media ? Object.fromEntries(Object.entries(item.media).filter(([, path]) => isApprovedContentMediaPath(path))) : undefined,
+      })),
+    })),
+  };
+  return { content: displayContent, language, locale: localeValue };
 }
 
 export async function generateMetadata({
@@ -61,7 +76,19 @@ export default async function PublicPage({
       <StructuredData
         data={createPageStructuredData(result.content, result.locale)}
       />
-      <StaticPage content={result.content}>
+      <StaticPage
+        content={result.content}
+        journey={{
+          onThisPage: visitorContent[result.language].onThisPage,
+          inquiry: visitorContent[result.language].inquiry,
+          help: visitorContent[result.language].help,
+          nextStep: visitorContent[result.language].nextStep,
+          contactAction: visitorContent[result.language].contactAction,
+          description: result.content.slug === "contact" ? "" : visitorContent[result.language].nextSteps[result.content.slug],
+          topic: result.content.slug === "contact" ? "general" : pageInquiryTopics[result.content.slug],
+        }}
+        afterContent={result.content.slug === "contact" && <VisitorQuestions language={result.language} />}
+      >
         {page === "contact" && <ContactInquiry language={result.language} />}
       </StaticPage>
     </>
