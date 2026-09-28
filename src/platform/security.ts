@@ -139,7 +139,8 @@ export async function readJson(request: Request) {
       const next = await reader.read();
       if (next.done) break;
       length += next.value.length;
-      if (length > 100000) {
+      // Allow all three maximum-length translations, including multibyte text.
+      if (length > 160000) {
         await reader.cancel();
         throw new PlatformError("too-large", 413);
       }

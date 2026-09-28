@@ -6,10 +6,10 @@ import { getAdminState } from "@/platform/server";
 import { isLocale } from "@/i18n/config";
 import { platformContent } from "@/data/platformContent";
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = {
-  title: "héReSonare workspace",
-  robots: { index: false, follow: false },
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params; if (!isLocale(locale)) notFound();
+  return { title: platformContent[locale].manage, robots: { index: false, follow: false } };
+}
 export default async function ManagePage({
   params,
 }: {

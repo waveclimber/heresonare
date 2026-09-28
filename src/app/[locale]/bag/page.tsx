@@ -7,7 +7,10 @@ import { isLocale } from "@/i18n/config";
 import { getPublishedEntries } from "@/platform/server";
 import { storageConfigured } from "@/platform/store";
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { robots: { index: false, follow: true } };
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params; if (!isLocale(locale)) notFound();
+  return { title: platformContent[locale].bag, robots: { index: false, follow: true } };
+}
 export default async function BagPage({
   params,
 }: {

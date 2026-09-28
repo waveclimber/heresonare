@@ -320,9 +320,13 @@ try {
     });
   await rejects(() => p.readJson(request("https://evil.example")), "forbidden");
   await rejects(
-    () => p.readJson(request("http://127.0.0.1:3000", "x".repeat(100001))),
+    () => p.readJson(request("http://127.0.0.1:3000", "x".repeat(160001))),
     "too-large",
   );
+  const multilingual = entry("about");
+  for (const locale of p.locales) multilingual.translations[locale].body = "響".repeat(12000);
+  const decoded = await p.readJson(request("http://127.0.0.1:3000", JSON.stringify(multilingual)));
+  ok(p.parseEntry(decoded).translations.ja.body.length === 12000, "maximum multibyte translations fit the request limit");
   ok(
     await p.checkPassword(password, process.env.PLATFORM_ADMIN_PASSWORD_HASH),
     "password verification",

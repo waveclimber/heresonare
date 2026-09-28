@@ -134,6 +134,13 @@ try {
     );
   }
   const filtered = await fetch(`${origin}/en/catalog/tour?q=absent`);
+  for (const [locale, titles] of Object.entries({ en: ["Website workspace", "Enquiry basket", "Send an enquiry"], ja: ["ウェブサイト管理", "商品問い合わせリスト", "お問い合わせを送る"], "zh-cn": ["官网工作台", "商品意向单", "在线咨询"] })) {
+    for (const [index, path] of ["manage", "bag", "connect"].entries()) {
+      const page = await (await fetch(`${origin}/${locale}/${path}`)).text();
+      assert.ok(page.includes(`<title>${titles[index]}`), `${locale}/${path} has a localized document title`);
+      assert.match(page, /<meta name="robots" content="noindex/u);
+    }
+  }
   assert.match(await filtered.text(), /No matching items/u);
   const calendar = await fetch(
     `${origin}/api/platform/calendar/${id}?locale=ja`,
