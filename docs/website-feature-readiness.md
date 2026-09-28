@@ -1,6 +1,8 @@
 # Website feature readiness — 2026-09-29
 
-This pass prepares the public brand-site visitor journey. It does not claim that an unpublished catalog, checkout, ticketing system, CMS, or production deployment exists.
+The current platform pass adds all nine module catalogues/details, a localized administration workspace, draft/review/publish workflows, related content, event calendars, product enquiry baskets, private enquiry/order inboxes, local persistence and a PostgreSQL production adapter. See [platform-operations.md](./platform-operations.md) for the current module matrix, configuration, verification and limitations. Production accounts, real content and live deployment are not implied.
+
+The visitor-journey evidence below describes the preceding PR #44 baseline. Its remaining CMS/submission implementation items are superseded by the platform above; real provider and business inputs still remain.
 
 ## Available visitor features
 

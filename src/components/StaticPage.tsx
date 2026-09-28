@@ -35,7 +35,7 @@ export default function StaticPage({ content, children, journey, afterContent }:
       />
 
       <div className="mx-auto max-w-7xl px-6 pb-32">
-        <PageContents content={content} labels={journey} />
+        <PageContents content={content} labels={journey} locale={locale} />
         {children}
         <div className="grid gap-24">
           {content.sections.map((section) => (

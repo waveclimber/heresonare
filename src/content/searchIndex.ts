@@ -1,4 +1,6 @@
 import "server-only";
+import { getPublishedEntries } from "@/platform/server";
+import { recordPath } from "@/platform/domain";
 
 import { getPageContent, getProductionContent, getSiteContent } from "@/content/repository";
 import { getNavigationItems } from "@/data/navigation";
@@ -56,5 +58,9 @@ export async function getSearchIndex(locale: Locale): Promise<SearchEntry[]> {
       status: production.status ?? "",
     });
   });
+  for (const entry of await getPublishedEntries()) {
+    const content = entry.translations[locale];
+    entries.push({ href: recordPath(entry, locale), label: navigation.find((item) => item.key === entry.module)!.label, title: content.title, description: content.summary, keywords: `${content.body} ${entry.category} ${entry.location}`, kind: "page", status: "" });
+  }
   return entries;
 }

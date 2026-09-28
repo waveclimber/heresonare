@@ -2,6 +2,15 @@
 
 This ordered roadmap records direction, not fixed delivery dates. Each stage should become one or more scoped issues with owners, acceptance criteria, constraints, and validation steps before implementation.
 
+**Current module platform (2026-09-29):** All nine modules now have localized
+published catalogues and detail routes, with an admin workspace, draft/review/
+publish lifecycle, calendars, product enquiry basket, private inboxes, audit,
+content export and local/PostgreSQL persistence. This supersedes the older
+statements below that non-production details and content administration are
+entirely deferred. See [platform-operations.md](./platform-operations.md).
+Paid checkout, automatic email, approved business data/media and production
+provider configuration are still separate launch work.
+
 **Current visitor readiness (2026-09-29):** Localized search, contextual inquiry
 entry points, guided email drafts with copy/download/reset, section navigation,
 and visitor FAQs are implemented. See
