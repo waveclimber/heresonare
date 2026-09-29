@@ -31,7 +31,9 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export const dynamicParams = false;
+// Allow known locale pages to regenerate after publication invalidates their cache.
+// isLocale below continues to reject unsupported locale values.
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   return supportedLocales.map((locale) => ({ locale }));

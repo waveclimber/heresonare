@@ -128,7 +128,7 @@ export function assertOrigin(request: Request) {
   )
     throw new PlatformError("forbidden", 403);
 }
-export async function readJson(request: Request) {
+export async function readJson(request: Request, maximum = 160000) {
   assertOrigin(request);
   const reader = request.body?.getReader();
   if (!reader) throw new PlatformError("invalid");
@@ -140,7 +140,7 @@ export async function readJson(request: Request) {
       if (next.done) break;
       length += next.value.length;
       // Allow all three maximum-length translations, including multibyte text.
-      if (length > 160000) {
+      if (length > maximum) {
         await reader.cancel();
         throw new PlatformError("too-large", 413);
       }

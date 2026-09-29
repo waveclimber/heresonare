@@ -7,4 +7,8 @@ CREATE TABLE IF NOT EXISTS heresonare_platform (
 INSERT INTO heresonare_platform (id, document) VALUES (1,
   '{"version":1,"records":[],"submissions":[],"sessions":[],"limits":{},"audit":[]}'::jsonb
 ) ON CONFLICT (id) DO NOTHING;
+CREATE TABLE IF NOT EXISTS heresonare_media (
+  id uuid PRIMARY KEY,
+  data bytea NOT NULL CHECK (octet_length(data) <= 524288)
+);
 COMMIT;

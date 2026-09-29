@@ -4,6 +4,7 @@ import { createServer } from "node:net";
 import { mkdtemp, rm } from "node:fs/promises";
 import { resolve } from "node:path";
 import { randomUUID } from "node:crypto";
+import sharp from "sharp";
 import { loadPlatform } from "./platform-runtime.mjs";
 const p = await loadPlatform();
 const directory = await mkdtemp(resolve(".next/platform-http-"));
@@ -77,6 +78,33 @@ try {
   assert.match(session, /httponly/iu);
   assert.match(session, /samesite=strict/iu);
   cookie = session.split(";")[0];
+  const imageData = await sharp({
+    create: { width: 40, height: 30, channels: 3, background: "#115e59" },
+  })
+    .png()
+    .toBuffer();
+  const uploadBody = {
+    name: "HTTP cover",
+    data: imageData.toString("base64"),
+    rights: true,
+  };
+  assert.equal((await post("media", uploadBody, false)).status, 401);
+  assert.equal(
+    (await post("media", uploadBody, true, "https://other.example")).status,
+    403,
+  );
+  const upload = await post("media", uploadBody);
+  assert.equal(upload.status, 201);
+  const media = await upload.json();
+  const imageUrl = `${origin}/api/platform/media/${media.id}`;
+  assert.equal(
+    (await fetch(imageUrl)).status,
+    404,
+    "unpublished media private",
+  );
+  const privateImage = await fetch(imageUrl, { headers: { Cookie: cookie } });
+  assert.equal(privateImage.status, 200);
+  assert.match(privateImage.headers.get("cache-control"), /no-store/u);
   const input = {
     module: "tour",
     slug: "http-test-event",
@@ -86,7 +114,7 @@ try {
         {
           title: `HTTP fixture ${locale}`,
           summary: `Calendar summary ${locale}`,
-          body: `Test text ${locale}`,
+          body: `## Test heading ${locale}\n\n**Bold text**\n- One\n- Two\n\n<script>alert(1)</script>`,
         },
       ]),
     ),
@@ -99,6 +127,11 @@ try {
     currency: "JPY",
     available: false,
     related: [],
+    featured: true,
+    cover: {
+      id: media.id,
+      alt: { en: "Test image", ja: "テスト画像", "zh-cn": "测试图片" },
+    },
   };
   const create = await post("admin", { action: "save", entry: input });
   assert.equal(create.status, 200);
@@ -133,11 +166,68 @@ try {
       ),
     );
   }
+  assert.equal(
+    (await fetch(imageUrl)).headers.get("content-type"),
+    "image/webp",
+  );
+  const detail = await (
+    await fetch(`${origin}/en/catalog/tour/http-test-event`)
+  ).text();
+  assert.match(detail, /<strong>Bold text<\/strong>/u);
+  assert.match(detail, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/u);
+  for (const path of ["/en", "/en/tour"]) {
+    const highlighted = await fetch(`${origin}${path}`);
+    assert.equal(highlighted.status, 200, `${path}: highlights page available`);
+    assert.ok((await highlighted.text()).includes("HTTP fixture en"), `${path}: published content reaches home/section`);
+  }
+  const changed = structuredClone(input);
+  changed.translations.en.title = "PRIVATE EDITORIAL DRAFT";
+  assert.equal(
+    (await post("admin", { action: "save", id, revision: 3, entry: changed }))
+      .status,
+    200,
+  );
+  assert.doesNotMatch(
+    await (await fetch(`${origin}/en`)).text(),
+    /PRIVATE EDITORIAL DRAFT/u,
+  );
+  assert.equal(
+    (
+      await post("admin", {
+        action: "restore",
+        id,
+        revision: 4,
+        previousRevision: 3,
+      })
+    ).status,
+    200,
+  );
+  assert.equal(
+    (
+      await post("admin", {
+        action: "import",
+        entry: { ...changed, id },
+        revision: 5,
+      })
+    ).status,
+    200,
+  );
+  assert.doesNotMatch(
+    await (await fetch(`${origin}/en/catalog/tour/http-test-event`)).text(),
+    /PRIVATE EDITORIAL DRAFT/u,
+  );
   const filtered = await fetch(`${origin}/en/catalog/tour?q=absent`);
-  for (const [locale, titles] of Object.entries({ en: ["Website workspace", "Enquiry basket", "Send an enquiry"], ja: ["ウェブサイト管理", "商品問い合わせリスト", "お問い合わせを送る"], "zh-cn": ["官网工作台", "商品意向单", "在线咨询"] })) {
+  for (const [locale, titles] of Object.entries({
+    en: ["Website workspace", "Enquiry basket", "Send an enquiry"],
+    ja: ["ウェブサイト管理", "商品問い合わせリスト", "お問い合わせを送る"],
+    "zh-cn": ["官网工作台", "商品意向单", "在线咨询"],
+  })) {
     for (const [index, path] of ["manage", "bag", "connect"].entries()) {
       const page = await (await fetch(`${origin}/${locale}/${path}`)).text();
-      assert.ok(page.includes(`<title>${titles[index]}`), `${locale}/${path} has a localized document title`);
+      assert.ok(
+        page.includes(`<title>${titles[index]}`),
+        `${locale}/${path} has a localized document title`,
+      );
       assert.match(page, /<meta name="robots" content="noindex/u);
     }
   }
@@ -184,7 +274,7 @@ try {
     /http-visitor@example.test|sessions|password/u,
   );
   assert.equal(
-    (await post("admin", { action: "unpublish", id, revision: 3 })).status,
+    (await post("admin", { action: "unpublish", id, revision: 6 })).status,
     200,
   );
   assert.equal(
@@ -195,6 +285,17 @@ try {
     (await fetch(`${origin}/api/platform/calendar/${id}`)).status,
     404,
   );
+  assert.equal(
+    (await fetch(imageUrl)).status,
+    404,
+    "unpublishing withdraws image access",
+  );
+  for (const path of ["/en", "/en/tour"])
+    assert.doesNotMatch(
+      await (await fetch(`${origin}${path}`)).text(),
+      /HTTP fixture en/u,
+      "highlights removed on unpublish",
+    );
   assert.equal((await post("session", { action: "logout" })).status, 200);
   assert.equal(
     (

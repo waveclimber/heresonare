@@ -24,18 +24,20 @@
     "check:site": "node scripts/check-site-integrity.mjs",
     "check:inquiry": "node scripts/check-inquiry.mjs",
     "check:search": "node scripts/check-search.mjs",
-    "check": "npm run lint && npm run typecheck && npm run check:ci-security && npm run check:config && npm run check:content-boundary && npm run check:content-contract && npm run check:error-recovery && npm run check:observability && npm run check:live-contract && npm run check:content && npm run check:inquiry && npm run check:search && npm run check:platform && npm run build && npm run check:platform-http && npm run check:site && npm run check:performance",
+    "check": "npm run lint && npm run typecheck && npm run check:ci-security && npm run check:config && npm run check:content-boundary && npm run check:content-contract && npm run check:error-recovery && npm run check:observability && npm run check:live-contract && npm run check:content && npm run check:inquiry && npm run check:search && npm run check:platform && npm run build && npm run check:performance && npm run check:platform-http && npm run check:site",
     "platform:setup": "node scripts/platform-setup.mjs",
     "platform:migrate": "node scripts/platform-migrate.mjs",
     "check:platform": "node scripts/check-platform.mjs",
-    "check:platform-http": "node scripts/check-platform-http.mjs"
+    "check:platform-http": "node scripts/check-platform-http.mjs",
+    "platform:doctor": "node scripts/platform-doctor.mjs"
   },
   "dependencies": {
     "motion": "12.42.2",
     "next": "16.3.5",
     "pg": "^8.23.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "sharp": "0.35.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

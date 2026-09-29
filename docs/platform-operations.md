@@ -1,5 +1,7 @@
 # Website module platform
 
+The current editorial extension is documented in [editorial-operations.md](./editorial-operations.md): image uploads, homepage selections, formatted editing, history, draft imports and the additive media-table migration. See [owner-launch-checklist.md](./owner-launch-checklist.md) for owner inputs.
+
 ## Implemented scope
 
 All nine existing sections have a shared typed publishing system. Existing brand/concept pages and production URLs remain intact. Each section links to its new published catalogue at `/{locale}/catalog/{section}`; entries use `/{locale}/catalog/{section}/{slug}`. No fictional business records are seeded into production.
@@ -42,7 +44,7 @@ Configure these as private hosting variables, never `NEXT_PUBLIC_*`:
 
 Run `npm run platform:migrate` in an authorized environment with the database configured, before enabling the site. The idempotent transaction creates schema version 1 without replacing existing data. Run migrations with a schema-owner role; the runtime role needs SELECT/UPDATE on `heresonare_platform`. The application does not perform schema DDL on requests. Bind hosting/domain using the existing domain runbook; preserve enterprise email DNS records.
 
-The PostgreSQL adapter uses a single client per transaction and a locked versioned JSONB document. This keeps publishing, revisions, submissions, sessions and quotas atomic across app instances. It intentionally targets a small editorial site: maximum 500 content records, 2,000 enquiries and the latest 500 audit events. Split into normalized indexed tables and paginated queries before raising these limits or accepting high traffic. Each process uses a pool of at most three connections; budget the managed database connection limit across instances.
+The PostgreSQL adapter uses a single client per transaction and a locked versioned JSONB document. This keeps publishing, revisions, submissions, sessions and quotas atomic across app instances. It intentionally targets a small editorial site: maximum 500 content records, 2,000 enquiries, a 32 MiB JSON document and the latest 500 audit events. Split into normalized indexed tables and paginated queries before raising these limits or accepting high traffic. Each process uses a pool of at most three connections; budget the managed database connection limit across instances.
 
 ## Authentication and data handling
 
@@ -55,13 +57,13 @@ The PostgreSQL adapter uses a single client per transaction and a locked version
 
 ## Backups and recovery
 
-The authenticated content export downloads all draft/published content in versioned JSON, excluding enquiries, sessions and passwords. It is an editorial export, not a full database backup. It is not automatically imported or published.
+The authenticated content export downloads draft/published content and retained history in versioned JSON, excluding image bytes, enquiries, sessions and passwords. It is an editorial export, not a full database backup. The workspace can import selected current drafts without publishing them; see the editorial extension for limits and full recovery requirements.
 
 Use the managed provider's encrypted backups/PITR for the PostgreSQL table and test restores in an isolated database. Stop writers before a local backup of `.local-platform/state.json`. To recover, restore the database snapshot (or local state file) with the app stopped, rotate the administrator hash to revoke sessions, then validate public catalogues and inbox counts before reopening traffic. Schema v1 is retained by code rollback; preserve the database when rolling back source. Keep an authorized offline copy of necessary local test work before any workspace cleanup.
 
 ## Integrations and remaining business inputs
 
-Official HTTPS links provide listening, viewing, ticket and external store entry points without embedding third-party players or inventing transactions. No automatic outbound email, payment capture, checkout webhook, stock reservation, fulfillment workflow or file upload is claimed. A real payment/fulfillment account, inventory and policies are required before adding paid checkout. A verified email sender is required before automatic receipts/notifications. Approved artist/release/event/product copy and licensed media remain necessary; the existing approved-media registry stays authoritative for the original pages.
+Official HTTPS links provide listening, viewing, ticket and external store entry points without embedding third-party players or inventing transactions. Image uploads are available through the editorial extension. Automatic outbound email, payment capture, checkout webhooks, stock reservation, fulfillment and audio/video uploads remain unimplemented. A real payment/fulfillment account, inventory and policies are required before adding paid checkout. A verified email sender is required before automatic receipts/notifications. Approved artist/release/event/product copy and licensed media remain necessary; the existing approved-media registry stays authoritative for the original pages.
 
 No live database provider, mailbox delivery, merchant account, DNS change or production deployment was configured by this code change. Local setup and CI test credentials are isolated from production.
 

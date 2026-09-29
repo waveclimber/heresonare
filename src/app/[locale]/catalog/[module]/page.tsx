@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PlatformFrame from "@/components/platform/PlatformFrame";
+import CoverImage from "@/components/platform/CoverImage";
 import { platformContent } from "@/data/platformContent";
 import { getNavigationItems, isNavigationKey } from "@/data/navigation";
 import { contentLanguageByLocale, isLocale } from "@/i18n/config";
@@ -121,6 +122,7 @@ export default async function CataloguePage({
       <div className="p-grid">
         {matches.map((entry) => (
           <article className="p-card" key={entry.id}>
+            <CoverImage cover={entry.cover} locale={locale} />
             <p className="p-kicker">{entry.category || label}</p>
             <h2>
               <a href={recordPath(entry, locale)}>

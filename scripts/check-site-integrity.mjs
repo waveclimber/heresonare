@@ -877,7 +877,8 @@ async function checkRuntimeRoutes() {
       expectedRoutes.map(async (route) => {
         const response = await fetch(`${runtimeOrigin}${route}`);
         checkSecurityHeaders(response, route);
-        checkCacheControl(response, route, "s-maxage=31536000");
+        const hasPublishedHighlights = route.split("/").filter(Boolean).length <= 2;
+        checkCacheControl(response, route, hasPublishedHighlights ? "s-maxage=60, stale-while-revalidate=31535940" : "s-maxage=31536000");
 
         return { route, status: response.status };
       }),

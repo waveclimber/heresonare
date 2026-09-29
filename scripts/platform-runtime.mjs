@@ -5,11 +5,11 @@ import ts from "typescript";
 export async function loadPlatform() {
   const directory = resolve(".next/platform-tools");
   await mkdir(directory, { recursive: true });
-  for (const name of ["domain", "store", "security", "service"]) {
+  for (const name of ["domain", "store", "security", "service", "media"]) {
     const source = (
       await readFile(resolve(`src/platform/${name}.ts`), "utf8")
     ).replace(
-      /from "\.\/(domain|store|security|service)"/gu,
+      /from "\.\/(domain|store|security|service|media)"/gu,
       'from "./$1.mjs"',
     );
     const { outputText } = ts.transpileModule(source, {
@@ -23,7 +23,7 @@ export async function loadPlatform() {
   return Object.assign(
     {},
     ...(await Promise.all(
-      ["domain", "store", "security", "service"].map(
+      ["domain", "store", "security", "service", "media"].map(
         (name) => import(pathToFileURL(resolve(directory, `${name}.mjs`)).href),
       ),
     )),

@@ -23,6 +23,7 @@ export async function getAdminState() {
     state: sessionValid(state, token)
       ? {
           records: state.records,
+          media: state.media ?? [],
           submissions: state.submissions.map((item) => ({
             id: item.id,
             kind: item.kind,

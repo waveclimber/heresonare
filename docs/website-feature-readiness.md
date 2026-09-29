@@ -1,5 +1,7 @@
 # Website feature readiness — 2026-09-29
 
+**Editorial extension (2026-09-29):** Image library, covers, featured home/section content, formatted editing, draft history/copy/import, unsaved-change guards and batch enquiry statuses are implemented. Read [editorial-operations.md](./editorial-operations.md) for migration and recovery details and [owner-launch-checklist.md](./owner-launch-checklist.md) for remaining account/content inputs.
+
 The current platform pass adds all nine module catalogues/details, a localized administration workspace, draft/review/publish workflows, related content, event calendars, product enquiry baskets, private enquiry/order inboxes, local persistence and a PostgreSQL production adapter. See [platform-operations.md](./platform-operations.md) for the current module matrix, configuration, verification and limitations. Production accounts, real content and live deployment are not implied.
 
 The visitor-journey evidence below describes the preceding PR #44 baseline. Its remaining CMS/submission implementation items are superseded by the platform above; real provider and business inputs still remain.

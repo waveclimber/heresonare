@@ -1,5 +1,11 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { editorialContent } from "@/data/editorialContent";
+import RichText from "./RichText";
+import CoverImage from "./CoverImage";
+import BodyEditor from "./BodyEditor";
+import MediaLibrary from "./MediaLibrary";
+import BackupRestore from "./BackupRestore";
 import { useRouter } from "next/navigation";
 import { platformContent } from "@/data/platformContent";
 import { getNavigationItems } from "@/data/navigation";
@@ -22,6 +28,7 @@ type WorkspaceState = {
   records: ContentRecord[];
   submissions: Omit<Submission, "key" | "digest">[];
   audit: State["audit"];
+  media: NonNullable<State["media"]>;
 };
 function blank(module: Module): Entry {
   return {
@@ -57,6 +64,7 @@ export default function AdminWorkspace({
   configured: boolean;
 }) {
   const c = platformContent[locale];
+  const e = editorialContent[locale];
   const router = useRouter();
   const api = usePlatformRequest(c);
   const navigation = getNavigationItems(
@@ -67,10 +75,80 @@ export default function AdminWorkspace({
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<Entry | null>(null);
   const [notice, setNotice] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [selected, setSelected] = useState<string[]>([]);
+  const [batchStatus, setBatchStatus] = useState("in-progress");
+  const [externalBusy, setExternalBusy] = useState(false);
+  const [pending, setPending] = useState<{ run(): void } | null>(null);
+  const pendingSource = useRef<HTMLElement | null>(null);
+  function keepEditing() {
+    setPending(null);
+    setTimeout(() => pendingSource.current?.focus(), 0);
+  }
+  const [initial, setInitial] = useState("");
+  const dirty = Boolean(editing && JSON.stringify(editing) !== initial);
+  useEffect(() => {
+    if (!dirty && !externalBusy) return;
+    const guard = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", guard);
+    return () => window.removeEventListener("beforeunload", guard);
+  }, [dirty, externalBusy]);
+  useEffect(() => {
+    if (!dirty && !externalBusy) return;
+    const guard = (event: MouseEvent) => {
+      if (
+        event.button ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      )
+        return;
+      const link =
+        event.target instanceof Element
+          ? event.target.closest<HTMLAnchorElement>("a[href]")
+          : null;
+      if (!link || link.download || (link.target && link.target !== "_self"))
+        return;
+      const url = new URL(link.href);
+      if (
+        url.origin !== window.location.origin ||
+        (url.pathname === window.location.pathname &&
+          url.search === window.location.search)
+      )
+        return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      pendingSource.current = link;
+      if (!externalBusy)
+        setPending({
+          run: () => {
+            setEditing(null);
+            router.push(url.pathname + url.search + url.hash);
+          },
+        });
+    };
+    document.addEventListener("click", guard, true);
+    return () => document.removeEventListener("click", guard, true);
+  }, [dirty, externalBusy, router]);
+  function transition(run: () => void) {
+    if (externalBusy || api.busy) return;
+    if (dirty) {
+      pendingSource.current =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+      setPending({ run });
+    } else run();
+  }
   const [confirmation, setConfirmation] = useState<{
     action: string;
     id: string;
     revision: number;
+    previousRevision?: number;
   } | null>(null);
   const editorHeading = useRef<HTMLHeadingElement>(null);
   const listHeading = useRef<HTMLHeadingElement>(null);
@@ -90,18 +168,24 @@ export default function AdminWorkspace({
       setEditing(null);
       setConfirmation(null);
       setNotice(c.saved);
+      setSelected([]);
       router.refresh();
       setTimeout(() => listHeading.current?.focus(), 0);
     }
   }
   function select(next: string) {
-    setView(next);
-    setQuery("");
-    setEditing(null);
-    setConfirmation(null);
-    setNotice("");
+    transition(() => {
+      setView(next);
+      setQuery("");
+      setEditing(null);
+      setConfirmation(null);
+      setNotice("");
+      setStatusFilter("");
+      setSelected([]);
+    });
   }
   function openEditor(entry: Entry) {
+    setInitial(JSON.stringify(entry));
     setEditing(structuredClone(entry));
     setNotice("");
     setTimeout(() => editorHeading.current?.focus(), 0);
@@ -176,6 +260,7 @@ export default function AdminWorkspace({
   const records = state.records.filter(
     ({ draft }) =>
       draft.module === view &&
+      (!statusFilter || draft.status === statusFilter) &&
       `${draft.slug} ${Object.values(draft.translations)
         .map((translation) => translation.title)
         .join(" ")}`
@@ -185,6 +270,7 @@ export default function AdminWorkspace({
   const submissions = state.submissions.filter(
     (item) =>
       item.kind === (view === "orders" ? "order" : "inquiry") &&
+      (!statusFilter || item.status === statusFilter) &&
       `${item.name} ${item.email} ${item.message} ${item.id}`
         .toLowerCase()
         .includes(query.toLowerCase()),
@@ -192,7 +278,14 @@ export default function AdminWorkspace({
   return (
     <>
       <div className="p-row">
-        <a className="p-button" href={`/${locale}`}>
+        <a
+          className="p-button"
+          href={`/${locale}`}
+          onClick={(event) => {
+            event.preventDefault();
+            transition(() => router.push(`/${locale}`));
+          }}
+        >
           {c.home}
         </a>
         <a className="p-button" href="/api/platform/export" download>
@@ -200,18 +293,50 @@ export default function AdminWorkspace({
         </a>
         <button
           className="p-button"
-          disabled={api.busy}
-          onClick={async () => {
-            if (
-              await api.request("/api/platform/session", { action: "logout" })
-            )
-              router.refresh();
-          }}
+          disabled={api.busy || externalBusy}
+          onClick={() =>
+            transition(async () => {
+              if (
+                await api.request("/api/platform/session", { action: "logout" })
+              ) {
+                setEditing(null);
+                setView("dashboard");
+                router.refresh();
+              }
+            })
+          }
         >
           {c.logout}
         </button>
       </div>
       <p className="p-muted">{c.adminIntro}</p>
+      {pending && (
+        <div
+          className="p-confirm"
+          role="group"
+          aria-label={e.unsaved}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") keepEditing();
+          }}
+        >
+          <p>{e.unsaved}</p>
+          <div className="p-row">
+            <button autoFocus className="p-button" onClick={keepEditing}>
+              {e.keep}
+            </button>
+            <button
+              className="p-button"
+              onClick={() => {
+                const run = pending.run;
+                setPending(null);
+                run();
+              }}
+            >
+              {e.discard}
+            </button>
+          </div>
+        </div>
+      )}
       <div className="p-admin-layout">
         <nav className="p-sidebar" aria-label={c.manage}>
           {[
@@ -220,11 +345,14 @@ export default function AdminWorkspace({
             ["inbox", c.inbox],
             ["orders", c.orders],
             ["activity", c.activity],
+            ["media", e.media],
+            ["backup", e.backup],
           ].map(([key, label]) => (
             <button
               key={key}
               className="p-button"
               aria-pressed={view === key}
+              disabled={api.busy || externalBusy}
               onClick={() => select(key)}
             >
               {label}
@@ -239,6 +367,8 @@ export default function AdminWorkspace({
                 inbox: c.inbox,
                 orders: c.orders,
                 activity: c.activity,
+                media: e.media,
+                backup: e.backup,
               }[view]}
           </h2>
           {message}
@@ -252,9 +382,11 @@ export default function AdminWorkspace({
               }}
             >
               <p>
-                {confirmation.action === "unpublish"
-                  ? c.confirmUnpublish
-                  : c.confirmDelete}
+                {confirmation.action === "restore"
+                  ? e.confirmRestore
+                  : confirmation.action === "unpublish"
+                    ? c.confirmUnpublish
+                    : c.confirmDelete}
               </p>
               <div className="p-row">
                 <button
@@ -311,7 +443,26 @@ export default function AdminWorkspace({
                 <dd>{c.mailManual}</dd>
               </dl>
               <p className="p-muted">{c.reviewNote}</p>
+              <h3>{e.readiness}</h3>
+              <p>{e.readinessIntro}</p>
             </>
+          )}
+          {view === "media" && (
+            <MediaLibrary
+              locale={locale}
+              media={state.media}
+              refresh={() => router.refresh()}
+              onBusy={setExternalBusy}
+            />
+          )}
+          {view === "backup" && (
+            <BackupRestore
+              locale={locale}
+              records={state.records}
+              media={state.media}
+              refresh={() => router.refresh()}
+              onBusy={setExternalBusy}
+            />
           )}
           {modules.includes(view as Module) && !editing && (
             <>
@@ -331,6 +482,22 @@ export default function AdminWorkspace({
                 </label>
               </div>
               <p className="p-muted">{c.liveVersion}</p>
+              <label className="p-field">
+                {c.status}
+                <select
+                  value={statusFilter}
+                  onChange={(event) => setStatusFilter(event.target.value)}
+                >
+                  <option value="">{e.statusAll}</option>
+                  {["draft", "review", "published", "archived"].map(
+                    (status) => (
+                      <option key={status} value={status}>
+                        {statuses[status]}
+                      </option>
+                    ),
+                  )}
+                </select>
+              </label>
               {!records.length && <p>{c.noRecords}</p>}
               {records.map((record) => (
                 <article className="p-card" key={record.draft.id}>
@@ -348,6 +515,21 @@ export default function AdminWorkspace({
                       onClick={() => openEditor(record.draft)}
                     >
                       {c.edit}
+                    </button>
+                    <button
+                      className="p-button"
+                      onClick={() =>
+                        openEditor({
+                          ...structuredClone(record.draft),
+                          id: "",
+                          slug: "",
+                          revision: 0,
+                          status: "draft",
+                          updatedAt: "",
+                        })
+                      }
+                    >
+                      {e.duplicate}
                     </button>
                     {record.draft.status === "draft" && (
                       <button
@@ -427,12 +609,51 @@ export default function AdminWorkspace({
                           {record.draft.translations[language].title}
                         </h3>
                         <p>{record.draft.translations[language].summary}</p>
-                        <p className="p-body">
-                          {record.draft.translations[language].body}
-                        </p>
+                        <CoverImage
+                          cover={record.draft.cover}
+                          locale={language}
+                        />
+                        <RichText
+                          text={record.draft.translations[language].body}
+                        />
                       </section>
                     ))}
                   </details>
+                  {!!record.history?.length && (
+                    <details>
+                      <summary className="p-button">{e.history}</summary>
+                      <p>{e.restoreHelp}</p>
+                      {record.history.map((previous) => (
+                        <div key={previous.revision} className="p-divider">
+                          <p>
+                            {previous.updatedAt} ·{" "}
+                            {previous.translations[locale].title} · #
+                            {previous.revision}
+                          </p>
+                          <details>
+                            <summary className="p-button">{c.preview}</summary>
+                            <RichText
+                              text={previous.translations[locale].body}
+                            />
+                          </details>
+                          <button
+                            className="p-button"
+                            disabled={api.busy}
+                            onClick={() =>
+                              setConfirmation({
+                                action: "restore",
+                                id: record.draft.id,
+                                revision: record.draft.revision,
+                                previousRevision: previous.revision,
+                              })
+                            }
+                          >
+                            {e.restore}
+                          </button>
+                        </div>
+                      ))}
+                    </details>
+                  )}
                 </article>
               ))}
             </>
@@ -468,6 +689,46 @@ export default function AdminWorkspace({
                   />
                 </label>
                 <p className="p-muted">{c.identityNote}</p>
+                <label className="p-check">
+                  <input
+                    type="checkbox"
+                    checked={editing.featured ?? false}
+                    onChange={(event) =>
+                      field("featured", event.target.checked)
+                    }
+                  />
+                  {e.featured}
+                </label>
+                <p className="p-muted">{e.featuredHelp}</p>
+                <label className="p-field">
+                  {e.cover}
+                  <select
+                    value={editing.cover?.id ?? ""}
+                    onChange={(event) =>
+                      field(
+                        "cover",
+                        event.target.value
+                          ? {
+                              id: event.target.value,
+                              alt: editing.cover?.alt ?? {
+                                en: "",
+                                ja: "",
+                                "zh-cn": "",
+                              },
+                            }
+                          : undefined,
+                      )
+                    }
+                  >
+                    <option value="">{e.noCover}</option>
+                    {state.media.map((asset) => (
+                      <option key={asset.id} value={asset.id}>
+                        {asset.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <CoverImage cover={editing.cover} locale={locale} />
                 {locales.map((language) => (
                   <fieldset key={language}>
                     <legend>
@@ -477,7 +738,25 @@ export default function AdminWorkspace({
                           ? "日本語"
                           : "简体中文"}
                     </legend>
-                    {(["title", "summary", "body"] as const).map((key) => (
+                    {editing.cover && (
+                      <label className="p-field">
+                        {e.alt}
+                        <input
+                          maxLength={240}
+                          value={editing.cover.alt[language]}
+                          onChange={(event) =>
+                            field("cover", {
+                              ...editing.cover,
+                              alt: {
+                                ...editing.cover!.alt,
+                                [language]: event.target.value,
+                              },
+                            })
+                          }
+                        />
+                      </label>
+                    )}
+                    {(["title", "summary"] as const).map((key) => (
                       <label className="p-field" key={key}>
                         {c[key]}
                         {key === "title" ? (
@@ -511,6 +790,20 @@ export default function AdminWorkspace({
                         )}
                       </label>
                     ))}
+                    <BodyEditor
+                      label={c.body}
+                      locale={locale}
+                      value={editing.translations[language].body}
+                      onChange={(body) =>
+                        field("translations", {
+                          ...editing.translations,
+                          [language]: {
+                            ...editing.translations[language],
+                            body,
+                          },
+                        })
+                      }
+                    />
                   </fieldset>
                 ))}
                 <label className="p-field">
@@ -644,7 +937,7 @@ export default function AdminWorkspace({
                   <button
                     type="button"
                     className="p-button"
-                    onClick={() => setEditing(null)}
+                    onClick={() => transition(() => setEditing(null))}
                   >
                     {c.cancel}
                   </button>
@@ -662,9 +955,81 @@ export default function AdminWorkspace({
                 />
               </label>
               <p className="p-muted">{c.retained}</p>
+              <div className="p-row">
+                <label className="p-field">
+                  {c.status}
+                  <select
+                    value={statusFilter}
+                    onChange={(event) => {
+                      setStatusFilter(event.target.value);
+                      setSelected([]);
+                    }}
+                  >
+                    <option value="">{e.statusAll}</option>
+                    {["new", "in-progress", "resolved", "closed"].map(
+                      (status) => (
+                        <option key={status} value={status}>
+                          {statuses[status]}
+                        </option>
+                      ),
+                    )}
+                  </select>
+                </label>
+                <label className="p-field">
+                  {e.batch}
+                  <select
+                    value={batchStatus}
+                    onChange={(event) => setBatchStatus(event.target.value)}
+                  >
+                    {["new", "in-progress", "resolved", "closed"].map(
+                      (status) => (
+                        <option key={status} value={status}>
+                          {statuses[status]}
+                        </option>
+                      ),
+                    )}
+                  </select>
+                </label>
+                <button
+                  className="p-button"
+                  disabled={!selected.length || api.busy}
+                  onClick={() =>
+                    act({
+                      action: "submission-batch",
+                      status: batchStatus,
+                      items: state.submissions
+                        .filter((item) => selected.includes(item.id))
+                        .map((item) => ({
+                          id: item.id,
+                          revision: item.revision,
+                        })),
+                    })
+                  }
+                >
+                  {e.batch} ({selected.length})
+                </button>
+              </div>
+              <p className="p-muted">{e.noneSelected}</p>
               {!submissions.length && <p>{c.noRecords}</p>}
               {submissions.map((item) => (
                 <article className="p-card" key={item.id}>
+                  <label className="p-check">
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(item.id)}
+                      disabled={
+                        !selected.includes(item.id) && selected.length >= 50
+                      }
+                      onChange={(event) =>
+                        setSelected((ids) =>
+                          event.target.checked
+                            ? [...ids, item.id]
+                            : ids.filter((id) => id !== item.id),
+                        )
+                      }
+                    />
+                    {e.select} · {item.name}
+                  </label>
                   <p className="p-kicker">
                     {statuses[item.status]} · {item.locale}
                   </p>
@@ -755,6 +1120,10 @@ export default function AdminWorkspace({
                             order: c.orders,
                             "submission-status": c.status,
                             "submission-delete": c.delete,
+                            restore: e.restore,
+                            import: e.backup,
+                            "media-upload": e.upload,
+                            "media-delete": c.delete,
                           } as Record<string, string>
                         )[item.action] ?? item.action}
                       </td>

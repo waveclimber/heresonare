@@ -11,6 +11,7 @@ import {
   type Entry,
   type State,
   type Submission,
+  type ContentRecord,
 } from "./domain";
 import { audit, hash, sessionValid, throttle } from "./security";
 import type { Store } from "./store";
@@ -21,18 +22,155 @@ function admin(state: State, token: string | undefined) {
 function revision(actual: number, expected: unknown) {
   if (actual !== expected) throw new PlatformError("conflict", 409);
 }
+function remember(state: State, record: ContentRecord) {
+  record.history = [
+    structuredClone(record.draft),
+    ...(record.history ?? []),
+  ].slice(0, 5);
+  while (
+    state.records.reduce(
+      (count, item) => count + (item.history?.length ?? 0),
+      0,
+    ) > 100
+  ) {
+    const oldest = state.records
+      .filter((item) => item.history?.length)
+      .sort((a, b) =>
+        a
+          .history!.at(-1)!
+          .updatedAt.localeCompare(b.history!.at(-1)!.updatedAt),
+      )[0];
+    oldest.history!.pop();
+  }
+}
+function assertMedia(state: State, entry: Pick<Entry, "cover">) {
+  if (entry.cover && !state.media?.some((item) => item.id === entry.cover?.id))
+    throw new PlatformError("invalid-media");
+}
 export async function manage(
   store: Store,
   token: string | undefined,
   value: unknown,
 ) {
   const input = object(value);
-  return store.change((state) => {
+  return store.change(async (state, assets) => {
     admin(state, token);
     const now = new Date().toISOString();
     const id = typeof input.id === "string" ? input.id : "";
+    if (input.action === "media-delete") {
+      if (!state.media?.some((item) => item.id === id))
+        throw new PlatformError("not-found", 404);
+      if (
+        state.records.some((record) =>
+          [record.draft, record.published, ...(record.history ?? [])].some(
+            (entry) => entry?.cover?.id === id,
+          ),
+        )
+      )
+        throw new PlatformError("media-referenced", 409);
+      await assets.remove(id);
+      state.media = state.media.filter((item) => item.id !== id);
+      audit(state, "media-delete", id);
+      return { id };
+    }
+    if (input.action === "restore") {
+      const record = state.records.find((item) => item.draft.id === id);
+      if (!record) throw new PlatformError("not-found", 404);
+      revision(record.draft.revision, input.revision);
+      const previous = record.history?.find(
+        (item) => item.revision === input.previousRevision,
+      );
+      if (!previous) throw new PlatformError("not-found", 404);
+      const restored = structuredClone(previous);
+      remember(state, record);
+      record.draft = {
+        ...restored,
+        status: "draft",
+        revision: record.draft.revision + 1,
+        updatedAt: now,
+      };
+      audit(state, "restore", id);
+      return { id };
+    }
+    if (input.action === "import") {
+      const entry = object(input.entry);
+      const fields = parseEntry(entry);
+      if (
+        !/^[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}$/u.test(String(entry.id))
+      )
+        throw new PlatformError("invalid");
+      const current = state.records.find((item) => item.draft.id === entry.id);
+      revision(current?.draft.revision ?? 0, input.revision);
+      if (
+        current &&
+        (current.draft.slug !== fields.slug ||
+          current.draft.module !== fields.module)
+      )
+        throw new PlatformError("identity-fixed");
+      if (
+        state.records.some(
+          (item) =>
+            item.draft.id !== entry.id &&
+            item.draft.module === fields.module &&
+            item.draft.slug === fields.slug,
+        )
+      )
+        throw new PlatformError("slug-used", 409);
+      if (!current && state.records.length >= 500)
+        throw new PlatformError("capacity", 409);
+      // Content-only exports do not contain image bytes; the preview identifies missing covers.
+      if (
+        fields.cover &&
+        !state.media?.some((item) => item.id === fields.cover?.id)
+      )
+        delete fields.cover;
+      const draft: Entry = {
+        ...fields,
+        id: String(entry.id),
+        status: "draft",
+        revision: (current?.draft.revision ?? 0) + 1,
+        updatedAt: now,
+      };
+      if (current) {
+        remember(state, current);
+        current.draft = draft;
+      } else state.records.unshift({ draft, published: null });
+      audit(state, "import", draft.id);
+      return { id: draft.id };
+    }
+    if (input.action === "submission-batch") {
+      const status = oneOf(input.status, [
+        "new",
+        "in-progress",
+        "resolved",
+        "closed",
+      ]);
+      if (
+        !Array.isArray(input.items) ||
+        !input.items.length ||
+        input.items.length > 50
+      )
+        throw new PlatformError("invalid");
+      const items = input.items.map((value) => {
+        const expected = object(value);
+        const item = state.submissions.find((item) => item.id === expected.id);
+        if (!item) throw new PlatformError("not-found", 404);
+        revision(item.revision, expected.revision);
+        return item;
+      });
+      if (new Set(items).size !== items.length)
+        throw new PlatformError("invalid");
+      for (const item of items) {
+        item.status = status;
+        item.revision++;
+        item.updatedAt = now;
+        audit(state, "submission-status", item.id);
+      }
+      return {};
+    }
     if (input.action === "save") {
       const fields = parseEntry(input.entry);
+      assertMedia(state, fields);
       const current = state.records.find((record) => record.draft.id === id);
       if (id && !current) throw new PlatformError("not-found", 404);
       if (current) {
@@ -60,8 +198,10 @@ export async function manage(
         status: "draft",
         updatedAt: now,
       };
-      if (current) current.draft = draft;
-      else state.records.unshift({ draft, published: null });
+      if (current) {
+        remember(state, current);
+        current.draft = draft;
+      } else state.records.unshift({ draft, published: null });
       audit(state, "save", draft.id);
       return { id: draft.id };
     }
@@ -77,6 +217,7 @@ export async function manage(
         if (record.draft.status !== "review")
           throw new PlatformError("review-required");
         assertPublishable(record.draft, state.records);
+        assertMedia(state, record.draft);
         record.draft.status = "published";
       } else if (input.action === "review") {
         assertPublishable(record.draft, state.records);
