@@ -3,6 +3,7 @@ import { mkdtemp, rm, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 import { Pool } from "pg";
+import sharp from "sharp";
 import { loadPlatform } from "./platform-runtime.mjs";
 const p = await loadPlatform();
 const directory = await mkdtemp(resolve(".next/platform-check-"));
@@ -292,6 +293,203 @@ async function exercise(store, label) {
     }),
   );
   ok((await store.read()).records.length > 0, "failed transaction rolls back");
+  const fixture = await sharp({
+    create: { width: 48, height: 32, channels: 3, background: "#115e59" },
+  })
+    .png()
+    .withMetadata()
+    .toBuffer();
+  const upload = {
+    name: "Test only",
+    data: fixture.toString("base64"),
+    rights: true,
+  };
+  await rejects(() => p.uploadMedia(store, undefined, upload), "unauthorized");
+  await rejects(
+    () => p.uploadMedia(store, token, { ...upload, rights: false }),
+    "media-rights-required",
+  );
+  await rejects(
+    () =>
+      p.uploadMedia(store, token, {
+        ...upload,
+        data: Buffer.from(
+          '<svg xmlns="http://www.w3.org/2000/svg"></svg>',
+        ).toString("base64"),
+      }),
+    "invalid-media",
+  );
+  const media = await p.uploadMedia(store, token, upload);
+  const image = await p.readMedia(store, token, media.id);
+  const metadata = await sharp(image).metadata();
+  ok(
+    metadata.format === "webp" && !metadata.exif && metadata.width === 48,
+    "image normalized and metadata removed",
+  );
+  await rejects(() => p.readMedia(store, undefined, media.id), "not-found");
+  const editorial = {
+    ...entry("about", "editorial-test"),
+    featured: true,
+    cover: {
+      id: media.id,
+      alt: { en: "Test cover", ja: "テスト", "zh-cn": "测试封面" },
+    },
+  };
+  const created = await p.manage(store, token, {
+    action: "save",
+    entry: editorial,
+  });
+  await rejects(
+    () => p.manage(store, token, { action: "media-delete", id: media.id }),
+    "media-referenced",
+  );
+  await p.manage(store, token, {
+    action: "review",
+    id: created.id,
+    revision: 1,
+  });
+  await p.manage(store, token, {
+    action: "publish",
+    id: created.id,
+    revision: 2,
+  });
+  ok(
+    (await p.readMedia(store, undefined, media.id)).equals(image),
+    "published cover public",
+  );
+  const changed = structuredClone(editorial);
+  changed.translations.en.title = "Changed draft";
+  await p.manage(store, token, {
+    action: "save",
+    id: created.id,
+    revision: 3,
+    entry: changed,
+  });
+  await rejects(
+    () =>
+      p.manage(store, token, {
+        action: "restore",
+        id: created.id,
+        revision: 3,
+        previousRevision: 3,
+      }),
+    "conflict",
+  );
+  await p.manage(store, token, {
+    action: "restore",
+    id: created.id,
+    revision: 4,
+    previousRevision: 3,
+  });
+  let record = (await store.read()).records.find(
+    (item) => item.draft.id === created.id,
+  );
+  ok(
+    record.draft.status === "draft" &&
+      record.draft.revision === 5 &&
+      record.draft.translations.en.title === editorial.translations.en.title &&
+      record.published.revision === 3,
+    "history restores draft without changing publication",
+  );
+  await p.manage(store, token, {
+    action: "import",
+    entry: { ...changed, id: created.id },
+    revision: 5,
+  });
+  record = (await store.read()).records.find(
+    (item) => item.draft.id === created.id,
+  );
+  ok(
+    record.draft.revision === 6 && record.published.revision === 3,
+    "import is a new draft revision",
+  );
+  await rejects(
+    () =>
+      p.manage(store, token, {
+        action: "import",
+        entry: { ...changed, id: created.id },
+        revision: 5,
+      }),
+    "conflict",
+  );
+  const recovered = {
+    ...editorial,
+    id: randomUUID(),
+    slug: "recovered-test",
+    cover: { ...editorial.cover, id: randomUUID() },
+  };
+  await p.manage(store, token, {
+    action: "import",
+    entry: recovered,
+    revision: 0,
+  });
+  record = (await store.read()).records.find(
+    (item) => item.draft.id === recovered.id,
+  );
+  ok(
+    !record.draft.cover && !record.published,
+    "missing backup media removed and imported content private",
+  );
+  await p.manage(store, token, {
+    action: "unpublish",
+    id: created.id,
+    revision: 6,
+  });
+  await rejects(() => p.readMedia(store, undefined, media.id), "not-found");
+  await rejects(
+    () => p.manage(store, token, { action: "media-delete", id: media.id }),
+    "media-referenced",
+  );
+  await p.manage(store, token, {
+    action: "delete",
+    id: created.id,
+    revision: 7,
+  });
+  await p.manage(store, token, { action: "media-delete", id: media.id });
+  ok(!(await store.readAsset(media.id)), "unreferenced media bytes deleted");
+  const rollbackId = randomUUID();
+  await assert.rejects(() =>
+    store.change(async (_state, assets) => {
+      await assets.put(rollbackId, image);
+      throw new Error("rollback");
+    }),
+  );
+  ok(!(await store.readAsset(rollbackId)), "media transaction rollback");
+  const remaining = (await store.read()).submissions[0];
+  await rejects(
+    () =>
+      p.manage(store, token, {
+        action: "submission-batch",
+        status: "closed",
+        items: [
+          { id: remaining.id, revision: remaining.revision },
+          { id: randomUUID(), revision: 1 },
+        ],
+      }),
+    "not-found",
+  );
+  ok(
+    (await store.read()).submissions[0].status === remaining.status,
+    "batch rollback on any invalid item",
+  );
+  await p.manage(store, token, {
+    action: "submission-batch",
+    status: "closed",
+    items: [{ id: remaining.id, revision: remaining.revision }],
+  });
+  ok(
+    (await store.read()).submissions[0].status === "closed",
+    "batch updates inbox",
+  );
+  const untranslated = {
+    ...editorial,
+    cover: { ...editorial.cover, alt: { en: "", ja: "", "zh-cn": "" } },
+  };
+  assert.throws(
+    () => p.assertPublishable(untranslated, []),
+    (error) => error.code === "media-alt-required",
+  );
+  checks++;
   process.env.PLATFORM_ADMIN_PASSWORD_HASH = await p.passwordHash(password);
   ok(
     !p.sessionValid(await store.read(), token),
@@ -324,9 +522,15 @@ try {
     "too-large",
   );
   const multilingual = entry("about");
-  for (const locale of p.locales) multilingual.translations[locale].body = "響".repeat(12000);
-  const decoded = await p.readJson(request("http://127.0.0.1:3000", JSON.stringify(multilingual)));
-  ok(p.parseEntry(decoded).translations.ja.body.length === 12000, "maximum multibyte translations fit the request limit");
+  for (const locale of p.locales)
+    multilingual.translations[locale].body = "響".repeat(12000);
+  const decoded = await p.readJson(
+    request("http://127.0.0.1:3000", JSON.stringify(multilingual)),
+  );
+  ok(
+    p.parseEntry(decoded).translations.ja.body.length === 12000,
+    "maximum multibyte translations fit the request limit",
+  );
   ok(
     await p.checkPassword(password, process.env.PLATFORM_ADMIN_PASSWORD_HASH),
     "password verification",

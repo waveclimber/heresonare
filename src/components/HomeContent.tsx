@@ -10,8 +10,10 @@ import { useLanguage } from "@/context/LanguageContext";
 
 export default function HomeContent({
   content,
+  children,
 }: {
   content: HomePageContent;
+  children?: React.ReactNode;
 }) {
   const { language, locale } = useLanguage();
 
@@ -29,6 +31,7 @@ export default function HomeContent({
       />
 
       <Products content={content} locale={locale} />
+      {children}
 
       <About content={content} />
 

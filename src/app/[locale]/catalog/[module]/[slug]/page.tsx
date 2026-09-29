@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PlatformFrame from "@/components/platform/PlatformFrame";
+import CoverImage from "@/components/platform/CoverImage";
+import RichText from "@/components/platform/RichText";
 import { BasketButton } from "@/components/platform/Basket";
 import StructuredData from "@/components/StructuredData";
 import { platformContent } from "@/data/platformContent";
@@ -89,6 +91,7 @@ export default async function EntryPage({ params }: { params: Params }) {
       <div className="p-detail">
         <a href={`/${locale}/catalog/${module}`}>← {c.back}</a>
         <p>{content.summary}</p>
+        <CoverImage cover={entry.cover} locale={locale} />
         {entry.location && (
           <p>
             {c.location}: {entry.location}
@@ -118,7 +121,9 @@ export default async function EntryPage({ params }: { params: Params }) {
             </a>
           </div>
         )}
-        <div className="p-body p-divider">{content.body}</div>
+        <div className="p-divider">
+          <RichText text={content.body} />
+        </div>
         <div className="p-row">
           {entry.externalUrl && (
             <a
@@ -142,7 +147,10 @@ export default async function EntryPage({ params }: { params: Params }) {
                 : c.unavailable}
             </h2>
             <p>{c.orderNote}</p>
-            <BasketButton entry={{ id: entry.id, available: entry.available }} locale={locale} />
+            <BasketButton
+              entry={{ id: entry.id, available: entry.available }}
+              locale={locale}
+            />
           </div>
         )}
         {related.length > 0 && (

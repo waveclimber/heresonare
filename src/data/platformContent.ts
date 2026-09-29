@@ -142,6 +142,17 @@ const en = {
   reviewNote:
     "Check factual accuracy, translation and link rights before publishing. Publication is a separate action after review.",
   errors: {
+    "invalid-media":
+      "Choose a valid, single-frame JPEG, PNG or WebP image from the library.",
+    "media-alt-required":
+      "Add an image description in all three languages before publishing.",
+    "media-rights-required":
+      "Confirm that you have permission to publish this image.",
+    "media-referenced":
+      "This image is used by a draft, published page or saved version. Remove those references before deleting it.",
+    "too-large":
+      "This file or request is too large. Images must be no more than 2 MB; try a smaller image.",
+
     unauthorized: "Sign-in failed or your session expired. Sign in again.",
     forbidden: "This request could not be verified. Reload the page.",
     conflict: "This item changed elsewhere. Reload before editing again.",
@@ -320,6 +331,15 @@ const ja: Copy = {
   reviewNote:
     "事実、翻訳、リンクの利用権を確認してください。レビュー後、別の操作で公開します。",
   errors: {
+    "invalid-media":
+      "有効な静止JPEG・PNG・WebP画像をライブラリから選んでください。",
+    "media-alt-required": "公開前に3言語の画像説明を入力してください。",
+    "media-rights-required": "画像の公開権限を確認してください。",
+    "media-referenced":
+      "下書き、公開ページ、履歴で使用中の画像です。参照を解除してから削除してください。",
+    "too-large":
+      "ファイルまたはリクエストが大きすぎます。画像は2 MB以下にしてください。",
+
     unauthorized:
       "ログインに失敗したか、セッションが切れました。再度ログインしてください。",
     forbidden: "リクエストを確認できませんでした。再読み込みしてください。",
@@ -481,6 +501,13 @@ const zh: Copy = {
   maintenance: "内容目录暂时不可用，请稍后重试。",
   reviewNote: "发布前请核对事实、翻译及链接使用权。审核和发布为独立操作。",
   errors: {
+    "invalid-media": "请选择素材库中的有效 JPEG、PNG 或 WebP 静态图片。",
+    "media-alt-required": "发布前请填写三种语言的图片说明。",
+    "media-rights-required": "请确认拥有这张图片的公开使用授权。",
+    "media-referenced":
+      "草稿、公开页面或历史版本仍在使用这张图片，请解除引用后再删除。",
+    "too-large": "文件或请求过大，图片不能超过 2 MB，请尝试更小的图片。",
+
     unauthorized: "登录失败或会话已过期，请重新登录。",
     forbidden: "无法验证本次请求，请重新加载页面。",
     conflict: "记录已在其他地方修改，请重新加载后再编辑。",

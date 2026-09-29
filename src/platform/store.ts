@@ -6,8 +6,26 @@ import { emptyState, PlatformError, type State } from "./domain";
 
 export type Store = {
   read(): Promise<State>;
-  change<T>(action: (state: State) => T): Promise<T>;
+  readAsset(id: string): Promise<Buffer | null>;
+  change<T>(
+    action: (state: State, assets: AssetWriter) => T | Promise<T>,
+  ): Promise<T>;
 };
+type AssetWriter = {
+  put(id: string, data: Buffer): Promise<void>;
+  remove(id: string): Promise<void>;
+};
+function assetId(id: string) {
+  if (!/^[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}$/u.test(id))
+    throw new PlatformError("invalid-media");
+  return id;
+}
+function encode(state: State) {
+  const serialized = JSON.stringify(state);
+  if (Buffer.byteLength(serialized) > 32 * 1024 * 1024)
+    throw new PlatformError("capacity", 409);
+  return serialized;
+}
 function decode(value: unknown): State {
   const state = value as State;
   if (
@@ -35,6 +53,14 @@ export function localStore(directory: string): Store {
   };
   return {
     read,
+    async readAsset(id) {
+      try {
+        return await readFile(join(directory, "media", assetId(id)));
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+        throw error;
+      }
+    },
     async change(action) {
       await mkdir(directory, { recursive: true, mode: 0o700 });
       // A filesystem lock also coordinates separate local workers. A crashed lock fails closed.
@@ -50,19 +76,56 @@ export function localStore(directory: string): Store {
       }
       if (!lock) throw new PlatformError("busy", 503);
       const temporary = `${file}.${randomUUID()}.tmp`;
+      const pending = new Map<string, Buffer | null>();
+      const created: string[] = [];
+      let committed = false;
       try {
         const state = await read();
-        const result = action(state);
+        const result = await action(state, {
+          async put(id, data) {
+            pending.set(assetId(id), data);
+          },
+          async remove(id) {
+            pending.set(assetId(id), null);
+          },
+        });
+        const serialized = encode(state);
+        if (pending.size)
+          await mkdir(join(directory, "media"), {
+            recursive: true,
+            mode: 0o700,
+          });
+        for (const [id, data] of pending)
+          if (data) {
+            const path = join(directory, "media", id);
+            const asset = await open(path, "wx", 0o600);
+            created.push(path);
+            try {
+              await asset.writeFile(data);
+              await asset.sync();
+            } finally {
+              await asset.close();
+            }
+          }
         const handle = await open(temporary, "wx", 0o600);
         try {
-          await handle.writeFile(JSON.stringify(state));
+          await handle.writeFile(serialized);
           await handle.sync();
         } finally {
           await handle.close();
         }
         await rename(temporary, file);
+        committed = true;
+        // Unreferenced bytes are inaccessible even if post-commit cleanup fails.
+        for (const [id, data] of pending)
+          if (!data)
+            await rm(join(directory, "media", id), { force: true }).catch(() =>
+              console.error("platform_media_cleanup_failed"),
+            );
         return result;
       } finally {
+        if (!committed)
+          for (const path of created) await rm(path, { force: true });
         await rm(temporary, { force: true });
         await lock.close();
         await rm(join(directory, "write.lock"));
@@ -72,6 +135,13 @@ export function localStore(directory: string): Store {
 }
 export function postgresStore(pool: Pool): Store {
   return {
+    async readAsset(id) {
+      const result = await pool.query(
+        "SELECT data FROM heresonare_media WHERE id = $1",
+        [assetId(id)],
+      );
+      return result.rows[0]?.data ?? null;
+    },
     async read() {
       const result = await pool.query(
         "SELECT document FROM heresonare_platform WHERE id = 1",
@@ -89,10 +159,22 @@ export function postgresStore(pool: Pool): Store {
         if (!result.rows[0])
           throw new PlatformError("storage-unavailable", 503);
         const state = decode(result.rows[0].document);
-        const output = action(state);
+        const output = await action(state, {
+          async put(id, data) {
+            await client.query(
+              "INSERT INTO heresonare_media (id, data) VALUES ($1, $2)",
+              [assetId(id), data],
+            );
+          },
+          async remove(id) {
+            await client.query("DELETE FROM heresonare_media WHERE id = $1", [
+              assetId(id),
+            ]);
+          },
+        });
         await client.query(
           "UPDATE heresonare_platform SET document = $1::jsonb, updated_at = now() WHERE id = 1",
-          [JSON.stringify(state)],
+          [encode(state)],
         );
         await client.query("COMMIT");
         return output;

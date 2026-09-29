@@ -30,8 +30,22 @@ export type Entry = {
   available: boolean;
   related: string[];
   updatedAt: string;
+  featured?: boolean;
+  cover?: { id: string; alt: Record<Locale, string> };
 };
-export type ContentRecord = { draft: Entry; published: Entry | null };
+export type ContentRecord = {
+  draft: Entry;
+  published: Entry | null;
+  history?: Entry[];
+};
+export type MediaAsset = {
+  id: string;
+  name: string;
+  width: number;
+  height: number;
+  bytes: number;
+  createdAt: string;
+};
 export type Submission = {
   id: string;
   kind: "inquiry" | "order";
@@ -61,6 +75,7 @@ export type State = {
   sessions: { hash: string; expires: number; credential: string }[];
   limits: Record<string, { count: number; until: number }>;
   audit: { at: string; action: string; target: string }[];
+  media?: MediaAsset[];
 };
 export class PlatformError extends Error {
   constructor(
@@ -183,6 +198,22 @@ export function parseEntry(
   )
     throw new PlatformError("invalid");
   const related = [...new Set(input.related.map((id) => text(id, 36, true)))];
+  let cover: Entry["cover"];
+  if (input.cover) {
+    const value = object(input.cover),
+      alt = object(value.alt);
+    const id = text(value.id, 36, true);
+    if (!/^[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}$/u.test(id))
+      throw new PlatformError("invalid-media");
+    cover = {
+      id,
+      alt: Object.fromEntries(
+        locales.map((locale) => [locale, text(alt[locale], 240)]),
+      ) as Record<Locale, string>,
+    };
+  }
+  if (input.featured !== undefined && typeof input.featured !== "boolean")
+    throw new PlatformError("invalid");
   return {
     module: section,
     slug,
@@ -196,9 +227,13 @@ export function parseEntry(
     currency: oneOf(input.currency, ["JPY", "USD", "CNY"]),
     available: input.available,
     related,
+    featured: input.featured === true,
+    ...(cover ? { cover } : {}),
   };
 }
 export function assertPublishable(entry: Entry, records: ContentRecord[]) {
+  if (entry.cover && locales.some((locale) => !entry.cover!.alt[locale]))
+    throw new PlatformError("media-alt-required");
   if (
     locales.some(
       (locale) =>

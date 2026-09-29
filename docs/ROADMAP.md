@@ -1,5 +1,7 @@
 # Roadmap
 
+**Editorial extension (2026-09-29):** Image library, covers, featured home/section content, formatted editing, draft history/copy/import, unsaved-change guards and batch enquiry statuses are implemented. Read [editorial-operations.md](./editorial-operations.md) for migration and recovery details and [owner-launch-checklist.md](./owner-launch-checklist.md) for remaining account/content inputs.
+
 This ordered roadmap records direction, not fixed delivery dates. Each stage should become one or more scoped issues with owners, acceptance criteria, constraints, and validation steps before implementation.
 
 **Current module platform (2026-09-29):** All nine modules now have localized
